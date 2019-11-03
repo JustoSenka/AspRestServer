@@ -14,11 +14,28 @@ namespace AspRestServer
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
-        }
+            var configuration = new ConfigurationBuilder()
+                .AddCommandLine(args)
+                .Build();
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+            var http = configuration["http"];
+            if (string.IsNullOrEmpty(http))
+                http = "http://0.0.0.0:80";
+
+            var https = configuration["https"];
+            if (string.IsNullOrEmpty(https))
+                https = "https://0.0.0.0:443";
+
+            var host = new WebHostBuilder()
+                .UseKestrel()
+                .UseUrls(http, https)  
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
+                .UseStartup<Startup>()
+                .UseConfiguration(configuration)
+                .Build();
+
+            host.Run();
+        }
     }
 }

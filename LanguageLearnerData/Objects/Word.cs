@@ -1,4 +1,4 @@
-﻿namespace LanguageLearner.Objects
+﻿namespace LanguageLearnerData.Objects
 {
     public class Word
     {

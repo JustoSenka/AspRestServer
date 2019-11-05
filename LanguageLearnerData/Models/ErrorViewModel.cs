@@ -1,6 +1,6 @@
 using System;
 
-namespace LanguageLearner.Models
+namespace LanguageLearnerData.Models
 {
     public class ErrorViewModel
     {

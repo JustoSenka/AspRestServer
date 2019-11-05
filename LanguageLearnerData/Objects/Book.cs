@@ -7,9 +7,7 @@ namespace LanguageLearnerData.Objects
     {
         public int ID { get; set; }
 
-        [Required]
         public Language LanguageFrom { get; set; }
-        [Required]
         public Language LanguageTo { get; set; }
 
         public IEnumerable<Translation> Words { get; set; }

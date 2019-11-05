@@ -25,9 +25,9 @@ namespace LanguageLearnerData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LanguageFromID");
+                    b.Property<int?>("LanguageFromID");
 
-                    b.Property<int>("LanguageToID");
+                    b.Property<int?>("LanguageToID");
 
                     b.HasKey("ID");
 
@@ -44,14 +44,10 @@ namespace LanguageLearnerData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LanguageID");
-
                     b.Property<string>("Text")
                         .IsRequired();
 
                     b.HasKey("ID");
-
-                    b.HasIndex("LanguageID");
 
                     b.ToTable("Definition");
                 });
@@ -99,14 +95,10 @@ namespace LanguageLearnerData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LanguageID");
-
                     b.Property<string>("Text")
                         .IsRequired();
 
                     b.HasKey("ID");
-
-                    b.HasIndex("LanguageID");
 
                     b.ToTable("Word");
                 });
@@ -115,21 +107,11 @@ namespace LanguageLearnerData.Migrations
                 {
                     b.HasOne("LanguageLearnerData.Objects.Language", "LanguageFrom")
                         .WithMany()
-                        .HasForeignKey("LanguageFromID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("LanguageFromID");
 
                     b.HasOne("LanguageLearnerData.Objects.Language", "LanguageTo")
                         .WithMany()
-                        .HasForeignKey("LanguageToID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("LanguageLearnerData.Objects.Definition", b =>
-                {
-                    b.HasOne("LanguageLearnerData.Objects.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("LanguageToID");
                 });
 
             modelBuilder.Entity("LanguageLearnerData.Objects.Translation", b =>
@@ -146,14 +128,6 @@ namespace LanguageLearnerData.Migrations
                     b.HasOne("LanguageLearnerData.Objects.Word", "Word")
                         .WithMany()
                         .HasForeignKey("WordID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("LanguageLearnerData.Objects.Word", b =>
-                {
-                    b.HasOne("LanguageLearnerData.Objects.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

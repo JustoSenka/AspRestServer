@@ -7,10 +7,10 @@ namespace LanguageLearner.Controllers
 {
     public class BookController : Controller
     {
-        public BookModel bookModel;
+        public Book bookModel;
         public IActionResult Index()
         {
-            bookModel = new BookModel() { LanguageFrom = new Language() { Name = "Spanish" } };
+            bookModel = new Book() { LanguageFrom = new Language() { Name = "Spanish" } };
 
             return View();
         }

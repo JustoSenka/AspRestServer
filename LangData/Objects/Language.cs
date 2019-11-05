@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LanguageLearnerData.Objects
+namespace LangData.Objects
 {
     public class Language
     {

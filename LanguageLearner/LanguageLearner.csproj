@@ -14,7 +14,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\LanguageLearnerData\LanguageLearnerData.csproj" />
+    <ProjectReference Include="..\LangData\LangData.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
-﻿using LanguageLearnerData.Models;
-using LanguageLearnerData.Objects;
+﻿using LangData.Objects;
+using LanguageLearner.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -10,7 +10,7 @@ namespace LanguageLearner.Controllers
         public Book bookModel;
         public IActionResult Index()
         {
-            bookModel = new Book() { LanguageFrom = new Language() { Name = "Spanish" } };
+            bookModel = new Book() { Name = "Spanish" };
 
             return View();
         }

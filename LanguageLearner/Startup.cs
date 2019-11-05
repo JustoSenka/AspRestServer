@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LanguageLearnerData.Context;
+using LangData.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,7 +37,7 @@ namespace LanguageLearner
 
             services.AddDbContext<BookContext>(o => 
                 o.UseSqlServer(Configuration.GetConnectionString("LanguageLearner"), 
-                b => b.MigrationsAssembly("LanguageLearnerData")));
+                b => b.MigrationsAssembly("LangData")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using AspRestServer.Models;
+using LanguageLearner.Models;
 
-namespace AspRestServer.Controllers
+namespace LanguageLearner.Controllers
 {
     public class HomeController : Controller
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace AspRestServer.Models
+namespace LanguageLearner.Models
 {
     public class ErrorViewModel
     {

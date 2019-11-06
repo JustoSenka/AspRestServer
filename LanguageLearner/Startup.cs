@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LangData.Context;
+using LangServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -34,6 +35,10 @@ namespace LanguageLearner
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSingleton(Configuration);
+
+            services.AddScoped<IBookService, BookService>();
 
             services.AddDbContext<BookContext>(o => 
                 o.UseSqlServer(Configuration.GetConnectionString("LanguageLearner"), 

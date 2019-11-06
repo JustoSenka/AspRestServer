@@ -1,18 +1,27 @@
 ﻿using LangData.Objects;
+using LangServices;
 using LanguageLearner.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Linq;
 
 namespace LanguageLearner.Controllers
 {
     public class BookController : Controller
     {
+        private readonly IBookService BookService;
+        public BookController(IBookService BookService)
+        {
+            this.BookService = BookService;
+        }
+
         public Book bookModel;
         public IActionResult Index()
         {
-            bookModel = new Book() { Name = "Spanish" };
+            var books = BookService.GetBooks();
+            var bookModel = new BookModel() { Book = books.FirstOrDefault() };
 
-            return View();
+            return View(bookModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

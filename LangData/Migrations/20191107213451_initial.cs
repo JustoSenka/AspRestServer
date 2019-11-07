@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LangData.Migrations
 {
-    public partial class madethingscomplexagain : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,7 +21,7 @@ namespace LangData.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Language",
+                name: "Languages",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -30,11 +30,11 @@ namespace LangData.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Language", x => x.ID);
+                    table.PrimaryKey("PK_Languages", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Definition",
+                name: "Definitions",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -45,17 +45,17 @@ namespace LangData.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Definition", x => x.ID);
+                    table.PrimaryKey("PK_Definitions", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Definition_Language_LanguageID",
+                        name: "FK_Definitions_Languages_LanguageID",
                         column: x => x.LanguageID,
-                        principalTable: "Language",
+                        principalTable: "Languages",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Word",
+                name: "Words",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -66,23 +66,23 @@ namespace LangData.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Word", x => x.ID);
+                    table.PrimaryKey("PK_Words", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Word_Books_BookID",
+                        name: "FK_Words_Books_BookID",
                         column: x => x.BookID,
                         principalTable: "Books",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Word_Language_LanguageID",
+                        name: "FK_Words_Languages_LanguageID",
                         column: x => x.LanguageID,
-                        principalTable: "Language",
+                        principalTable: "Languages",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Translation",
+                name: "Translations",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -92,63 +92,63 @@ namespace LangData.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Translation", x => x.ID);
+                    table.PrimaryKey("PK_Translations", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Translation_Definition_DefinitionID",
+                        name: "FK_Translations_Definitions_DefinitionID",
                         column: x => x.DefinitionID,
-                        principalTable: "Definition",
+                        principalTable: "Definitions",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Translation_Word_WordID",
+                        name: "FK_Translations_Words_WordID",
                         column: x => x.WordID,
-                        principalTable: "Word",
+                        principalTable: "Words",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Definition_LanguageID",
-                table: "Definition",
+                name: "IX_Definitions_LanguageID",
+                table: "Definitions",
                 column: "LanguageID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Translation_DefinitionID",
-                table: "Translation",
+                name: "IX_Translations_DefinitionID",
+                table: "Translations",
                 column: "DefinitionID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Translation_WordID",
-                table: "Translation",
+                name: "IX_Translations_WordID",
+                table: "Translations",
                 column: "WordID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Word_BookID",
-                table: "Word",
+                name: "IX_Words_BookID",
+                table: "Words",
                 column: "BookID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Word_LanguageID",
-                table: "Word",
+                name: "IX_Words_LanguageID",
+                table: "Words",
                 column: "LanguageID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Translation");
+                name: "Translations");
 
             migrationBuilder.DropTable(
-                name: "Definition");
+                name: "Definitions");
 
             migrationBuilder.DropTable(
-                name: "Word");
+                name: "Words");
 
             migrationBuilder.DropTable(
                 name: "Books");
 
             migrationBuilder.DropTable(
-                name: "Language");
+                name: "Languages");
         }
     }
 }

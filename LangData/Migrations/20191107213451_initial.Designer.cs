@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LangData.Migrations
 {
     [DbContext(typeof(BookContext))]
-    [Migration("20191107170211_pluraliztion")]
-    partial class pluraliztion
+    [Migration("20191107213451_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

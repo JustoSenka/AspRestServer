@@ -32,7 +32,7 @@ namespace Tests
         }
 
         [Test]
-        public void CanAddData_ToDatabase()
+        public void CanAdd_Word_ToDatabase()
         {
             var service = m_Host.Services.GetService<IBookService>();
             var count = service.GetWords().Count();

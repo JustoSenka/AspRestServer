@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LangData.Context;
+﻿using LangData.Context;
 using LangServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +16,9 @@ namespace LanguageLearner
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            var msg = Configuration.GetValue<string>("WelcomeMessage");
+            System.Diagnostics.Debug.WriteLine("Config in use: " + msg);
         }
 
         public IConfiguration Configuration { get; }
@@ -40,9 +39,26 @@ namespace LanguageLearner
 
             services.AddScoped<IBookService, BookService>();
 
-            services.AddDbContext<BookContext>(o => 
-                o.UseSqlServer(Configuration.GetConnectionString("LanguageLearner"), 
-                b => b.MigrationsAssembly("LangData")));
+            SetupDatabase(services);
+
+        }
+
+        private void SetupDatabase(IServiceCollection services)
+        {
+            var inMemory = Configuration.GetValue<bool>("UseInMemoryDB");
+            if (inMemory)
+            {
+                var connectionString = Configuration.GetConnectionString("InMemoryDB");
+                var connection = new SqliteConnection(connectionString);
+                connection.Open();
+
+                services.AddDbContext<BookContext>(o => o.UseSqlite(connection));
+            }
+            else
+            {
+                var connectionString = Configuration.GetConnectionString("LanguageLearner");
+                services.AddDbContext<BookContext>(o => o.UseSqlServer(connectionString, b => b.MigrationsAssembly("LangData")));
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

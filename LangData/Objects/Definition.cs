@@ -5,6 +5,14 @@ namespace LangData.Objects
 {
     public class Definition
     {
+        public Definition() { }
+        public Definition(string text, Language language, string examples = "")
+        {
+            Text = text;
+            Language = language;
+            Examples = examples;
+        }
+
         public int ID { get; set; }
 
         [Required]

@@ -5,6 +5,13 @@ namespace LangData.Objects
 {
     public class Word
     {
+        public Word() { }
+        public Word(string text, Language language)
+        {
+            Text = text;
+            Language = language;
+        }
+
         public int ID { get; set; }
 
         [Required]

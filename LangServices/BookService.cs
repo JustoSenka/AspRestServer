@@ -96,7 +96,8 @@ namespace LangServices
 
         public void RemoveBook(Book obj)
         {
-            throw new NotImplementedException();
+            m_Context.Books.Remove(obj);
+            m_Context.SaveChanges();
         }
 
         public void RemoveDefinition(Definition obj)

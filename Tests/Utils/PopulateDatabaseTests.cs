@@ -28,21 +28,6 @@ namespace Tests.Utils
             Assert.AreEqual(3, BookService.GetLanguages().Count());
             Assert.AreEqual(3, BookService.GetDefinitions().Count());
             Assert.AreEqual(6, BookService.GetWords().Count());
-            Assert.AreEqual(6, BookService.GetTranslations().Count());
-        }
-
-        [Test]
-        public void RemoveBook_WhileWorksHaveAReferenceToIt_ResultsIn()
-        {
-            PopulateDatabase.PopulateWithTestData(BookContext);
-
-            BookService.RemoveBook(BookService.GetBooks().First());
-
-            Assert.AreEqual(0, BookService.GetBooks().Count());
-            Assert.AreEqual(3, BookService.GetLanguages().Count());
-            Assert.AreEqual(3, BookService.GetDefinitions().Count());
-            Assert.AreEqual(6, BookService.GetWords().Count());
-            Assert.AreEqual(6, BookService.GetTranslations().Count());
         }
     }
 }

@@ -18,6 +18,6 @@ namespace LangData.Objects
         public string Text { get; set; }
 
         public Language Language { get; set; }
-        public IEnumerable<Translation> Translations { get; set; }
+        public List<Translation> Translations { get; set; }
     }
 }

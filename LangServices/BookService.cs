@@ -1,6 +1,5 @@
 ﻿using LangData.Context;
 using LangData.Objects;
-using System;
 using System.Collections.Generic;
 
 namespace LangServices
@@ -32,12 +31,6 @@ namespace LangServices
             m_Context.SaveChanges();
         }
 
-        public void AddTranslation(Translation obj)
-        {
-            m_Context.Translations.Add(obj);
-            m_Context.SaveChanges();
-        }
-
         public void AddWord(Word obj)
         {
             m_Context.Words.Add(obj);
@@ -59,39 +52,33 @@ namespace LangServices
             return m_Context.Languages;
         }
 
-        public IEnumerable<Translation> GetTranslations()
-        {
-            return m_Context.Translations;
-        }
-
         public IEnumerable<Word> GetWords()
         {
             return m_Context.Words;
         }
 
-        public void MoodifyBook(Book obj)
+        public void UpdateBook(Book obj)
         {
-            throw new NotImplementedException();
+            m_Context.Books.Update(obj);
+            m_Context.SaveChanges();
         }
 
-        public void MoodifyDefinition(Definition obj)
+        public void UpdateDefinition(Definition obj)
         {
-            throw new NotImplementedException();
+            m_Context.Definitions.Update(obj);
+            m_Context.SaveChanges();
         }
 
-        public void MoodifyLanguage(Language obj)
+        public void UpdateLanguage(Language obj)
         {
-            throw new NotImplementedException();
+            m_Context.Languages.Update(obj);
+            m_Context.SaveChanges();
         }
 
-        public void MoodifyTranslation(Translation obj)
+        public void UpdateWord(Word obj)
         {
-            throw new NotImplementedException();
-        }
-
-        public void MoodifyWord(Word obj)
-        {
-            throw new NotImplementedException();
+            m_Context.Words.Update(obj);
+            m_Context.SaveChanges();
         }
 
         public void RemoveBook(Book obj)
@@ -102,22 +89,20 @@ namespace LangServices
 
         public void RemoveDefinition(Definition obj)
         {
-            throw new NotImplementedException();
+            m_Context.Definitions.Remove(obj);
+            m_Context.SaveChanges();
         }
 
         public void RemoveLanguage(Language obj)
         {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveTranslation(Translation obj)
-        {
-            throw new NotImplementedException();
+            m_Context.Languages.Remove(obj);
+            m_Context.SaveChanges();
         }
 
         public void RemoveWord(Word obj)
         {
-            throw new NotImplementedException();
+            m_Context.Remove(obj);
+            m_Context.SaveChanges();
         }
     }
 }

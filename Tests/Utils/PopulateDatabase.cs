@@ -1,5 +1,7 @@
 ﻿using LangData.Context;
 using LangData.Objects;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Tests.Utils
 {
@@ -8,7 +10,6 @@ namespace Tests.Utils
         public static void ClearDatabase(BookContext BookContext)
         {
             BookContext.Books.RemoveRange(BookContext.Books);
-            BookContext.Translations.RemoveRange(BookContext.Translations);
             BookContext.Words.RemoveRange(BookContext.Words);
             BookContext.Definitions.RemoveRange(BookContext.Definitions);
             BookContext.Languages.RemoveRange(BookContext.Languages);
@@ -47,18 +48,18 @@ namespace Tests.Utils
                 new Translation(words[5], def[2]),
             };
             
-            def[0].Translations = new[] { translations[0], translations[3] };
-            def[1].Translations = new[] { translations[1], translations[4] };
-            def[2].Translations = new[] { translations[2], translations[5] };
+            def[0].Translations = new List<Translation>() { translations[0], translations[3] };
+            def[1].Translations = new List<Translation>()  { translations[1], translations[4] };
+            def[2].Translations = new List<Translation>() { translations[2], translations[5] };
 
-            words[0].Translations = new[] { translations[0] };
-            words[1].Translations = new[] { translations[1] };
-            words[2].Translations = new[] { translations[2] };
-            words[3].Translations = new[] { translations[3] };
-            words[4].Translations = new[] { translations[4] };
-            words[5].Translations = new[] { translations[5] };
+            words[0].Translations = new List<Translation>() { translations[0] };
+            words[1].Translations = new List<Translation>() { translations[1] };
+            words[2].Translations = new List<Translation>() { translations[2] };
+            words[3].Translations = new List<Translation>() { translations[3] };
+            words[4].Translations = new List<Translation>() { translations[4] };
+            words[5].Translations = new List<Translation>() { translations[5] };
             
-            var book = new Book("Book 0", words);
+            var book = new Book("Book 0", words.ToList());
 
             BookContext.Books.Add(book);
             BookContext.SaveChanges();

@@ -12,6 +12,5 @@ namespace LangData.Context
         public DbSet<Word> Words { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Definition> Definitions { get; set; }
-        public DbSet<Translation> Translations { get; set; }
     }
 }

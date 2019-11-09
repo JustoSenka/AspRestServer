@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Linq;
 using Tests.Base;
+using Tests.Utils;
 
 namespace Tests.Integration
 {
@@ -51,6 +52,37 @@ namespace Tests.Integration
 
             Assert.AreEqual(2, BookService.GetWords().Count());
             Assert.AreEqual(1, BookService.GetLanguages().Count());
+        }
+
+        [Test]
+        public void RemovingTranslationFromWord_WillUpdateDB()
+        {
+            PopulateDatabase.PopulateWithTestData(BookContext);
+            var word = BookService.GetWords().First();
+            var trans = word.Translations.First();
+
+            word.Translations.Remove(trans);
+            BookService.UpdateWord(word);
+            // BookService.RemoveWord(word);
+
+            var newWord = BookService.GetWords().First();
+
+            Assert.AreEqual(0, newWord.Translations.Count);
+        }
+
+
+        [Test]
+        public void RemovingWord_WillUpdateDB_AndRemoveWordsFromBookAutomatically()
+        {
+            PopulateDatabase.PopulateWithTestData(BookContext);
+            var word = BookService.GetWords().First();
+
+            BookService.RemoveWord(word);
+            var newWord = BookService.GetWords().First();
+            var wCount = BookService.GetBooks().First().Words.Count;
+
+            Assert.AreNotEqual(word, newWord);
+            Assert.AreEqual(5, wCount);
         }
     }
 }

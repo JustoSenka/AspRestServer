@@ -37,6 +37,12 @@ namespace LangServices
             m_Context.SaveChanges();
         }
 
+        public void AddTranslation(Translation obj)
+        {
+            m_Context.Translations.Add(obj);
+            m_Context.SaveChanges();
+        }
+
         public IEnumerable<Book> GetBooks()
         {
             return m_Context.Books;
@@ -55,6 +61,11 @@ namespace LangServices
         public IEnumerable<Word> GetWords()
         {
             return m_Context.Words;
+        }
+
+        public IEnumerable<Translation> GetTranslations()
+        {
+            return m_Context.Translations;
         }
 
         public void UpdateBook(Book obj)
@@ -81,6 +92,12 @@ namespace LangServices
             m_Context.SaveChanges();
         }
 
+        public void UpdateTranslation(Translation obj)
+        {
+            m_Context.Translations.Update(obj);
+            m_Context.SaveChanges();
+        }
+
         public void RemoveBook(Book obj)
         {
             m_Context.Books.Remove(obj);
@@ -101,7 +118,13 @@ namespace LangServices
 
         public void RemoveWord(Word obj)
         {
-            m_Context.Remove(obj);
+            m_Context.Words.Remove(obj);
+            m_Context.SaveChanges();
+        }
+
+        public void RemoveTranslation(Translation obj)
+        {
+            m_Context.Translations.Remove(obj);
             m_Context.SaveChanges();
         }
     }

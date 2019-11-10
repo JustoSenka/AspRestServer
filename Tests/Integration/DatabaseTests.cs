@@ -63,13 +63,11 @@ namespace Tests.Integration
 
             word.Translations.Remove(trans);
             BookService.UpdateWord(word);
-            // BookService.RemoveWord(word);
 
             var newWord = BookService.GetWords().First();
 
             Assert.AreEqual(0, newWord.Translations.Count);
         }
-
 
         [Test]
         public void RemovingWord_WillUpdateDB_AndRemoveWordsFromBookAutomatically()
@@ -83,6 +81,19 @@ namespace Tests.Integration
 
             Assert.AreNotEqual(word, newWord);
             Assert.AreEqual(5, wCount);
+        }
+
+        [Test]
+        public void RemovingDefinition_WillUpdateDB_AndRemoveWordsFromTranslationsAutomatically()
+        {
+            PopulateDatabase.PopulateWithTestData(BookContext);
+            var word = BookService.GetWords().First();
+
+            BookService.RemoveDefinition(word.Translations[0].Definition);
+            var newWord = BookService.GetWords().First();
+            var trans = newWord.Translations[0];
+
+            Assert.IsNull(trans.Definition);
         }
     }
 }

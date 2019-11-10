@@ -24,10 +24,30 @@ namespace Tests.Utils
         {
             PopulateDatabase.PopulateWithTestData(BookContext);
 
-            Assert.AreEqual(1, BookService.GetBooks().Count());
-            Assert.AreEqual(3, BookService.GetLanguages().Count());
-            Assert.AreEqual(3, BookService.GetDefinitions().Count());
-            Assert.AreEqual(6, BookService.GetWords().Count());
+            Assert.AreEqual(1, BookService.GetBooks().Count(), "Books");
+            Assert.AreEqual(3, BookService.GetLanguages().Count(), "Langs");
+            Assert.AreEqual(3, BookService.GetDefinitions().Count(), "Defs");
+            Assert.AreEqual(6, BookService.GetWords().Count(), "Words");
+            Assert.AreEqual(6, BookService.GetTranslations().Count(), "Translations");
+        }
+
+        [Test]
+        public void DeteteDB()
+        {
+            PopulateDatabase.DeleteAndRecreateDB(BookContext);
+        }
+
+        [Test]
+        public void ClearDB()
+        {
+            PopulateDatabase.PopulateWithTestData(BookContext);
+            PopulateDatabase.ClearDatabase(BookContext);
+
+            Assert.AreEqual(0, BookService.GetBooks().Count(), "Books");
+            Assert.AreEqual(0, BookService.GetLanguages().Count(), "Langs");
+            Assert.AreEqual(0, BookService.GetDefinitions().Count(), "Defs");
+            Assert.AreEqual(0, BookService.GetWords().Count(), "Words");
+            Assert.AreEqual(0, BookService.GetTranslations().Count(), "Translations");
         }
     }
 }

@@ -7,12 +7,22 @@ namespace Tests.Utils
 {
     public static class PopulateDatabase
     {
+        public static void DeleteAndRecreateDB(BookContext BookContext)
+        {
+            BookContext.Database.EnsureDeleted();
+            BookContext.Database.EnsureCreated();
+        }
+
+
         public static void ClearDatabase(BookContext BookContext)
         {
-            BookContext.Books.RemoveRange(BookContext.Books);
             BookContext.Words.RemoveRange(BookContext.Words);
             BookContext.Definitions.RemoveRange(BookContext.Definitions);
             BookContext.Languages.RemoveRange(BookContext.Languages);
+            BookContext.Books.RemoveRange(BookContext.Books);
+            BookContext.Translations.RemoveRange(BookContext.Translations);
+
+            BookContext.SaveChanges();
         }
 
         public static void PopulateWithTestData(BookContext BookContext)

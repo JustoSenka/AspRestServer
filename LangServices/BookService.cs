@@ -1,5 +1,6 @@
 ﻿using LangData.Context;
 using LangData.Objects;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace LangServices
@@ -45,12 +46,24 @@ namespace LangServices
 
         public IEnumerable<Book> GetBooks()
         {
-            return m_Context.Books;
+            return m_Context.Books
+                .Include(p => p.Words)
+                    .ThenInclude(word => word.Language)
+                .Include(p => p.Words)
+                    .ThenInclude(word => word.Translations)
+                        .ThenInclude(t => t.Definition)
+                            .ThenInclude(d => d.Language)
+                .Include(p => p.Words)
+                    .ThenInclude(word => word.Translations)
+                        .ThenInclude(t => t.Word)
+                            .ThenInclude(d => d.Language);
         }
 
         public IEnumerable<Definition> GetDefinitions()
         {
-            return m_Context.Definitions;
+            return m_Context.Definitions
+                .Include(p => p.Language)
+                .Include(p => p.Translations);
         }
 
         public IEnumerable<Language> GetLanguages()
@@ -60,12 +73,12 @@ namespace LangServices
 
         public IEnumerable<Word> GetWords()
         {
-            return m_Context.Words;
+            return m_Context.Words.Include(p => p.Language).Include(p => p.Translations);
         }
 
         public IEnumerable<Translation> GetTranslations()
         {
-            return m_Context.Translations;
+            return m_Context.Translations.Include(p => p.Word).Include(p => p.Definition);
         }
 
         public void UpdateBook(Book obj)

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace LangData.Objects
 {
+    [DebuggerDisplay("Def: Lang: {Language.Name} Text: {Text}")]
     public class Definition
     {
         public Definition() { }

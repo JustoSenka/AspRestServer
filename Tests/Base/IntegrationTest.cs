@@ -4,7 +4,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-
+using System.Linq;
+using Tests.Utils;
 
 namespace Tests.Base
 {
@@ -12,12 +13,22 @@ namespace Tests.Base
     {
         protected IWebHost Host;
 
+        public virtual bool UseInMemoryDB => true;
+
         [SetUp]
         public void CreateWebHostBuilderAndDatabase()
         {
+            Startup.UseInMemoryDatabase = UseInMemoryDB;
+
             Host = CreateWebHostBuilder();
 
-            Host.Services.GetService<BookContext>().Database.EnsureCreated();
+            var BookContext = Host.Services.GetService<BookContext>();
+            BookContext.Database.EnsureCreated();
+
+            if (UseInMemoryDB || BookContext.Books.Count() == 0)
+            {
+                PopulateDatabase.PopulateWithTestData(BookContext);
+            }
         }
 
         protected static IWebHost CreateWebHostBuilder() =>

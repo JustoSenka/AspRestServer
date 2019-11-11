@@ -1,5 +1,8 @@
-﻿namespace LangData.Objects
+﻿using System.Diagnostics;
+
+namespace LangData.Objects
 {
+    [DebuggerDisplay("Translation: Word: {Word.Text} Def: {Definition.Text}")]
     public class Translation
     {
         public Translation() { }

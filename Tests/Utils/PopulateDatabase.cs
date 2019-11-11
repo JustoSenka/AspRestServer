@@ -7,10 +7,9 @@ namespace Tests.Utils
 {
     public static class PopulateDatabase
     {
-        public static void DeleteAndRecreateDB(BookContext BookContext)
+        public static void DeleteDB(BookContext BookContext)
         {
             BookContext.Database.EnsureDeleted();
-            BookContext.Database.EnsureCreated();
         }
 
 
@@ -27,6 +26,8 @@ namespace Tests.Utils
 
         public static void PopulateWithTestData(BookContext BookContext)
         {
+            ClearDatabase(BookContext);
+
             var langEn = new Language("English");
             var langEsp = new Language("Spanish");
             var langJp = new Language("Japanese");
@@ -48,6 +49,7 @@ namespace Tests.Utils
                 new Word("おーげんきです", langJp),
             };
 
+            // Note: order at which translations are added might differ from this array since we're adding the Book object only
             var translations = new[]
             {
                 new Translation(words[0], def[0]),

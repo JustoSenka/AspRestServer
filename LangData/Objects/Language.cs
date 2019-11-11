@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace LangData.Objects
 {
+    [DebuggerDisplay("Language: {Name}")]
     public class Language
     {
         public Language() { }

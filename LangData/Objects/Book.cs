@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace LangData.Objects
 {
+    [DebuggerDisplay("Book: {Name} Count: {Words.Count}")]
     public class Book
     {
         public Book() { }

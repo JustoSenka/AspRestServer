@@ -12,6 +12,8 @@ namespace Tests.Utils
         private IBookService BookService;
         private BookContext BookContext;
 
+        // public override bool UseInMemoryDB => false;
+
         [SetUp]
         public void Setup()
         {
@@ -32,9 +34,10 @@ namespace Tests.Utils
         }
 
         [Test]
+        [Ignore("Can be used in special occasions whe something goes wrong. Do not enable for normal test run.")]
         public void DeteteDB()
         {
-            PopulateDatabase.DeleteAndRecreateDB(BookContext);
+            PopulateDatabase.DeleteDB(BookContext);
         }
 
         [Test]

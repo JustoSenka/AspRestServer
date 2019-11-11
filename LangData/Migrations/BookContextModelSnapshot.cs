@@ -83,7 +83,7 @@ namespace LangData.Migrations
 
                     b.HasIndex("WordID");
 
-                    b.ToTable("Translation");
+                    b.ToTable("Translations");
                 });
 
             modelBuilder.Entity("LangData.Objects.Word", b =>

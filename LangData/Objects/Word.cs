@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace LangData.Objects
 {
+    [DebuggerDisplay("Word: Lang: {Language.Name} Text: {Text}")]
     public class Word
     {
         public Word() { }

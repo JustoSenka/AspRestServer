@@ -14,15 +14,21 @@ namespace LanguageLearner.Controllers
         {
             this.BookService = BookService;
         }
-
-        public Book bookModel;
+        
         public IActionResult Index()
         {
             var books = BookService.GetBooks();
-            var bookModel = new BookModel() { Book = books.FirstOrDefault() };
+            var bookModel = new BookModel() { Book = books.First() };
 
             return View(bookModel);
         }
+
+        public IActionResult AddWord()
+        {
+            // Add word
+            return Index();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

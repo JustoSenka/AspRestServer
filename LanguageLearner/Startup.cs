@@ -13,6 +13,11 @@ namespace LanguageLearner
 {
     public class Startup
     {
+        /// <summary>
+        /// Used only from tests
+        /// </summary>
+        public static bool UseInMemoryDatabase = false;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -45,7 +50,8 @@ namespace LanguageLearner
 
         private void SetupDatabase(IServiceCollection services)
         {
-            var inMemory = Configuration.GetValue<bool>("UseInMemoryDB");
+            // var inMemory = Configuration.GetValue<bool>("UseInMemoryDB");
+            var inMemory = UseInMemoryDatabase;
             if (inMemory)
             {
                 var connectionString = Configuration.GetConnectionString("InMemoryDB");

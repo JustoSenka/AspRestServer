@@ -63,7 +63,12 @@ namespace LangServices
         {
             return m_Context.Definitions
                 .Include(p => p.Language)
-                .Include(p => p.Translations);
+                    .Include(p => p.Translations)
+                        .ThenInclude(t => t.Word)
+                            .ThenInclude(d => d.Language)
+                    .Include(p => p.Translations)
+                        .ThenInclude(t => t.Definition)
+                            .ThenInclude(d => d.Language);
         }
 
         public IEnumerable<Language> GetLanguages()
@@ -73,12 +78,23 @@ namespace LangServices
 
         public IEnumerable<Word> GetWords()
         {
-            return m_Context.Words.Include(p => p.Language).Include(p => p.Translations);
+            return m_Context.Words
+                .Include(p => p.Language)
+                .Include(p => p.Translations)
+                    .ThenInclude(t => t.Word)
+                        .ThenInclude(d => d.Language)
+                .Include(p => p.Translations)
+                    .ThenInclude(t => t.Definition)
+                        .ThenInclude(d => d.Language);
         }
 
         public IEnumerable<Translation> GetTranslations()
         {
-            return m_Context.Translations.Include(p => p.Word).Include(p => p.Definition);
+            return m_Context.Translations
+                .Include(t => t.Word)
+                    .ThenInclude(d => d.Language)
+                .Include(t => t.Definition)
+                    .ThenInclude(d => d.Language);
         }
 
         public void UpdateBook(Book obj)

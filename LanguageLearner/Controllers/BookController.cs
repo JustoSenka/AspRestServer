@@ -23,10 +23,27 @@ namespace LanguageLearner.Controllers
             return View(bookModel);
         }
 
+        public IActionResult DisplayWords()
+        {
+            var books = BookService.GetBooks();
+            var bookModel = new BookModel() { Book = books.First() };
+
+            return View(bookModel);
+        }
+
+        public IActionResult AddWords()
+        {
+            var books = BookService.GetBooks();
+            var bookModel = new BookModel() { Book = books.First() };
+
+            return View(bookModel);
+        }
+
+        [HttpPost]
         public IActionResult AddWord()
         {
             // Add word
-            return Index();
+            return RedirectToAction("Index");
         }
 
 

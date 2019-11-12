@@ -1,0 +1,41 @@
+﻿@model BookModel
+
+<partial name="_BookNavigation" />
+
+<h1> @Model.Book.Name </h1>
+
+<div class="container" id="words">
+    <h3>Words in book</h3>
+
+    @foreach (var word in Model.Book.Words)
+    {
+        <div class="grid">
+            <div class="row">
+                <div class="col-lg-6">@word.Text</div>
+                <div class="col-lg-6">@word.Translations?[0].Definition.Text</div>
+            </div>
+        </div>
+    }
+
+    <div id="wordTable">
+        <table class="table-responsive-lg">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Word</th>
+                    <th>Translation</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var word in Model.Book.Words)
+                {
+                    <tr class="wordRow">
+                        <td>@word.ID</td>
+                        <td>@word.Text</td>
+                        <td>@word.Translations?[0].Definition.Text</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

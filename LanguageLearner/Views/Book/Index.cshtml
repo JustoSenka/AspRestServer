@@ -1,31 +1,5 @@
 ﻿@model BookModel
 
-<h1> @Model.Book.Name </h1>
+<partial name="_BookNavigation" />
 
-<div class="container" id="words">
-    <h3>Words in book</h3>
-    <div id="wordTable">
-        <table class="table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Word</th>
-                    <th>Translation</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var word in Model.Book.Words)
-                {
-                    <tr class="wordRow">
-                        <td>@word.ID</td>
-                        <td>@word.Text</td>
-                        <td>@word.Translations?[0].Definition.Text</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div>
-        <a class="btn" role="button" asp-controller="Book" asp-action="AddWord">Add Word</a>
-    </div>
-</div>
+<h1>Select Book to display</h1>

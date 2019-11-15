@@ -39,6 +39,14 @@ namespace LanguageLearner.Controllers
             return View(bookModel);
         }
 
+        public IActionResult EditWord()
+        {
+            var books = BookService.GetBooks();
+            var bookModel = new BookModel() { Book = books.First() };
+
+            return View(bookModel);
+        }
+
         [HttpPost]
         public IActionResult AddWord()
         {

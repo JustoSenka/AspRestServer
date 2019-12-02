@@ -31,7 +31,7 @@ namespace LanguageLearner.Controllers
             return View(bookModel);
         }
 
-        public IActionResult AddWords()
+        public IActionResult EditWord()
         {
             var books = BookService.GetBooks();
             var bookModel = new BookModel() { Book = books.First() };
@@ -39,7 +39,7 @@ namespace LanguageLearner.Controllers
             return View(bookModel);
         }
 
-        public IActionResult EditWord()
+        public IActionResult AddWords()
         {
             var books = BookService.GetBooks();
             var bookModel = new BookModel() { Book = books.First() };

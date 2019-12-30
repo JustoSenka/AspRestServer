@@ -13,6 +13,6 @@ sudo apt-get install dotnet-sdk-2.2=2.2.203-1
 
 sqllocaldb start
 
-
+add-migration <name>
 
 

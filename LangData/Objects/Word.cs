@@ -8,16 +8,19 @@ namespace LangData.Objects
     public class Word
     {
         public Word() { }
-        public Word(string text, Language language)
+        public Word(string text, Language language, string article = "")
         {
             Text = text;
             Language = language;
+            Article = article;
         }
 
         public int ID { get; set; }
 
         [Required]
         public string Text { get; set; }
+
+        public string Article { get; set; }
 
         public Language Language { get; set; }
         public List<Translation> Translations { get; set; }

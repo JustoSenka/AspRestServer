@@ -12,6 +12,17 @@ namespace LangServices
         IEnumerable<Definition> GetDefinitions();
         IEnumerable<Translation> GetTranslations();
 
+        Book GetBook(int id);
+        Word GetWord(int id);
+        Language GetLanguage(int id);
+        Definition GetDefinition(int id);
+        Translation GetTranslation(int id);
+
+        IEnumerable<Book> GetBooksWithData();
+        IEnumerable<Word> GetWordsWithData();
+        IEnumerable<Definition> GetDefinitionsWithData();
+        IEnumerable<Translation> GetTranslationsWithData();
+
         void AddBook(Book obj);
         void AddWord(Word obj);
         void AddLanguage(Language obj);

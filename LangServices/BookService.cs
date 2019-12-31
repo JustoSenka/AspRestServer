@@ -2,6 +2,7 @@
 using LangData.Objects;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LangServices
 {
@@ -12,6 +13,89 @@ namespace LangServices
         public BookService(BookContext context)
         {
             m_Context = context;
+        }
+
+        public IEnumerable<Book> GetBooks() => m_Context.Books;
+        public IEnumerable<Word> GetWords() => m_Context.Words;
+        public IEnumerable<Language> GetLanguages() => m_Context.Languages;
+        public IEnumerable<Definition> GetDefinitions() => m_Context.Definitions;
+        public IEnumerable<Translation> GetTranslations() => m_Context.Translations;
+
+        public Book GetBook(int id) => m_Context.Books
+            .Include(p => p.Words)
+                .ThenInclude(word => word.Translations)
+                    .ThenInclude(t => t.Definition)
+            .Single(e => e.ID == id);
+
+        public Word GetWord(int id) => m_Context.Words
+            .Include(word => word.Language)
+            .Include(word => word.Translations)
+                .ThenInclude(t => t.Definition)
+                    .ThenInclude(d => d.Language)
+            .Include(word => word.Translations)
+                .ThenInclude(t => t.Word)
+                    .ThenInclude(d => d.Language)
+            .Single(e => e.ID == id);
+
+        public Language GetLanguage(int id) => m_Context.Languages.Single(e => e.ID == id);
+
+        public Definition GetDefinition(int id) => m_Context.Definitions
+            .Include(d => d.Language)
+            .Single(e => e.ID == id);
+
+        public Translation GetTranslation(int id) => m_Context.Translations
+            .Include(t => t.Definition)
+                .ThenInclude(d => d.Language)
+            .Include(t => t.Word)
+                .ThenInclude(d => d.Language)
+            .Single(e => e.ID == id);
+
+        public IEnumerable<Book> GetBooksWithData()
+        {
+            return m_Context.Books
+                .Include(p => p.Words)
+                    .ThenInclude(word => word.Language)
+                .Include(p => p.Words)
+                    .ThenInclude(word => word.Translations)
+                        .ThenInclude(t => t.Definition)
+                            .ThenInclude(d => d.Language)
+                .Include(p => p.Words)
+                    .ThenInclude(word => word.Translations)
+                        .ThenInclude(t => t.Word)
+                            .ThenInclude(d => d.Language);
+        }
+
+        public IEnumerable<Definition> GetDefinitionsWithData()
+        {
+            return m_Context.Definitions
+                .Include(p => p.Language)
+                    .Include(p => p.Translations)
+                        .ThenInclude(t => t.Word)
+                            .ThenInclude(d => d.Language)
+                    .Include(p => p.Translations)
+                        .ThenInclude(t => t.Definition)
+                            .ThenInclude(d => d.Language);
+        }
+
+        public IEnumerable<Word> GetWordsWithData()
+        {
+            return m_Context.Words
+                .Include(p => p.Language)
+                .Include(p => p.Translations)
+                    .ThenInclude(t => t.Word)
+                        .ThenInclude(d => d.Language)
+                .Include(p => p.Translations)
+                    .ThenInclude(t => t.Definition)
+                        .ThenInclude(d => d.Language);
+        }
+
+        public IEnumerable<Translation> GetTranslationsWithData()
+        {
+            return m_Context.Translations
+                .Include(t => t.Word)
+                    .ThenInclude(d => d.Language)
+                .Include(t => t.Definition)
+                    .ThenInclude(d => d.Language);
         }
 
         public void AddBook(Book obj)
@@ -42,59 +126,6 @@ namespace LangServices
         {
             m_Context.Translations.Add(obj);
             m_Context.SaveChanges();
-        }
-
-        public IEnumerable<Book> GetBooks()
-        {
-            return m_Context.Books
-                .Include(p => p.Words)
-                    .ThenInclude(word => word.Language)
-                .Include(p => p.Words)
-                    .ThenInclude(word => word.Translations)
-                        .ThenInclude(t => t.Definition)
-                            .ThenInclude(d => d.Language)
-                .Include(p => p.Words)
-                    .ThenInclude(word => word.Translations)
-                        .ThenInclude(t => t.Word)
-                            .ThenInclude(d => d.Language);
-        }
-
-        public IEnumerable<Definition> GetDefinitions()
-        {
-            return m_Context.Definitions
-                .Include(p => p.Language)
-                    .Include(p => p.Translations)
-                        .ThenInclude(t => t.Word)
-                            .ThenInclude(d => d.Language)
-                    .Include(p => p.Translations)
-                        .ThenInclude(t => t.Definition)
-                            .ThenInclude(d => d.Language);
-        }
-
-        public IEnumerable<Language> GetLanguages()
-        {
-            return m_Context.Languages;
-        }
-
-        public IEnumerable<Word> GetWords()
-        {
-            return m_Context.Words
-                .Include(p => p.Language)
-                .Include(p => p.Translations)
-                    .ThenInclude(t => t.Word)
-                        .ThenInclude(d => d.Language)
-                .Include(p => p.Translations)
-                    .ThenInclude(t => t.Definition)
-                        .ThenInclude(d => d.Language);
-        }
-
-        public IEnumerable<Translation> GetTranslations()
-        {
-            return m_Context.Translations
-                .Include(t => t.Word)
-                    .ThenInclude(d => d.Language)
-                .Include(t => t.Definition)
-                    .ThenInclude(d => d.Language);
         }
 
         public void UpdateBook(Book obj)

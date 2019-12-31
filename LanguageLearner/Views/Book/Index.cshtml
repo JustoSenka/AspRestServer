@@ -1,4 +1,4 @@
-﻿@model BookModel
+﻿@model BookIndexModel
 
 @{
     ViewData["Title"] = "Books";
@@ -7,3 +7,8 @@
 <partial name="_BookNavigation" />
 
 <h1>Select Book to display</h1>
+
+@foreach (var book in Model.Books)
+{
+    <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="EditWord">@book.ID - @book.Name</a>
+}

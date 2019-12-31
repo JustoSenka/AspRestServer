@@ -26,11 +26,11 @@ namespace Tests.Utils
         {
             PopulateDatabase.PopulateWithTestData(BookContext);
 
-            Assert.AreEqual(1, BookService.GetBooks().Count(), "Books");
+            Assert.AreEqual(1, BookService.GetBooksWithData().Count(), "Books");
             Assert.AreEqual(3, BookService.GetLanguages().Count(), "Langs");
-            Assert.AreEqual(3, BookService.GetDefinitions().Count(), "Defs");
-            Assert.AreEqual(6, BookService.GetWords().Count(), "Words");
-            Assert.AreEqual(6, BookService.GetTranslations().Count(), "Translations");
+            Assert.AreEqual(3, BookService.GetDefinitionsWithData().Count(), "Defs");
+            Assert.AreEqual(6, BookService.GetWordsWithData().Count(), "Words");
+            Assert.AreEqual(6, BookService.GetTranslationsWithData().Count(), "Translations");
         }
 
         [Test]
@@ -46,11 +46,11 @@ namespace Tests.Utils
             PopulateDatabase.PopulateWithTestData(BookContext);
             PopulateDatabase.ClearDatabase(BookContext);
 
-            Assert.AreEqual(0, BookService.GetBooks().Count(), "Books");
+            Assert.AreEqual(0, BookService.GetBooksWithData().Count(), "Books");
             Assert.AreEqual(0, BookService.GetLanguages().Count(), "Langs");
-            Assert.AreEqual(0, BookService.GetDefinitions().Count(), "Defs");
-            Assert.AreEqual(0, BookService.GetWords().Count(), "Words");
-            Assert.AreEqual(0, BookService.GetTranslations().Count(), "Translations");
+            Assert.AreEqual(0, BookService.GetDefinitionsWithData().Count(), "Defs");
+            Assert.AreEqual(0, BookService.GetWordsWithData().Count(), "Words");
+            Assert.AreEqual(0, BookService.GetTranslationsWithData().Count(), "Translations");
         }
     }
 }

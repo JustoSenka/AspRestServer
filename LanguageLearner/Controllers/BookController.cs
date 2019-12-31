@@ -7,17 +7,25 @@ using System.Linq;
 
 namespace LanguageLearner.Controllers
 {
-    public class BookController : Controller
+    public class BooksController : Controller
     {
         private readonly IBookService BookService;
-        public BookController(IBookService BookService)
+        public BooksController(IBookService BookService)
         {
             this.BookService = BookService;
         }
         
         public IActionResult Index()
         {
-            var books = BookService.GetBooks();
+            var books = BookService.GetBooksWithData().ToArray();
+            var bookModel = new BookIndexModel() { Books = books };
+
+            return View(bookModel);
+        }
+
+        public IActionResult Book(int index)
+        {
+            var books = BookService.GetBooksWithData();
             var bookModel = new BookModel() { Book = books.First() };
 
             return View(bookModel);
@@ -25,7 +33,7 @@ namespace LanguageLearner.Controllers
 
         public IActionResult DisplayWords()
         {
-            var books = BookService.GetBooks();
+            var books = BookService.GetBooksWithData();
             var bookModel = new BookModel() { Book = books.First() };
 
             return View(bookModel);
@@ -33,7 +41,7 @@ namespace LanguageLearner.Controllers
 
         public IActionResult EditWord()
         {
-            var books = BookService.GetBooks();
+            var books = BookService.GetBooksWithData();
             var bookModel = new BookModel() { Book = books.First() };
 
             return View(bookModel);
@@ -41,7 +49,7 @@ namespace LanguageLearner.Controllers
 
         public IActionResult AddWords()
         {
-            var books = BookService.GetBooks();
+            var books = BookService.GetBooksWithData();
             var bookModel = new BookModel() { Book = books.First() };
 
             return View(bookModel);

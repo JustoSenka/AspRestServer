@@ -23,11 +23,11 @@ namespace LangServices
         IEnumerable<Definition> GetDefinitionsWithData();
         IEnumerable<Translation> GetTranslationsWithData();
 
-        void AddBook(Book obj);
-        void AddWord(Word obj);
-        void AddLanguage(Language obj);
-        void AddDefinition(Definition obj);
-        void AddTranslation(Translation obj);
+        Book AddBook(Book obj);
+        Word AddWord(Word obj);
+        Language AddLanguage(Language obj);
+        Definition AddDefinition(Definition obj);
+        Translation AddTranslation(Translation obj);
 
         void RemoveBook(Book obj);
         void RemoveWord(Word obj);

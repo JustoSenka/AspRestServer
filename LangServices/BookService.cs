@@ -98,34 +98,39 @@ namespace LangServices
                     .ThenInclude(d => d.Language);
         }
 
-        public void AddBook(Book obj)
+        public Book AddBook(Book obj)
         {
-            m_Context.Books.Add(obj);
+            var entry = m_Context.Books.Add(obj);
             m_Context.SaveChanges();
+            return entry.Entity;
         }
 
-        public void AddDefinition(Definition obj)
+        public Definition AddDefinition(Definition obj)
         {
-            m_Context.Definitions.Add(obj);
+            var entry = m_Context.Definitions.Add(obj);
             m_Context.SaveChanges();
+            return entry.Entity;
         }
 
-        public void AddLanguage(Language obj)
+        public Language AddLanguage(Language obj)
         {
-            m_Context.Languages.Add(obj);
+            var entry = m_Context.Languages.Add(obj);
             m_Context.SaveChanges();
+            return entry.Entity;
         }
 
-        public void AddWord(Word obj)
+        public Word AddWord(Word obj)
         {
-            m_Context.Words.Add(obj);
+            var entry = m_Context.Words.Add(obj);
             m_Context.SaveChanges();
+            return entry.Entity;
         }
 
-        public void AddTranslation(Translation obj)
+        public Translation AddTranslation(Translation obj)
         {
-            m_Context.Translations.Add(obj);
+            var entry = m_Context.Translations.Add(obj);
             m_Context.SaveChanges();
+            return entry.Entity;
         }
 
         public void UpdateBook(Book obj)

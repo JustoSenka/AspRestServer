@@ -1,4 +1,5 @@
-﻿using LangServices;
+﻿using LangData.Objects;
+using LangServices;
 using LanguageLearner.Models;
 using LanguageLearner.Models.Books;
 using Microsoft.AspNetCore.Mvc;
@@ -26,13 +27,25 @@ namespace LanguageLearner.Controllers
         public IActionResult Book(int id)
         {
             var book = BookService.GetBook(id);
-            if (book == default)
-                return RedirectToAction("Error");
+            /*if (book == default)
+                return RedirectToAction("Error");*/
 
             var bookModel = new BookModel() { Book = book };
             return View(bookModel);
         }
 
+        public IActionResult NewBook()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CompleteNewBook(string name, string description)
+        {
+            var book = new Book(name, description);
+            book = BookService.AddBook(book);
+            return RedirectToAction("Book", new { id = book.ID });
+        }
 
         //---
 

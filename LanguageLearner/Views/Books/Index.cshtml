@@ -8,6 +8,29 @@
 
 <h1>Select Book to display</h1>
 
+
+
+<div class="panel-group" id="accordion">
+    @foreach (var book in Model.Books)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse_@book.ID">
+                        @book.ID: @book.Name
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse_@book.ID" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <button id="button_id">Button</button>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
 @foreach (var book in Model.Books)
 {
     <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Book" asp-route-id="@book.ID">@book.ID - @book.Name</a>

@@ -8,16 +8,26 @@ namespace LangData.Objects
     public class Book
     {
         public Book() { }
-        public Book(string name, List<Word> words = null)
+        public Book(string name, string description, List <Word> words = null)
         {
             Name = name;
             Words = words;
+            Description = description;
+
+            if (Words == null)
+                Words = new List<Word>();
+
+            WordCount = Words.Count;
         }
 
         public int ID { get; set; }
 
         [Required]
         public string Name { get; set; }
+
+        public int WordCount { get; set; }
+        public string Description{ get; set; }
+
         public List<Word> Words { get; set; }
     }
 }

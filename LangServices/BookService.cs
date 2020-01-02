@@ -25,7 +25,7 @@ namespace LangServices
             .Include(p => p.Words)
                 .ThenInclude(word => word.Translations)
                     .ThenInclude(t => t.Definition)
-            .Single(e => e.ID == id);
+            .SingleOrDefault(e => e.ID == id);
 
         public Word GetWord(int id) => m_Context.Words
             .Include(word => word.Language)
@@ -35,20 +35,20 @@ namespace LangServices
             .Include(word => word.Translations)
                 .ThenInclude(t => t.Word)
                     .ThenInclude(d => d.Language)
-            .Single(e => e.ID == id);
+            .SingleOrDefault(e => e.ID == id);
 
-        public Language GetLanguage(int id) => m_Context.Languages.Single(e => e.ID == id);
+        public Language GetLanguage(int id) => m_Context.Languages.SingleOrDefault(e => e.ID == id);
 
         public Definition GetDefinition(int id) => m_Context.Definitions
             .Include(d => d.Language)
-            .Single(e => e.ID == id);
+            .SingleOrDefault(e => e.ID == id);
 
         public Translation GetTranslation(int id) => m_Context.Translations
             .Include(t => t.Definition)
                 .ThenInclude(d => d.Language)
             .Include(t => t.Word)
                 .ThenInclude(d => d.Language)
-            .Single(e => e.ID == id);
+            .SingleOrDefault(e => e.ID == id);
 
         public IEnumerable<Book> GetBooksWithData()
         {

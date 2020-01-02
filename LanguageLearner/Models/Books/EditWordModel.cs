@@ -1,8 +1,8 @@
 using LangData.Objects;
 
-namespace LanguageLearner.Models
+namespace LanguageLearner.Models.Books
 {
-    public class BookModel
+    public class EditWordModel
     {
         public Book Book { get; set; }
     }

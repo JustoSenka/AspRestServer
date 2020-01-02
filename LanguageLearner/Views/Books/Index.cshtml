@@ -10,5 +10,5 @@
 
 @foreach (var book in Model.Books)
 {
-    <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="EditWord">@book.ID - @book.Name</a>
+    <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Book" asp-route-id="@book.ID">@book.ID - @book.Name</a>
 }

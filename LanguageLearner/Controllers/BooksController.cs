@@ -1,6 +1,6 @@
-﻿using LangData.Objects;
-using LangServices;
+﻿using LangServices;
 using LanguageLearner.Models;
+using LanguageLearner.Models.Books;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Linq;
@@ -14,22 +14,28 @@ namespace LanguageLearner.Controllers
         {
             this.BookService = BookService;
         }
-        
+
         public IActionResult Index()
         {
-            var books = BookService.GetBooksWithData().ToArray();
+            var books = BookService.GetBooks().ToArray();
             var bookModel = new BookIndexModel() { Books = books };
 
             return View(bookModel);
         }
 
-        public IActionResult Book(int index)
+        public IActionResult Book(int id)
         {
-            var books = BookService.GetBooksWithData();
-            var bookModel = new BookModel() { Book = books.First() };
+            var book = BookService.GetBook(id);
+            if (book == default)
+                return RedirectToAction("Error");
 
+            var bookModel = new BookModel() { Book = book };
             return View(bookModel);
         }
+
+
+        //---
+
 
         public IActionResult DisplayWords()
         {

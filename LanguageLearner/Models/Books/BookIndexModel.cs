@@ -1,6 +1,6 @@
 using LangData.Objects;
 
-namespace LanguageLearner.Models
+namespace LanguageLearner.Models.Books
 {
     public class BookIndexModel
     {

@@ -1,7 +1,16 @@
-﻿
+﻿@model AddWordsModel
+
 @{
     ViewData["Title"] = "Words";
 }
+
+<script>
+    function check(self) {
+        var isChecked = $(self).is(":checked");
+        // $("#TestCheckbox").isEnabled = isChecked;
+        document.getElementById("TestCheckbox").isEnabled = isChecked;
+    }
+</script>
 
 <partial name="_WordNavigation" />
 
@@ -11,6 +20,22 @@
 
 <div class="container">
     <form asp-controller="Words" asp-action="AddWordsComplete" method="post">
+        <div class="form-group row align-items-center">
+            <div class="col-sm-12">
+                <input class="form-check-input" type="checkbox" asp-for="TreatFirstWordAsArticle" onchange="check(this)">
+                <label class="form-check-label" for="TreatFirstWordAsArticle">
+                    Treat First Word As Article
+                </label>
+            </div>
+
+            <div class="col-sm-12">
+                <input class="form-check-input" type="checkbox" id="TestCheckbox" onchange="check(this)">
+                <label class="form-check-label" for="TreatFirstWordAsArticle">
+                    Treat First Word As Article
+                </label>
+            </div>
+        </div>
+
         <div class="form-group row">
             <div class="col-sm-12">
                 <button type="submit" class="btn btn-success">Add</button>

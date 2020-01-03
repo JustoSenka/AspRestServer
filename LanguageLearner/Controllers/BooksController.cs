@@ -47,41 +47,6 @@ namespace LanguageLearner.Controllers
             return RedirectToAction("Book", new { id = book.ID });
         }
 
-        //---
-
-
-        public IActionResult DisplayWords()
-        {
-            var books = BookService.GetBooksWithData();
-            var bookModel = new BookModel() { Book = books.First() };
-
-            return View(bookModel);
-        }
-
-        public IActionResult EditWord()
-        {
-            var books = BookService.GetBooksWithData();
-            var bookModel = new BookModel() { Book = books.First() };
-
-            return View(bookModel);
-        }
-
-        public IActionResult AddWords()
-        {
-            var books = BookService.GetBooksWithData();
-            var bookModel = new BookModel() { Book = books.First() };
-
-            return View(bookModel);
-        }
-
-        [HttpPost]
-        public IActionResult AddWord()
-        {
-            // Add word
-            return RedirectToAction("Index");
-        }
-
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

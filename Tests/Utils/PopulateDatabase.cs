@@ -71,7 +71,7 @@ namespace Tests.Utils
             words[4].Translations = new List<Translation>() { translations[4] };
             words[5].Translations = new List<Translation>() { translations[5] };
             
-            var book = new Book("Book 0", words.ToList());
+            var book = new Book("Book 0", "", words.ToList());
 
             BookContext.Books.Add(book);
             BookContext.SaveChanges();

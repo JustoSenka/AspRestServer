@@ -1,0 +1,41 @@
+﻿@model LanguagesModel
+
+@{
+    ViewData["Title"] = "Languages";
+}
+
+<div class="container">
+    <form asp-controller="Languages" asp-action="EditLanguages" method="post">
+        <div class="form-group row">
+            <label for="languageName" class="col-sm-2 col-form-label">Language Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="languageName" name="languageName" placeholder="Name">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <button type="submit" name="buttonName" value="New" class="btn btn-sm btn-primary">Add new Language</button>
+            </div>
+        </div>
+
+        <h3>Available Languages: @Model.AvailableLanguages.Count()</h3>
+
+        @foreach (var lang in Model.AvailableLanguages)
+        {
+            <div class="grid">
+                <div class="row">
+                    <div class="col-sm-1">@lang.ID</div>
+                    <div class="col-sm-9">
+                        <h6>@lang.Name</h6>
+                    </div>
+                    <div class="col-sm-1">
+                        <button type="submit" name="buttonName" value="Rename_@lang.ID" class="btn btn-sm">Rename</button>
+                    </div>
+                    <div class="col-sm-1">
+                        <button type="submit" name="buttonName" value="Delete_@lang.ID" class="btn btn-danger btn-sm">Delete</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </form>
+</div>

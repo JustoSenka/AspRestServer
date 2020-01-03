@@ -1,0 +1,23 @@
+﻿@model LanguagePickerModel;
+
+<div class="form-group row">
+    <div class="col-sm-6">
+        <label for="LanguageFromID">Select Language From</label>
+        <select class="custom-select" asp-for="LanguageFromID">
+            @foreach (var lang in Model.AvailableLanguages)
+            {
+                <option value="@lang.ID">@lang.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-sm-6">
+        <label for="LanguageToID">Select Language To</label>
+        <select class="custom-select" asp-for="LanguageToID">
+            @foreach (var lang in Model.AvailableLanguages)
+            {
+                <option value="@lang.ID">@lang.Name</option>
+            }
+        </select>
+    </div>
+</div>

@@ -1,4 +1,5 @@
-﻿using LangServices;
+﻿using LangData.Objects;
+using LangServices;
 using LanguageLearner.Models;
 using LanguageLearner.Models.Words;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,30 @@ namespace LanguageLearner.Controllers
         {
             var model = new WordsModel()
             {
-                AvailableLanguages = BookService.GetLanguages().ToArray()
+                AvailableLanguages = BookService.GetLanguages().ToArray(),
+            };
+
+            return View(model);
+        }
+
+        // Redirecting to Show so language ids appear inside url.
+        public IActionResult ShowRedirect(WordsModel WordsModel)
+        {
+            return RedirectToAction("Show", new { WordsModel.LanguageFromID, WordsModel.LanguageToID });
+        }
+        public IActionResult Show(int LanguageFromID, int LanguageToID)
+        {
+            var model = new WordsModel()
+            {
+                LanguageFromID = LanguageFromID,
+                LanguageToID = LanguageToID,
+
+                From = BookService.GetLanguage(LanguageFromID),
+                To = BookService.GetLanguage(LanguageToID),
+
+                AvailableLanguages = BookService.GetLanguages().ToArray(),
+                Definitions = new Definition[] { new Definition() { Text = "example def" } },
+                Words = new Word[] { new Word() { Text = "example word" } },
             };
 
             return View(model);
@@ -27,7 +51,12 @@ namespace LanguageLearner.Controllers
 
         public IActionResult AddWords()
         {
-            return View();
+            var model = new AddWordsModel()
+            {
+                AvailableLanguages = BookService.GetLanguages().ToArray(),
+            };
+
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

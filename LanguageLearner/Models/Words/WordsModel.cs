@@ -1,14 +1,10 @@
 ﻿using LangData.Objects;
+using LanguageLearner.Models.Shared;
 
 namespace LanguageLearner.Models.Words
 {
-    public class WordsModel
+    public class WordsModel : LanguagePickerModel
     {
-        public Language[] AvailableLanguages { get; set; }
-
-        public Language From { get; set; }
-        public Language To { get; set; }
-
         public Word[] Words { get; set; }
         public Definition[] Definitions { get; set; }
     }

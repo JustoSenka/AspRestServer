@@ -1,17 +1,16 @@
-﻿@model BookModel
+﻿@model WordsModel;
 
 @{
-    ViewData["Title"] = "Books";
+    ViewData["Title"] = "Words";
 }
 
-<partial name="_BookNavigation" />
-
-<h1> @Model.Book.Name </h1>
+<partial name="Index" />
 
 <div class="container">
-    <h3>Words in book</h3>
+    <br>
+    <h3>Words: @Model.Words.Count()</h3>
 
-    @foreach (var word in Model.Book?.Words)
+    @foreach (var (word, def) in Model.Words.Zip(Model.Definitions, (w, d) => (w, d)))
     {
     <div class="grid">
         <div class="row">
@@ -19,7 +18,7 @@
             <div class="col-sm-5">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="EditWord">@word.Text</a>
             </div>
-            <div class="col-sm-6">@word.Translations?[0].Definition.Text</div>
+            <div class="col-sm-6">@def.Text</div>
         </div>
     </div>
     }

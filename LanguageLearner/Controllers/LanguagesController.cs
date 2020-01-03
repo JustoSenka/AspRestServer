@@ -24,21 +24,35 @@ namespace LanguageLearner.Controllers
             return View(model);
         }
 
+        public IActionResult ErrorIndex(string errorMsg)
+        {
+            var langs = BookService.GetLanguages().ToArray();
+            var model = new LanguagesModel() { AvailableLanguages = langs, Error = errorMsg };
+
+            return View("Index", model);
+        }
+
         [HttpPost]
         public IActionResult EditLanguages(string buttonName, string languageName)
         {
             if (buttonName == "New")
             {
+                if (string.IsNullOrEmpty(languageName))
+                    return RedirectToAction("ErrorIndex", new { errorMsg = "Language name cannot be empty." });
+
                 var lang = new Language(languageName);
                 lang = BookService.AddLanguage(lang);
             }
             else
-            {
+            {                
                 var id = int.Parse(buttonName.Split("_")[1]);
                 var lang = BookService.GetLanguage(id);
 
                 if (buttonName.StartsWith("Rename"))
                 {
+                    if (string.IsNullOrEmpty(languageName))
+                        return RedirectToAction("ErrorIndex", new { errorMsg = "Language name cannot be empty." });
+
                     lang.Name = languageName;
                     BookService.UpdateLanguage(lang);
                 }
@@ -48,28 +62,6 @@ namespace LanguageLearner.Controllers
                 }
             }
 
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public IActionResult AddNewLanguage(string name)
-        {
-            var lang = new Language(name);
-            lang = BookService.AddLanguage(lang);
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public IActionResult RemoveLanguage(int id)
-        {
-            BookService.RemoveLanguage(BookService.GetLanguage(id));
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public IActionResult RenameLanguage(int id, string name)
-        {
-            BookService.RemoveLanguage(BookService.GetLanguage(id));
             return RedirectToAction("Index");
         }
 

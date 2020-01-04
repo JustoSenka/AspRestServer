@@ -3,6 +3,8 @@ using LangServices;
 using LanguageLearner.Models;
 using LanguageLearner.Models.Words;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -42,65 +44,92 @@ namespace LanguageLearner.Controllers
                 To = BookService.GetLanguage(LanguageToID),
 
                 AvailableLanguages = BookService.GetLanguages().ToArray(),
-                Definitions = new Definition[] { new Definition() { Text = "example def" } },
-                Words = new Word[] { new Word() { Text = "example word" } },
             };
+
+
+            var translations = BookService.GetTranslationsWithData().Where(t => t.Word.Language.ID == LanguageFromID && t.Definition.Language.ID == LanguageToID);
+            model.Definitions = translations.Select(t => t.Definition).ToArray();
+            model.Words = translations.Select(t => t.Word).ToArray();
 
             return View(model);
         }
 
-        public IActionResult AddWords()
+        public IActionResult AddWords(AddWordsModel AddWordsModel)
         {
-            var model = new AddWordsModel()
-            {
-                AvailableLanguages = BookService.GetLanguages().ToArray(),
-            };
+            var model = AddWordsModel ?? new AddWordsModel();
+
+            model.AvailableLanguages = BookService.GetLanguages().ToArray();
 
             return View(model);
         }
 
-        [HttpPost]
-        public IActionResult AddWordsSingle()
+        public IActionResult AddWordsSingle(AddWordsModel AddWordsModel)
         {
-            var model = new AddWordsModel()
-            {
-                AvailableLanguages = BookService.GetLanguages().ToArray(),
-            };
+            AddWordsModel.InfoMsg = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
+                new[] { AddWordsModel.SingleWordText },
+                new[] { AddWordsModel.SingleDefinitionText });
 
-            return RedirectToAction("AddWords"); 
+            return View("AddWords", AddWordsModel);
         }
 
-        [HttpPost]
-        public IActionResult AddWordsArea()
+        public IActionResult AddWordsArea(AddWordsModel AddWordsModel)
         {
-            var model = new AddWordsModel()
-            {
-                AvailableLanguages = BookService.GetLanguages().ToArray(),
-            };
+            var lines = AddWordsModel.WordsCombinedArea.Split(Environment.NewLine);
+            AddWordsModel.InfoMsg = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
+                lines.Select(s => s.Split("-")[0].Trim()),
+                lines.Select(s => s.Split("-")[1].Trim()));
 
-            return RedirectToAction("AddWords");
+            return View("AddWords", AddWordsModel);
         }
 
-        [HttpPost]
-        public IActionResult AddWordsSeparateArea()
+        public IActionResult AddWordsSeparateArea(AddWordsModel AddWordsModel)
         {
-            var model = new AddWordsModel()
-            {
-                AvailableLanguages = BookService.GetLanguages().ToArray(),
-            };
+            AddWordsModel.InfoMsg = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
+                AddWordsModel.WordsArea3.Split(Environment.NewLine),
+                AddWordsModel.DefinitionsArea3.Split(Environment.NewLine));
 
-            return RedirectToAction("AddWords");
+            return View("AddWords", AddWordsModel);
         }
 
-        [HttpPost]
-        public IActionResult AddWordsSeparateAreaDescription()
+        public IActionResult AddWordsSeparateAreaDescription(AddWordsModel AddWordsModel)
         {
-            var model = new AddWordsModel()
-            {
-                AvailableLanguages = BookService.GetLanguages().ToArray(),
-            };
+            AddWordsModel.InfoMsg = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
+                AddWordsModel.WordsArea4.Split(Environment.NewLine),
+                AddWordsModel.DefinitionsArea4.Split(Environment.NewLine),
+                AddWordsModel.DescriptionsArea4.Split(Environment.NewLine));
 
-            return RedirectToAction("AddWords");
+            return View("AddWords", AddWordsModel);
+        }
+
+        private string AddWords(int languageFromID, int languageToID, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
+        {
+            return AddWords(BookService.GetLanguage(languageFromID), BookService.GetLanguage(languageToID), words, definitions, descriptions);
+        }
+
+        private string AddWords(Language from, Language to, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
+        {
+            var count1 = words?.Count();
+            var count2 = definitions?.Count();
+            var count3 = descriptions?.Count();
+
+            var isInputCorrect = count1 != null && count1 == count2 && (count1 == count3 || count3 == null);
+
+            if (!isInputCorrect)
+                return "Incorrect word format";
+
+            IEnumerable<(string Word, string Definition, string Description)> collection = descriptions != null ?
+                words.Zip(definitions, (w, d) => (w, d)).Zip(descriptions, (tuple, ds) => (tuple.w, tuple.d, ds)) :
+                words.Zip(definitions, (w, d) => (w, d, ""));
+
+            CreateTranslations(from, to, collection);
+
+            return $"Successfully added {count1} words!";
+        }
+
+        private void CreateTranslations(Language from, Language to, IEnumerable<(string Word, string Definition, string Description)> collection)
+        {
+            var translations = collection.Select(t => new Translation(new Word(t.Word, from), new Definition(t.Definition, to, t.Description))).ToArray();
+            BookService.AddTranslations(translations);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -29,6 +29,12 @@ namespace LangServices
         Definition AddDefinition(Definition obj);
         Translation AddTranslation(Translation obj);
 
+        void AddBooks(IEnumerable<Book> objs);
+        void AddWords(IEnumerable<Word> objs);
+        void AddLanguages(IEnumerable<Language> objs);
+        void AddDefinitions(IEnumerable<Definition> objs);
+        void AddTranslations(IEnumerable<Translation> objs);
+
         void RemoveBook(Book obj);
         void RemoveWord(Word obj);
         void RemoveLanguage(Language obj);

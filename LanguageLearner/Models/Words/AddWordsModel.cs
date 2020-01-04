@@ -4,6 +4,8 @@ namespace LanguageLearner.Models.Words
 {
     public class AddWordsModel : LanguagePickerModel
     {
+        public string InfoMsg { get; set; }
+
         public bool TreatFirstWordAsArticle { get; set; }
 
         // add1

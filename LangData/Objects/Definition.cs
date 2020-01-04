@@ -8,23 +8,21 @@ namespace LangData.Objects
     public class Definition
     {
         public Definition() { }
-        public Definition(string text, Language language, string examples = "", string alternateText = "")
+        public Definition(string text, Language language, string description = "")
         {
             Text = text;
             Language = language;
-            Examples = examples;
-            AlternateText = alternateText;
+            Description = description;
         }
 
         public int ID { get; set; }
 
         [Required]
         public string Text { get; set; }
-        public string AlternateText { get; set; }
-
-        public string Examples { get; set; }
-
+        [Required]
         public Language Language { get; set; }
+
+        public string Description { get; set; }
         public List<Translation> Translations { get; set; }
     }
 }

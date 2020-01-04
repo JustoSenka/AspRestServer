@@ -133,6 +133,36 @@ namespace LangServices
             return entry.Entity;
         }
 
+        public void AddBooks(IEnumerable<Book> objs)
+        {
+            m_Context.Books.AddRange(objs);
+            m_Context.SaveChanges();
+        }
+
+        public void AddWords(IEnumerable<Word> objs)
+        {
+            m_Context.Words.AddRange(objs);
+            m_Context.SaveChanges();
+        }
+
+        public void AddLanguages(IEnumerable<Language> objs)
+        {
+            m_Context.Languages.AddRange(objs);
+            m_Context.SaveChanges();
+        }
+
+        public void AddDefinitions(IEnumerable<Definition> objs)
+        {
+            m_Context.Definitions.AddRange(objs);
+            m_Context.SaveChanges();
+        }
+
+        public void AddTranslations(IEnumerable<Translation> objs)
+        {
+            m_Context.Translations.AddRange(objs);
+            m_Context.SaveChanges();
+        }
+
         public void UpdateBook(Book obj)
         {
             m_Context.Books.Update(obj);

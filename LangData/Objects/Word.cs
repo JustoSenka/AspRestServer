@@ -20,9 +20,13 @@ namespace LangData.Objects
         [Required]
         public string Text { get; set; }
 
-        public string Article { get; set; }
-
+        [Required]
         public Language Language { get; set; }
+
+        public string Article { get; set; }
+        public string Pronaunciation { get; set; }
+        public string AlternateSpelling { get; set; }
+
         public List<Translation> Translations { get; set; }
     }
 }

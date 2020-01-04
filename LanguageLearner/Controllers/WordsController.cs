@@ -2,6 +2,7 @@
 using LangServices;
 using LanguageLearner.Models;
 using LanguageLearner.Models.Words;
+using LanguageLearner.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -60,14 +61,40 @@ namespace LanguageLearner.Controllers
 
             model.AvailableLanguages = BookService.GetLanguages().ToArray();
 
+            // This means we came here from submitting a form while adding words. Process addition
+            if (!string.IsNullOrEmpty(AddWordsModel.SubmitButtonName))
+            {
+                if (AddWordsModel.SubmitButtonName == "1")
+                    return AddWordsSingle(AddWordsModel);
+
+                else if (AddWordsModel.SubmitButtonName == "2")
+                    return AddWordsArea(AddWordsModel);
+
+                else if (AddWordsModel.SubmitButtonName == "3")
+                    return AddWordsSeparateArea(AddWordsModel);
+
+                else if (AddWordsModel.SubmitButtonName == "4")
+                    return AddWordsSeparateAreaDescription(AddWordsModel);
+
+                else
+                {
+                    Debug.WriteLine("Incorrect button name: " + AddWordsModel.SubmitButtonName);
+                    AddWordsModel.LogMessage = "[Error] Incorrect button name. No words were added.";
+                    AddWordsModel.LogType = LogType.Error;
+                }
+            }
+
             return View(model);
         }
 
         public IActionResult AddWordsSingle(AddWordsModel AddWordsModel)
         {
-            AddWordsModel.InfoMsg = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
+            var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
                 new[] { AddWordsModel.SingleWordText },
                 new[] { AddWordsModel.SingleDefinitionText });
+
+            AddWordsModel.LogMessage = log.Msg;
+            AddWordsModel.LogType = log.LogType;
 
             return View("AddWords", AddWordsModel);
         }
@@ -75,38 +102,47 @@ namespace LanguageLearner.Controllers
         public IActionResult AddWordsArea(AddWordsModel AddWordsModel)
         {
             var lines = AddWordsModel.WordsCombinedArea.Split(Environment.NewLine);
-            AddWordsModel.InfoMsg = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
+            var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
                 lines.Select(s => s.Split("-")[0].Trim()),
                 lines.Select(s => s.Split("-")[1].Trim()));
+
+            AddWordsModel.LogMessage = log.Msg;
+            AddWordsModel.LogType = log.LogType;
 
             return View("AddWords", AddWordsModel);
         }
 
         public IActionResult AddWordsSeparateArea(AddWordsModel AddWordsModel)
         {
-            AddWordsModel.InfoMsg = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
+            var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
                 AddWordsModel.WordsArea3.Split(Environment.NewLine),
                 AddWordsModel.DefinitionsArea3.Split(Environment.NewLine));
+
+            AddWordsModel.LogMessage = log.Msg;
+            AddWordsModel.LogType = log.LogType;
 
             return View("AddWords", AddWordsModel);
         }
 
         public IActionResult AddWordsSeparateAreaDescription(AddWordsModel AddWordsModel)
         {
-            AddWordsModel.InfoMsg = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
+            var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
                 AddWordsModel.WordsArea4.Split(Environment.NewLine),
                 AddWordsModel.DefinitionsArea4.Split(Environment.NewLine),
                 AddWordsModel.DescriptionsArea4.Split(Environment.NewLine));
 
+            AddWordsModel.LogMessage = log.Msg;
+            AddWordsModel.LogType= log.LogType;
+
             return View("AddWords", AddWordsModel);
         }
 
-        private string AddWords(int languageFromID, int languageToID, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
+        private (string Msg, LogType LogType) AddWords(int languageFromID, int languageToID, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
         {
             return AddWords(BookService.GetLanguage(languageFromID), BookService.GetLanguage(languageToID), words, definitions, descriptions);
         }
 
-        private string AddWords(Language from, Language to, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
+        private (string Msg, LogType LogType) AddWords(Language from, Language to, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
         {
             var count1 = words?.Count();
             var count2 = definitions?.Count();
@@ -115,7 +151,7 @@ namespace LanguageLearner.Controllers
             var isInputCorrect = count1 != null && count1 == count2 && (count1 == count3 || count3 == null);
 
             if (!isInputCorrect)
-                return "Incorrect word format";
+                return ("Incorrect word format", LogType.Error);
 
             IEnumerable<(string Word, string Definition, string Description)> collection = descriptions != null ?
                 words.Zip(definitions, (w, d) => (w, d)).Zip(descriptions, (tuple, ds) => (tuple.w, tuple.d, ds)) :
@@ -123,7 +159,7 @@ namespace LanguageLearner.Controllers
 
             CreateTranslations(from, to, collection);
 
-            return $"Successfully added {count1} words!";
+            return ($"Successfully added {count1} words!", LogType.Success);
         }
 
         private void CreateTranslations(Language from, Language to, IEnumerable<(string Word, string Definition, string Description)> collection)

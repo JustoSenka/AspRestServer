@@ -14,30 +14,38 @@
 
 <partial name="_WordNavigation" />
 
-<div class="container">
-    <partial name="_LanguagePicker" />
-</div>
+<form asp-controller="Words" asp-action="AddWords" method="post">
 
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#add1">Single Word</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#add2">Text Area</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#add3">Separate Text Areas</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#add4">Separate Text Areas With Descriptions</a>
-    </li>
-</ul>
+    @if (!string.IsNullOrEmpty(Model.LogMessage))
+    {
+        <div class="@Model.LogType.AlertClass()" role="alert">
+            @Model.LogMessage
+        </div>
+    }
 
-<br>
-<div class="tab-content">
-    <div id="add1" class="tab-pane fade show active">
-        <form asp-controller="Words" asp-action="AddWordsSingle" method="post">
-            <button type="submit" class="btn btn-success">Complete</button>
+    <div class="container">
+        <partial name="_LanguagePicker" />
+    </div>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#add1">Single Word</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#add2">Text Area</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#add3">Separate Text Areas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#add4">Separate Text Areas With Descriptions</a>
+        </li>
+    </ul>
+
+    <br>
+    <div class="tab-content">
+        <div id="add1" class="tab-pane fade show active">
+            <button type="submit" class="btn btn-success" id="SubmitButtonName" name="SubmitButtonName" value="1">Complete</button>
 
             <div class="form-group row">
                 <div class="col">
@@ -50,24 +58,20 @@
                     <input type="text" class="form-control" asp-for="SingleDefinitionText" />
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
 
-    <div id="add2" class="tab-pane fade">
-        <form asp-controller="Words" asp-action="AddWordsArea" method="post">
-            <button type="submit" class="btn btn-success">Complete</button>
+        <div id="add2" class="tab-pane fade">
+            <button type="submit" class="btn btn-success" id="SubmitButtonName" name="SubmitButtonName" value="2">Complete</button>
             <div class="form-group row">
                 <div class="col">
                     <label for="WordsCombinedArea" class="col-form-label">Word - Translation</label>
                     <textarea type="text" rows="25" class="form-control" asp-for="WordsCombinedArea"></textarea>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
 
-    <div id="add3" class="tab-pane fade">
-        <form asp-controller="Words" asp-action="AddWordsSeparateArea" method="post">
-            <button type="submit" class="btn btn-success">Complete</button>
+        <div id="add3" class="tab-pane fade">
+            <button type="submit" class="btn btn-success" id="SubmitButtonName" name="SubmitButtonName" value="3">Complete</button>
 
             <div class="form-group row">
                 <div class="col">
@@ -80,12 +84,10 @@
                     <textarea type="text" rows="25" class="form-control" asp-for="DefinitionsArea3"></textarea>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
 
-    <div id="add4" class="tab-pane fade">
-        <form asp-controller="Words" asp-action="AddWordsSeparateAreaDescription" method="post">
-            <button type="submit" class="btn btn-success">Complete</button>
+        <div id="add4" class="tab-pane fade">
+            <button type="submit" class="btn btn-success" id="SubmitButtonName" name="SubmitButtonName" value="4">Complete</button>
 
             <div class="form-group row">
                 <div class="col">
@@ -103,6 +105,6 @@
                     <textarea type="text" rows="25" class="form-control" asp-for="DescriptionsArea4"></textarea>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>

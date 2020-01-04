@@ -1,12 +1,16 @@
 ﻿using LanguageLearner.Models.Shared;
+using LanguageLearner.Utilities;
 
 namespace LanguageLearner.Models.Words
 {
     public class AddWordsModel : LanguagePickerModel
     {
-        public string InfoMsg { get; set; }
+        public LogType LogType { get; set; }
+        public string LogMessage { get; set; }
 
         public bool TreatFirstWordAsArticle { get; set; }
+
+        public string SubmitButtonName { get; set; }
 
         // add1
         public string SingleWordText { get; set; }

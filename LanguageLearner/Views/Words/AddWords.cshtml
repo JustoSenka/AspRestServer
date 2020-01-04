@@ -16,16 +16,8 @@
 
 <form asp-controller="Words" asp-action="AddWords" method="post">
 
-    @if (!string.IsNullOrEmpty(Model.LogMessage))
-    {
-        <div class="@Model.LogType.AlertClass()" role="alert">
-            @Model.LogMessage
-        </div>
-    }
-
-    <div class="container">
-        <partial name="_LanguagePicker" />
-    </div>
+    <partial name="_AlertMessage" />
+    <partial name="_LanguagePicker" />
 
     <ul class="nav nav-tabs">
         <li class="nav-item">

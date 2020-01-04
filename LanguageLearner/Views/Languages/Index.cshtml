@@ -21,13 +21,8 @@
             <label for="languageName" class="col-form-label">Language Name</label>
             <input type="text" class="form-control" id="languageName" name="languageName" placeholder="Name">
         </div>
-        
-        @if (Model.IsError)
-        {
-            <div class="alert alert-danger" role="alert">
-                @Model.Error
-            </div>
-        }
+
+        <partial name="_AlertMessage" />
 
         <div class="form-group row">
             <button type="submit" name="buttonName" value="New" class="btn btn-sm btn-primary">Add new Language</button>

@@ -2,6 +2,7 @@
 using LangServices;
 using LanguageLearner.Models;
 using LanguageLearner.Models.Languages;
+using LanguageLearner.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace LanguageLearner.Controllers
         public IActionResult ErrorIndex(string errorMsg)
         {
             var langs = BookService.GetLanguages().ToArray();
-            var model = new LanguagesModel() { AvailableLanguages = langs, Error = errorMsg };
+            var model = new LanguagesModel() { AvailableLanguages = langs, AlertMessage = errorMsg, AlertType = AlertType.Error };
 
             return View("Index", model);
         }

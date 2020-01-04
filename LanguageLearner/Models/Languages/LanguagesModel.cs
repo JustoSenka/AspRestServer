@@ -1,25 +1,14 @@
 ﻿using LangData.Objects;
+using LanguageLearner.Models.Shared;
+using LanguageLearner.Utilities;
 
 namespace LanguageLearner.Models.Languages
 {
-    public class LanguagesModel
+    public class LanguagesModel : IAlertMessageModel
     {
         public Language[] AvailableLanguages { get; set; }
 
-        public bool IsError { get; private set; }
-
-        private string m_Error;
-        public string Error
-        {
-            get
-            {
-                return m_Error;
-            }
-            set
-            {
-                m_Error = value;
-                IsError = !string.IsNullOrEmpty(m_Error);
-            }
-        }
+        public AlertType AlertType { get; set; }
+        public string AlertMessage { get; set; }
     }
 }

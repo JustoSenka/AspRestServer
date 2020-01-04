@@ -79,8 +79,8 @@ namespace LanguageLearner.Controllers
                 else
                 {
                     Debug.WriteLine("Incorrect button name: " + AddWordsModel.SubmitButtonName);
-                    AddWordsModel.LogMessage = "[Error] Incorrect button name. No words were added.";
-                    AddWordsModel.LogType = LogType.Error;
+                    AddWordsModel.AlertMessage = "[Error] Incorrect button name. No words were added.";
+                    AddWordsModel.AlertType = AlertType.Error;
                 }
             }
 
@@ -93,8 +93,8 @@ namespace LanguageLearner.Controllers
                 new[] { AddWordsModel.SingleWordText },
                 new[] { AddWordsModel.SingleDefinitionText });
 
-            AddWordsModel.LogMessage = log.Msg;
-            AddWordsModel.LogType = log.LogType;
+            AddWordsModel.AlertMessage = log.Msg;
+            AddWordsModel.AlertType = log.LogType;
 
             return View("AddWords", AddWordsModel);
         }
@@ -106,8 +106,8 @@ namespace LanguageLearner.Controllers
                 lines.Select(s => s.Split("-")[0].Trim()),
                 lines.Select(s => s.Split("-")[1].Trim()));
 
-            AddWordsModel.LogMessage = log.Msg;
-            AddWordsModel.LogType = log.LogType;
+            AddWordsModel.AlertMessage = log.Msg;
+            AddWordsModel.AlertType = log.LogType;
 
             return View("AddWords", AddWordsModel);
         }
@@ -118,8 +118,8 @@ namespace LanguageLearner.Controllers
                 AddWordsModel.WordsArea3.Split(Environment.NewLine),
                 AddWordsModel.DefinitionsArea3.Split(Environment.NewLine));
 
-            AddWordsModel.LogMessage = log.Msg;
-            AddWordsModel.LogType = log.LogType;
+            AddWordsModel.AlertMessage = log.Msg;
+            AddWordsModel.AlertType = log.LogType;
 
             return View("AddWords", AddWordsModel);
         }
@@ -131,18 +131,18 @@ namespace LanguageLearner.Controllers
                 AddWordsModel.DefinitionsArea4.Split(Environment.NewLine),
                 AddWordsModel.DescriptionsArea4.Split(Environment.NewLine));
 
-            AddWordsModel.LogMessage = log.Msg;
-            AddWordsModel.LogType= log.LogType;
+            AddWordsModel.AlertMessage = log.Msg;
+            AddWordsModel.AlertType= log.LogType;
 
             return View("AddWords", AddWordsModel);
         }
 
-        private (string Msg, LogType LogType) AddWords(int languageFromID, int languageToID, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
+        private (string Msg, AlertType LogType) AddWords(int languageFromID, int languageToID, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
         {
             return AddWords(BookService.GetLanguage(languageFromID), BookService.GetLanguage(languageToID), words, definitions, descriptions);
         }
 
-        private (string Msg, LogType LogType) AddWords(Language from, Language to, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
+        private (string Msg, AlertType LogType) AddWords(Language from, Language to, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
         {
             var count1 = words?.Count();
             var count2 = definitions?.Count();
@@ -151,7 +151,7 @@ namespace LanguageLearner.Controllers
             var isInputCorrect = count1 != null && count1 == count2 && (count1 == count3 || count3 == null);
 
             if (!isInputCorrect)
-                return ("Incorrect word format", LogType.Error);
+                return ("Incorrect word format", AlertType.Error);
 
             IEnumerable<(string Word, string Definition, string Description)> collection = descriptions != null ?
                 words.Zip(definitions, (w, d) => (w, d)).Zip(descriptions, (tuple, ds) => (tuple.w, tuple.d, ds)) :
@@ -159,7 +159,7 @@ namespace LanguageLearner.Controllers
 
             CreateTranslations(from, to, collection);
 
-            return ($"Successfully added {count1} words!", LogType.Success);
+            return ($"Successfully added {count1} words!", AlertType.Success);
         }
 
         private void CreateTranslations(Language from, Language to, IEnumerable<(string Word, string Definition, string Description)> collection)

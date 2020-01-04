@@ -3,10 +3,10 @@ using LanguageLearner.Utilities;
 
 namespace LanguageLearner.Models.Words
 {
-    public class AddWordsModel : LanguagePickerModel
+    public class AddWordsModel : LanguagePickerModel, IAlertMessageModel
     {
-        public LogType LogType { get; set; }
-        public string LogMessage { get; set; }
+        public AlertType AlertType { get; set; }
+        public string AlertMessage { get; set; }
 
         public bool TreatFirstWordAsArticle { get; set; }
 

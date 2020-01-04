@@ -1,0 +1,8 @@
+﻿@model IAlertMessageModel;
+
+@if (!string.IsNullOrEmpty(Model.AlertMessage))
+{
+    <div class="@Model.AlertType.AlertClass()" role="alert">
+        @Model.AlertMessage
+    </div>
+}

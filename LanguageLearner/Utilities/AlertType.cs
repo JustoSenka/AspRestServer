@@ -1,25 +1,25 @@
 ﻿namespace LanguageLearner.Utilities
 {
-    public enum LogType
+    public enum AlertType
     {
         None, Error, Info, Success, Warning
     }
 
-    public static class LogTypeExtensions
+    public static class AlertTypeExtensions
     {
-        public static string AlertClass(this LogType LogType)
+        public static string AlertClass(this AlertType LogType)
         {
             switch (LogType)
             {
-                case LogType.Success:
+                case AlertType.Success:
                     return "alert alert-success";
-                case LogType.Info:
+                case AlertType.Info:
                     return "alert alert-info";
-                case LogType.Warning:
+                case AlertType.Warning:
                     return "alert alert-warning";
-                case LogType.Error:
+                case AlertType.Error:
                     return "alert alert-danger";
-                case LogType.None:
+                case AlertType.None:
                     return "alert alert-primary";
                 default:
                     return "alert";

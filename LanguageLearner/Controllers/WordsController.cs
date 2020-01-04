@@ -59,6 +59,50 @@ namespace LanguageLearner.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public IActionResult AddWordsSingle()
+        {
+            var model = new AddWordsModel()
+            {
+                AvailableLanguages = BookService.GetLanguages().ToArray(),
+            };
+
+            return RedirectToAction("AddWords"); 
+        }
+
+        [HttpPost]
+        public IActionResult AddWordsArea()
+        {
+            var model = new AddWordsModel()
+            {
+                AvailableLanguages = BookService.GetLanguages().ToArray(),
+            };
+
+            return RedirectToAction("AddWords");
+        }
+
+        [HttpPost]
+        public IActionResult AddWordsSeparateArea()
+        {
+            var model = new AddWordsModel()
+            {
+                AvailableLanguages = BookService.GetLanguages().ToArray(),
+            };
+
+            return RedirectToAction("AddWords");
+        }
+
+        [HttpPost]
+        public IActionResult AddWordsSeparateAreaDescription()
+        {
+            var model = new AddWordsModel()
+            {
+                AvailableLanguages = BookService.GetLanguages().ToArray(),
+            };
+
+            return RedirectToAction("AddWords");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

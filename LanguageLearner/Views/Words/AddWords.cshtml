@@ -18,40 +18,91 @@
     <partial name="_LanguagePicker" />
 </div>
 
-<div class="container">
-    <form asp-controller="Words" asp-action="AddWordsComplete" method="post">
-        <div class="form-group row align-items-center">
-            <div class="col-sm-12">
-                <input class="form-check-input" type="checkbox" asp-for="TreatFirstWordAsArticle" onchange="check(this)">
-                <label class="form-check-label" for="TreatFirstWordAsArticle">
-                    Treat First Word As Article
-                </label>
-            </div>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#add1">Single Word</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#add2">Text Area</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#add3">Separate Text Areas</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#add4">Separate Text Areas With Descriptions</a>
+    </li>
+</ul>
 
-            <div class="col-sm-12">
-                <input class="form-check-input" type="checkbox" id="TestCheckbox" onchange="check(this)">
-                <label class="form-check-label" for="TreatFirstWordAsArticle">
-                    Treat First Word As Article
-                </label>
-            </div>
-        </div>
+<br>
+<div class="tab-content">
+    <div id="add1" class="tab-pane fade show active">
+        <form asp-controller="Words" asp-action="AddWordsSingle" method="post">
+            <button type="submit" class="btn btn-success">Complete</button>
 
-        <div class="form-group row">
-            <div class="col-sm-12">
-                <button type="submit" class="btn btn-success">Add</button>
-            </div>
-        </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label for="SingleWordText" class="col-form-label">Word</label>
+                    <input type="text" class="form-control" asp-for="SingleWordText" />
+                </div>
 
-        <div class="form-group row">
-            <div class="col-sm-5">
-                <label for="words" class="col-form-label">Words</label>
-                <textarea type="text" rows="50" class="form-control" id="words" name="words"> </textarea>
+                <div class="col">
+                    <label for="SingleDefinitionText" class="col-form-label">Translation</label>
+                    <input type="text" class="form-control" asp-for="SingleDefinitionText" />
+                </div>
             </div>
+        </form>
+    </div>
 
-            <div class="col-sm-7">
-                <label for="trans" class="col-form-label">Translations</label>
-                <textarea type="text" rows="50" class="form-control" id="trans" name="trans"> </textarea>
+    <div id="add2" class="tab-pane fade">
+        <form asp-controller="Words" asp-action="AddWordsArea" method="post">
+            <button type="submit" class="btn btn-success">Complete</button>
+            <div class="form-group row">
+                <div class="col">
+                    <label for="WordsCombinedArea" class="col-form-label">Word - Translation</label>
+                    <textarea type="text" rows="25" class="form-control" asp-for="WordsCombinedArea"></textarea>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
+
+    <div id="add3" class="tab-pane fade">
+        <form asp-controller="Words" asp-action="AddWordsSeparateArea" method="post">
+            <button type="submit" class="btn btn-success">Complete</button>
+
+            <div class="form-group row">
+                <div class="col">
+                    <label for="WordsArea3" class="col-form-label">Words</label>
+                    <textarea type="text" rows="25" class="form-control" asp-for="WordsArea3"></textarea>
+                </div>
+
+                <div class="col">
+                    <label for="DefinitionsArea3" class="col-form-label">Translations</label>
+                    <textarea type="text" rows="25" class="form-control" asp-for="DefinitionsArea3"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="add4" class="tab-pane fade">
+        <form asp-controller="Words" asp-action="AddWordsSeparateAreaDescription" method="post">
+            <button type="submit" class="btn btn-success">Complete</button>
+
+            <div class="form-group row">
+                <div class="col">
+                    <label for="WordsArea4" class="col-form-label">Words</label>
+                    <textarea type="text" rows="25" class="form-control" asp-for="WordsArea4"></textarea>
+                </div>
+
+                <div class="col">
+                    <label for="DefinitionsArea4" class="col-form-label">Translations</label>
+                    <textarea type="text" rows="25" class="form-control" asp-for="DefinitionsArea4"></textarea>
+                </div>
+
+                <div class="col">
+                    <label for="DescriptionsArea4" class="col-form-label">Descriptions</label>
+                    <textarea type="text" rows="25" class="form-control" asp-for="DescriptionsArea4"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>

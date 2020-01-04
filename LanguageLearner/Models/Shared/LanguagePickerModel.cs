@@ -4,6 +4,7 @@ namespace LanguageLearner.Models.Shared
 {
     public class LanguagePickerModel
     {
+        public bool ShowNotSelectedError { get; set; }
         public Language[] AvailableLanguages { get; set; }
 
         public Language From { get; set; }

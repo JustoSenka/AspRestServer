@@ -21,9 +21,9 @@ namespace LanguageLearner.Controllers
 
         public IActionResult Index()
         {
-            var model = new WordsModel()
+            var model = new WordsModel
             {
-                AvailableLanguages = BookService.GetLanguages().ToArray(),
+                AvailableLanguages = BookService.GetLanguages().ToArray()
             };
 
             return View(model);
@@ -40,13 +40,16 @@ namespace LanguageLearner.Controllers
             {
                 LanguageFromID = LanguageFromID,
                 LanguageToID = LanguageToID,
-
+                AvailableLanguages = BookService.GetLanguages().ToArray(),
                 From = BookService.GetLanguage(LanguageFromID),
                 To = BookService.GetLanguage(LanguageToID),
-
-                AvailableLanguages = BookService.GetLanguages().ToArray(),
             };
 
+            if (LanguageFromID == 0 || LanguageToID == 0)
+            {
+                model.ShowNotSelectedError = true;
+                return View("Index", model);
+            }
 
             var translations = BookService.GetTranslationsWithData().Where(t => t.Word.Language.ID == LanguageFromID && t.Definition.Language.ID == LanguageToID);
             model.Definitions = translations.Select(t => t.Definition).ToArray();
@@ -58,12 +61,19 @@ namespace LanguageLearner.Controllers
         public IActionResult AddWords(AddWordsModel AddWordsModel)
         {
             var model = AddWordsModel ?? new AddWordsModel();
-
             model.AvailableLanguages = BookService.GetLanguages().ToArray();
 
             // This means we came here from submitting a form while adding words. Process addition
             if (!string.IsNullOrEmpty(AddWordsModel.SubmitButtonName))
             {
+                // Show error if no languages selected
+                if (AddWordsModel.LanguageFromID == 0 || AddWordsModel.LanguageToID == 0)
+                {
+                    model.ShowNotSelectedError = true;
+                    return View(model);
+                }
+
+                // Add entered words and return success message
                 if (AddWordsModel.SubmitButtonName == "1")
                     return AddWordsSingle(AddWordsModel);
 

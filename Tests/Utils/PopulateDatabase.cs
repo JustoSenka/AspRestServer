@@ -7,26 +7,29 @@ namespace Tests.Utils
 {
     public static class PopulateDatabase
     {
-        public static void DeleteDB(DatabaseContext BookContext)
+        public static void DeleteDB(DatabaseContext DatabaseContext)
         {
-            BookContext.Database.EnsureDeleted();
+            DatabaseContext.Database.EnsureDeleted();
         }
 
 
-        public static void ClearDatabase(DatabaseContext BookContext)
+        public static void ClearDatabase(DatabaseContext DatabaseContext)
         {
-            BookContext.Words.RemoveRange(BookContext.Words);
-            BookContext.Definitions.RemoveRange(BookContext.Definitions);
-            BookContext.Languages.RemoveRange(BookContext.Languages);
-            BookContext.Books.RemoveRange(BookContext.Books);
-            BookContext.Translations.RemoveRange(BookContext.Translations);
+            DatabaseContext.Database.EnsureCreated();
 
-            BookContext.SaveChanges();
+            DatabaseContext.Words.RemoveRange(DatabaseContext.Words);
+            DatabaseContext.Definitions.RemoveRange(DatabaseContext.Definitions);
+            DatabaseContext.Languages.RemoveRange(DatabaseContext.Languages);
+            DatabaseContext.Books.RemoveRange(DatabaseContext.Books);
+            DatabaseContext.Translations.RemoveRange(DatabaseContext.Translations);
+
+            DatabaseContext.SaveChanges();
         }
 
-        public static void PopulateWithTestData(DatabaseContext BookContext)
+        public static void PopulateWithTestData(DatabaseContext DatabaseContext)
         {
-            ClearDatabase(BookContext);
+            DatabaseContext.Database.EnsureCreated();
+            ClearDatabase(DatabaseContext);
 
             var langEn = new Language("English");
             var langEsp = new Language("Spanish");
@@ -73,8 +76,8 @@ namespace Tests.Utils
             
             var book = new Book("Book 0", "", words.ToList());
 
-            BookContext.Books.Add(book);
-            BookContext.SaveChanges();
+            DatabaseContext.Books.Add(book);
+            DatabaseContext.SaveChanges();
         }
     }
 }

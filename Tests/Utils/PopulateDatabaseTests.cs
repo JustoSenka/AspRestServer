@@ -1,7 +1,4 @@
-﻿using LangData.Context;
-using LangServices;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Linq;
 using Tests.Base;
 
@@ -9,48 +6,38 @@ namespace Tests.Utils
 {
     class PopulateDatabaseTests : IntegrationTest
     {
-        private IBooksService BookService;
-        private DatabaseContext BookContext;
-
-        // public override bool UseInMemoryDB => false;
-
-        [SetUp]
-        public void Setup()
-        {
-            BookService = Host.Services.GetService<IBooksService>();
-            BookContext = Host.Services.GetService<DatabaseContext>();
-        }
+        public override bool UseInMemoryDB => false;
 
         [Test]
         public void AddSingleBook_CheckIfDataCountIsCorrect()
         {
-            PopulateDatabase.PopulateWithTestData(BookContext);
+            PopulateDatabase.PopulateWithTestData(DatabaseContext);
 
             Assert.AreEqual(1, BookService.GetBooksWithData().Count(), "Books");
-            Assert.AreEqual(3, BookService.GetLanguages().Count(), "Langs");
-            Assert.AreEqual(3, BookService.GetDefinitionsWithData().Count(), "Defs");
-            Assert.AreEqual(6, BookService.GetWordsWithData().Count(), "Words");
-            Assert.AreEqual(6, BookService.GetTranslationsWithData().Count(), "Translations");
+            Assert.AreEqual(3, LanguagesService.GetAll().Count(), "Langs");
+            Assert.AreEqual(3, DefinitionsService.GetDefinitionsWithData().Count(), "Defs");
+            Assert.AreEqual(6, WordsService.GetWordsWithData().Count(), "Words");
+            Assert.AreEqual(6, TranslationsService.GetTranslationsWithData().Count(), "Translations");
         }
 
         [Test]
         [Ignore("Can be used in special occasions whe something goes wrong. Do not enable for normal test run.")]
         public void DeteteDB()
         {
-            PopulateDatabase.DeleteDB(BookContext);
+            PopulateDatabase.DeleteDB(DatabaseContext);
         }
 
         [Test]
         public void ClearDB()
         {
-            PopulateDatabase.PopulateWithTestData(BookContext);
-            PopulateDatabase.ClearDatabase(BookContext);
+            PopulateDatabase.PopulateWithTestData(DatabaseContext);
+            PopulateDatabase.ClearDatabase(DatabaseContext);
 
             Assert.AreEqual(0, BookService.GetBooksWithData().Count(), "Books");
-            Assert.AreEqual(0, BookService.GetLanguages().Count(), "Langs");
-            Assert.AreEqual(0, BookService.GetDefinitionsWithData().Count(), "Defs");
-            Assert.AreEqual(0, BookService.GetWordsWithData().Count(), "Words");
-            Assert.AreEqual(0, BookService.GetTranslationsWithData().Count(), "Translations");
+            Assert.AreEqual(0, LanguagesService.GetAll().Count(), "Langs");
+            Assert.AreEqual(0, DefinitionsService.GetDefinitionsWithData().Count(), "Defs");
+            Assert.AreEqual(0, WordsService.GetWordsWithData().Count(), "Words");
+            Assert.AreEqual(0, TranslationsService.GetTranslationsWithData().Count(), "Translations");
         }
     }
 }

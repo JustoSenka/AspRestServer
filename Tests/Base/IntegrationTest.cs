@@ -1,10 +1,10 @@
 ﻿using LangData.Context;
+using LangServices;
 using LanguageLearner;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using System.Linq;
 using Tests.Utils;
 
 namespace Tests.Base
@@ -15,6 +15,14 @@ namespace Tests.Base
 
         public virtual bool UseInMemoryDB => true;
 
+        protected IBooksService BookService;
+        protected IWordsService WordsService;
+        protected ILanguagesService LanguagesService;
+        protected IDefinitionsService DefinitionsService;
+        protected ITranslationsService TranslationsService;
+
+        protected DatabaseContext DatabaseContext;
+
         [SetUp]
         public void CreateWebHostBuilderAndDatabase()
         {
@@ -22,13 +30,14 @@ namespace Tests.Base
 
             Host = CreateWebHostBuilder();
 
-            var BookContext = Host.Services.GetService<DatabaseContext>();
-            BookContext.Database.EnsureCreated();
+            DatabaseContext = Host.Services.GetService<DatabaseContext>();
+            BookService = Host.Services.GetService<IBooksService>();
+            WordsService = Host.Services.GetService<IWordsService>();
+            LanguagesService = Host.Services.GetService<ILanguagesService>();
+            DefinitionsService = Host.Services.GetService<IDefinitionsService>();
+            TranslationsService = Host.Services.GetService<ITranslationsService>();
 
-            if (UseInMemoryDB || BookContext.Books.Count() == 0)
-            {
-                PopulateDatabase.PopulateWithTestData(BookContext);
-            }
+            PopulateDatabase.PopulateWithTestData(DatabaseContext);
         }
 
         protected static IWebHost CreateWebHostBuilder() =>

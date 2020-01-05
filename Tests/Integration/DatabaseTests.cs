@@ -1,26 +1,12 @@
-using LangData.Context;
 using LangData.Objects;
-using LangServices;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Linq;
 using Tests.Base;
-using Tests.Utils;
 
 namespace Tests.Integration
 {
     public class DatabaseTests : IntegrationTest
     {
-        private IBooksService BookService;
-        private DatabaseContext BookContext;
-
-        [SetUp]
-        public void Setup()
-        {
-            BookService = Host.Services.GetService<IBooksService>();
-            BookContext = Host.Services.GetService<DatabaseContext>();
-        }
-
         [Test]
         public void Service_WithDefaultWebHost_IsResolved()
         {
@@ -30,40 +16,40 @@ namespace Tests.Integration
         [Test]
         public void CanAdd_Word_ToDatabase()
         {
-            BookService.AddWord(new Word() { Text = "Something" });
-            Assert.AreEqual(7, BookService.GetWordsWithData().Count());
+            WordsService.Add(new Word() { Text = "Something", Language = LanguagesService.GetAll().First() });
+            Assert.AreEqual(7, WordsService.GetWordsWithData().Count());
         }
 
         [Test]
         public void CanAdd_WordWithLanguage_ToDatabase()
         {
-            BookService.AddWord(new Word() { Text = "Something", Language = new Language() { Name = "Another" } });
+            WordsService.Add(new Word() { Text = "Something", Language = new Language() { Name = "Another" } });
 
-            Assert.AreEqual(7, BookService.GetWordsWithData().Count());
-            Assert.AreEqual(4, BookService.GetLanguages().Count());
+            Assert.AreEqual(7, WordsService.GetWordsWithData().Count());
+            Assert.AreEqual(4, LanguagesService.GetAll().Count());
         }
 
         [Test]
         public void Adding_WordWithSameLanguage_WillNotIncrementLanguages()
         {
             var lang = new Language() { Name = "Another" };
-            BookService.AddWord(new Word() { Text = "Something", Language = lang });
-            BookService.AddWord(new Word() { Text = "anything", Language = lang });
+            WordsService.Add(new Word() { Text = "Something", Language = lang });
+            WordsService.Add(new Word() { Text = "anything", Language = lang });
 
-            Assert.AreEqual(8, BookService.GetWordsWithData().Count());
-            Assert.AreEqual(4, BookService.GetLanguages().Count());
+            Assert.AreEqual(8, WordsService.GetWordsWithData().Count());
+            Assert.AreEqual(4, LanguagesService.GetAll().Count());
         }
 
         [Test]
         public void RemovingTranslationFromWord_WillUpdateDB()
         {
-            var word = BookService.GetWordsWithData().First();
+            var word = WordsService.GetWordsWithData().First();
             var trans = word.Translations.First();
 
             word.Translations.Remove(trans);
-            BookService.UpdateWord(word);
+            WordsService.Update(word);
 
-            var newWord = BookService.GetWordsWithData().First();
+            var newWord = WordsService.GetWordsWithData().First();
 
             Assert.AreEqual(0, newWord.Translations.Count);
         }
@@ -71,10 +57,10 @@ namespace Tests.Integration
         [Test]
         public void RemovingWord_WillUpdateDB_AndRemoveWordsFromBookAutomatically()
         {
-            var word = BookService.GetWordsWithData().First();
+            var word = WordsService.GetWordsWithData().First();
 
-            BookService.RemoveWord(word);
-            var newWord = BookService.GetWordsWithData().First();
+            WordsService.Remove(word);
+            var newWord = WordsService.GetWordsWithData().First();
             var wCount = BookService.GetBooksWithData().First().Words.Count;
 
             Assert.AreNotEqual(word, newWord);
@@ -84,10 +70,10 @@ namespace Tests.Integration
         [Test]
         public void RemovingDefinition_WillUpdateDB_AndRemoveWordsFromTranslationsAutomatically()
         {
-            var word = BookService.GetWordsWithData().First();
+            var word = WordsService.GetWordsWithData().First();
 
-            BookService.RemoveDefinition(word.Translations[0].Definition);
-            var newWord = BookService.GetWordsWithData().First();
+            DefinitionsService.Remove(word.Translations[0].Definition);
+            var newWord = WordsService.GetWordsWithData().First();
             var trans = newWord.Translations[0];
 
             Assert.IsNull(trans.Definition);

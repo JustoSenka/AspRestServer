@@ -44,7 +44,7 @@
                 Title = "Definition count: " + Model.Definitions.Count(),
                 Table = Model.Definitions.Select(d => new[] { d.Text, d.Description }),
                 LeftHeaders = Model.Definitions.Select(t => t.ID.ToString()),
-                TopHeader = new[] { "ID", "Word", "Description" },
+                TopHeader = new[] { "ID", "Definition", "Description" },
             };
 
             <partial name="_TablePartial" for="@TableModel" />

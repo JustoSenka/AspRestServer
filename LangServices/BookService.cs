@@ -16,10 +16,10 @@ namespace LangServices
         }
 
         public IEnumerable<Book> GetBooks() => m_Context.Books;
-        public IEnumerable<Word> GetWords() => m_Context.Words;
+        public IEnumerable<Word> GetWords() => m_Context.Words.Include(w => w.Language);
         public IEnumerable<Language> GetLanguages() => m_Context.Languages;
-        public IEnumerable<Definition> GetDefinitions() => m_Context.Definitions;
-        public IEnumerable<Translation> GetTranslations() => m_Context.Translations;
+        public IEnumerable<Definition> GetDefinitions() => m_Context.Definitions.Include(w => w.Language);
+        public IEnumerable<Translation> GetTranslations() => m_Context.Translations.Include(t => t.Word).Include(t => t.Definition);
 
         public Book GetBook(int id) => m_Context.Books
             .Include(p => p.Words)

@@ -1,0 +1,44 @@
+﻿@model TableModel;
+
+<h3>@Model.Title</h3>
+<table class="table table-hover">
+    @if (Model.TopHeader != null)
+    {
+        <thead>
+            <tr>
+                @foreach (var header in Model.TopHeader)
+                {
+                    <th scope="col">@header</th>
+                }
+            </tr>
+        </thead>
+    }
+    <tbody>
+        @if (Model.LeftHeaders == null)
+        {
+            @foreach (var row in Model.Table)
+            {
+                <tr>
+                    @foreach (var col in row)
+                    {
+                        <td>@col</td>
+                    }
+                </tr>
+            }
+        }
+        else
+        {
+            @foreach (var (row, header) in Model.Table.Zip(Model.LeftHeaders, (r, h) => (r, h)))
+            {
+                <tr>
+                    <th scope="row">@header</th>
+
+                    @foreach (var col in row)
+                    {
+                        <td>@col</td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>

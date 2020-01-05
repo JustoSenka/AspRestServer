@@ -45,17 +45,34 @@ namespace LanguageLearner.Controllers
                 To = BookService.GetLanguage(LanguageToID),
             };
 
-            if (LanguageFromID == 0 || LanguageToID == 0)
-            {
-                model.ShowNotSelectedError = true;
-                return View("Index", model);
-            }
-
-            var translations = BookService.GetTranslationsWithData().Where(t => t.Word.Language.ID == LanguageFromID && t.Definition.Language.ID == LanguageToID);
-            model.Definitions = translations.Select(t => t.Definition).ToArray();
-            model.Words = translations.Select(t => t.Word).ToArray();
+            PopulateModelWithWords(LanguageFromID, LanguageToID, model);
 
             return View(model);
+        }
+
+        private void PopulateModelWithWords(int LanguageFromID, int LanguageToID, WordsModel model)
+        {
+            // If both languages selected, show translations
+            if (LanguageFromID != 0 && LanguageToID != 0)
+            {
+                var translations = BookService.GetTranslationsWithData().Where(t => t.Word.Language.ID == LanguageFromID && t.Definition.Language.ID == LanguageToID);
+                model.Definitions = translations.Select(t => t.Definition).ToArray();
+                model.Words = translations.Select(t => t.Word).ToArray();
+            }
+            // Of only one language selected, just list words/definitions in that language
+            else if (LanguageFromID != 0)
+            {
+                model.Words = BookService.GetWords().Where(w => w.Language.ID == LanguageFromID).ToArray();
+            }
+            else if (LanguageToID != 0)
+            {
+                model.Definitions = BookService.GetDefinitions().Where(d => d.Language.ID == LanguageToID).ToArray();
+            }
+            else
+            {
+                model.Words = BookService.GetWords().ToArray();
+                model.Definitions = BookService.GetDefinitions().ToArray();
+            }
         }
 
         public IActionResult AddWords(AddWordsModel AddWordsModel)
@@ -142,7 +159,7 @@ namespace LanguageLearner.Controllers
                 AddWordsModel.DescriptionsArea4.Split(Environment.NewLine));
 
             AddWordsModel.AlertMessage = log.Msg;
-            AddWordsModel.AlertType= log.LogType;
+            AddWordsModel.AlertType = log.LogType;
 
             return View("AddWords", AddWordsModel);
         }

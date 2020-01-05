@@ -24,7 +24,7 @@ namespace LangData.Objects
         public Language Language { get; set; }
 
         public string Article { get; set; }
-        public string Pronaunciation { get; set; }
+        public string Pronunciation { get; set; }
         public string AlternateSpelling { get; set; }
 
         public List<Translation> Translations { get; set; }

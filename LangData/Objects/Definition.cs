@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace LangData.Objects
 {
     [DebuggerDisplay("Def: Lang: {Language.Name} Text: {Text}")]
-    public class Definition
+    public class Definition : IHaveID
     {
         public Definition() { }
         public Definition(string text, Language language, string description = "")
@@ -14,8 +14,6 @@ namespace LangData.Objects
             Language = language;
             Description = description;
         }
-
-        public int ID { get; set; }
 
         [Required]
         public string Text { get; set; }

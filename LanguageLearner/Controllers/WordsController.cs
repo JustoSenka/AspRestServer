@@ -13,17 +13,23 @@ namespace LanguageLearner.Controllers
 {
     public class WordsController : Controller
     {
-        private readonly IBookService BookService;
-        public WordsController(IBookService BookService)
+        private readonly ILanguagesService LanguagesService;
+        private readonly IWordsService WordsService;
+        private readonly ITranslationsService TranslationsService;
+        private readonly IDefinitionsService DefinitionsService;
+        public WordsController(IWordsService WordsService, ILanguagesService LanguagesService, ITranslationsService TranslationsService, IDefinitionsService DefinitionsService)
         {
-            this.BookService = BookService;
+            this.WordsService = WordsService;
+            this.LanguagesService = LanguagesService;
+            this.TranslationsService = TranslationsService;
+            this.DefinitionsService = DefinitionsService;
         }
 
         public IActionResult Index()
         {
             var model = new WordsModel
             {
-                AvailableLanguages = BookService.GetLanguages().ToArray()
+                AvailableLanguages = LanguagesService.GetAll().ToArray()
             };
 
             return View(model);
@@ -40,9 +46,9 @@ namespace LanguageLearner.Controllers
             {
                 LanguageFromID = LanguageFromID,
                 LanguageToID = LanguageToID,
-                AvailableLanguages = BookService.GetLanguages().ToArray(),
-                From = BookService.GetLanguage(LanguageFromID),
-                To = BookService.GetLanguage(LanguageToID),
+                AvailableLanguages = LanguagesService.GetAll().ToArray(),
+                From = LanguagesService.Get(LanguageFromID),
+                To = LanguagesService.Get(LanguageToID),
             };
 
             PopulateModelWithWords(LanguageFromID, LanguageToID, model);
@@ -55,30 +61,30 @@ namespace LanguageLearner.Controllers
             // If both languages selected, show translations
             if (LanguageFromID != 0 && LanguageToID != 0)
             {
-                var translations = BookService.GetTranslationsWithData().Where(t => t.Word.Language.ID == LanguageFromID && t.Definition.Language.ID == LanguageToID);
+                var translations = TranslationsService.GetTranslationsWithData().Where(t => t.Word.Language.ID == LanguageFromID && t.Definition.Language.ID == LanguageToID);
                 model.Definitions = translations.Select(t => t.Definition).ToArray();
                 model.Words = translations.Select(t => t.Word).ToArray();
             }
             // Of only one language selected, just list words/definitions in that language
             else if (LanguageFromID != 0)
             {
-                model.Words = BookService.GetWords().Where(w => w.Language.ID == LanguageFromID).ToArray();
+                model.Words = WordsService.GetAll().Where(w => w.Language.ID == LanguageFromID).ToArray();
             }
             else if (LanguageToID != 0)
             {
-                model.Definitions = BookService.GetDefinitions().Where(d => d.Language.ID == LanguageToID).ToArray();
+                model.Definitions = DefinitionsService.GetAll().Where(d => d.Language.ID == LanguageToID).ToArray();
             }
             else
             {
-                model.Words = BookService.GetWords().ToArray();
-                model.Definitions = BookService.GetDefinitions().ToArray();
+                model.Words = WordsService.GetAll().ToArray();
+                model.Definitions = DefinitionsService.GetAll().ToArray();
             }
         }
 
         public IActionResult AddWords(AddWordsModel AddWordsModel)
         {
             var model = AddWordsModel ?? new AddWordsModel();
-            model.AvailableLanguages = BookService.GetLanguages().ToArray();
+            model.AvailableLanguages = LanguagesService.GetAll().ToArray();
 
             // This means we came here from submitting a form while adding words. Process addition
             if (!string.IsNullOrEmpty(AddWordsModel.SubmitButtonName))
@@ -166,7 +172,7 @@ namespace LanguageLearner.Controllers
 
         private (string Msg, AlertType LogType) AddWords(int languageFromID, int languageToID, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
         {
-            return AddWords(BookService.GetLanguage(languageFromID), BookService.GetLanguage(languageToID), words, definitions, descriptions);
+            return AddWords(LanguagesService.Get(languageFromID), LanguagesService.Get(languageToID), words, definitions, descriptions);
         }
 
         private (string Msg, AlertType LogType) AddWords(Language from, Language to, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
@@ -192,7 +198,7 @@ namespace LanguageLearner.Controllers
         private void CreateTranslations(Language from, Language to, IEnumerable<(string Word, string Definition, string Description)> collection)
         {
             var translations = collection.Select(t => new Translation(new Word(t.Word, from), new Definition(t.Definition, to, t.Description))).ToArray();
-            BookService.AddTranslations(translations);
+            TranslationsService.Add(translations);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

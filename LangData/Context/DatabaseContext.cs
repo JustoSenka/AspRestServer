@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LangData.Context
 {
-    public class BookContext : DbContext
+    public class DatabaseContext : DbContext
     {
-        public BookContext(DbContextOptions options) : base(options) { }
+        public DatabaseContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Book> Books { get; set; }
 

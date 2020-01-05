@@ -3,7 +3,7 @@
 namespace LangData.Objects
 {
     [DebuggerDisplay("Translation: Word: {Word.Text} Def: {Definition.Text}")]
-    public class Translation
+    public class Translation : IHaveID
     {
         public Translation() { }
         public Translation(Word word, Definition definition)
@@ -11,8 +11,6 @@ namespace LangData.Objects
             Word = word;
             Definition = definition;
         }
-
-        public int ID { get; set; }
 
         public Word Word { get; set; }
         public Definition Definition { get; set; }

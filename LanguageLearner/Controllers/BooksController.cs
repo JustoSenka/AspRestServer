@@ -10,15 +10,15 @@ namespace LanguageLearner.Controllers
 {
     public class BooksController : Controller
     {
-        private readonly IBookService BookService;
-        public BooksController(IBookService BookService)
+        private readonly IBooksService BookService;
+        public BooksController(IBooksService BookService)
         {
             this.BookService = BookService;
         }
 
         public IActionResult Index()
         {
-            var books = BookService.GetBooks().ToArray();
+            var books = BookService.GetAll().ToArray();
             var bookModel = new BookIndexModel() { Books = books };
 
             return View(bookModel);
@@ -26,7 +26,7 @@ namespace LanguageLearner.Controllers
 
         public IActionResult Book(int id)
         {
-            var book = BookService.GetBook(id);
+            var book = BookService.Get(id);
             /*if (book == default)
                 return RedirectToAction("Error");*/
 
@@ -43,7 +43,7 @@ namespace LanguageLearner.Controllers
         public IActionResult CompleteNewBook(string name, string description)
         {
             var book = new Book(name, description);
-            book = BookService.AddBook(book);
+            book = BookService.Add(book);
             return RedirectToAction("Book", new { id = book.ID });
         }
 

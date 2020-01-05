@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LangData.Migrations
 {
-    [DbContext(typeof(BookContext))]
+    [DbContext(typeof(DatabaseContext))]
     [Migration("20200102203757_Book_Desc_WordCount")]
     partial class Book_Desc_WordCount
     {

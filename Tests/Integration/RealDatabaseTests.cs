@@ -13,16 +13,16 @@ namespace Tests.Integration
     /// </summary>
     public class RealDatabaseTests : IntegrationTest
     {
-        private IBookService BookService;
-        private BookContext BookContext;
+        private IBooksService BookService;
+        private DatabaseContext BookContext;
 
         public override bool UseInMemoryDB => false;
 
         [SetUp]
         public void Setup()
         {
-            BookService = Host.Services.GetService<IBookService>();
-            BookContext = Host.Services.GetService<BookContext>();
+            BookService = Host.Services.GetService<IBooksService>();
+            BookContext = Host.Services.GetService<DatabaseContext>();
         }
 
         [Test]

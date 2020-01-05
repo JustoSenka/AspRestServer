@@ -11,15 +11,15 @@ namespace LanguageLearner.Controllers
 {
     public class LanguagesController : Controller
     {
-        private readonly IBookService BookService;
-        public LanguagesController(IBookService BookService)
+        private readonly ILanguagesService LanguagesService;
+        public LanguagesController(ILanguagesService LanguagesService)
         {
-            this.BookService = BookService;
+            this.LanguagesService = LanguagesService;
         }
 
         public IActionResult Index()
         {
-            var langs = BookService.GetLanguages().ToArray();
+            var langs = LanguagesService.GetAll().ToArray();
             var model = new LanguagesModel() { AvailableLanguages = langs };
 
             return View(model);
@@ -27,7 +27,7 @@ namespace LanguageLearner.Controllers
 
         public IActionResult ErrorIndex(string errorMsg)
         {
-            var langs = BookService.GetLanguages().ToArray();
+            var langs = LanguagesService.GetAll().ToArray();
             var model = new LanguagesModel() { AvailableLanguages = langs, AlertMessage = errorMsg, AlertType = AlertType.Error };
 
             return View("Index", model);
@@ -42,12 +42,12 @@ namespace LanguageLearner.Controllers
                     return RedirectToAction("ErrorIndex", new { errorMsg = "Language name cannot be empty." });
 
                 var lang = new Language(languageName);
-                lang = BookService.AddLanguage(lang);
+                lang = LanguagesService.Add(lang);
             }
             else
             {                
                 var id = int.Parse(buttonName.Split("_")[1]);
-                var lang = BookService.GetLanguage(id);
+                var lang = LanguagesService.Get(id);
 
                 if (buttonName.StartsWith("Rename"))
                 {
@@ -55,11 +55,11 @@ namespace LanguageLearner.Controllers
                         return RedirectToAction("ErrorIndex", new { errorMsg = "Language name cannot be empty." });
 
                     lang.Name = languageName;
-                    BookService.UpdateLanguage(lang);
+                    LanguagesService.Update(lang);
                 }
                 else if (buttonName.StartsWith("Delete"))
                 {
-                    BookService.RemoveLanguage(lang);
+                    LanguagesService.Remove(lang);
                 }
             }
 

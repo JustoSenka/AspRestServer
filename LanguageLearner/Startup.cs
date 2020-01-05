@@ -42,7 +42,11 @@ namespace LanguageLearner
 
             services.AddSingleton(Configuration);
 
-            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IBooksService, BooksService>();
+            services.AddScoped<IWordsService, WordsService>();
+            services.AddScoped<ILanguagesService, LanguagesService>();
+            services.AddScoped<IDefinitionsService, DefinitionsService>();
+            services.AddScoped<ITranslationsService, TranslationsService>();
 
             SetupDatabase(services);
 
@@ -58,12 +62,12 @@ namespace LanguageLearner
                 var connection = new SqliteConnection(connectionString);
                 connection.Open();
 
-                services.AddDbContext<BookContext>(o => o.UseSqlite(connection));
+                services.AddDbContext<DatabaseContext>(o => o.UseSqlite(connection));
             }
             else
             {
                 var connectionString = Configuration.GetConnectionString("LanguageLearner");
-                services.AddDbContext<BookContext>(o => o.UseSqlServer(connectionString, b => b.MigrationsAssembly("LangData")));
+                services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(connectionString, b => b.MigrationsAssembly("LangData")));
             }
         }
 

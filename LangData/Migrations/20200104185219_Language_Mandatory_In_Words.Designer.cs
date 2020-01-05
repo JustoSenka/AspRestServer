@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LangData.Migrations
 {
-    [DbContext(typeof(BookContext))]
+    [DbContext(typeof(DatabaseContext))]
     [Migration("20200104185219_Language_Mandatory_In_Words")]
     partial class Language_Mandatory_In_Words
     {

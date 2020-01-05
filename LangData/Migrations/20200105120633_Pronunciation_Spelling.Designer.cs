@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LangData.Migrations
 {
-    [DbContext(typeof(BookContext))]
+    [DbContext(typeof(DatabaseContext))]
     [Migration("20200105120633_Pronunciation_Spelling")]
     partial class Pronunciation_Spelling
     {

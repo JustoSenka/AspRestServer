@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LangData.Migrations
 {
-    [DbContext(typeof(BookContext))]
+    [DbContext(typeof(DatabaseContext))]
     [Migration("20191230105522_new-start")]
     partial class newstart
     {

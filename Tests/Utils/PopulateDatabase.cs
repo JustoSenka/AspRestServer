@@ -7,13 +7,13 @@ namespace Tests.Utils
 {
     public static class PopulateDatabase
     {
-        public static void DeleteDB(BookContext BookContext)
+        public static void DeleteDB(DatabaseContext BookContext)
         {
             BookContext.Database.EnsureDeleted();
         }
 
 
-        public static void ClearDatabase(BookContext BookContext)
+        public static void ClearDatabase(DatabaseContext BookContext)
         {
             BookContext.Words.RemoveRange(BookContext.Words);
             BookContext.Definitions.RemoveRange(BookContext.Definitions);
@@ -24,7 +24,7 @@ namespace Tests.Utils
             BookContext.SaveChanges();
         }
 
-        public static void PopulateWithTestData(BookContext BookContext)
+        public static void PopulateWithTestData(DatabaseContext BookContext)
         {
             ClearDatabase(BookContext);
 

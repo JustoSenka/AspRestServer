@@ -22,7 +22,7 @@ namespace Tests.Base
 
             Host = CreateWebHostBuilder();
 
-            var BookContext = Host.Services.GetService<BookContext>();
+            var BookContext = Host.Services.GetService<DatabaseContext>();
             BookContext.Database.EnsureCreated();
 
             if (UseInMemoryDB || BookContext.Books.Count() == 0)

@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace LangData.Objects
 {
     [DebuggerDisplay("Book: {Name} Count: {Words.Count}")]
-    public class Book
+    public class Book : IHaveID
     {
         public Book() { }
         public Book(string name, string description, List <Word> words = null)
@@ -19,8 +19,6 @@ namespace LangData.Objects
 
             WordCount = Words.Count;
         }
-
-        public int ID { get; set; }
 
         [Required]
         public string Name { get; set; }

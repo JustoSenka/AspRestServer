@@ -1,0 +1,16 @@
+﻿@model EntityModel;
+
+@{
+    ViewData["Title"] = Model.Word.Text;
+}
+
+<div class="container">
+    <form asp-controller="Entities" asp-action="Word" asp-route-id="@Model.Word.ID" method="post">
+
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-success">Update</button>
+            </div>
+        </div>
+    </form>
+</div>

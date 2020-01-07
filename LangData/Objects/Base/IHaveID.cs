@@ -1,7 +1,7 @@
-﻿namespace LangData.Objects
+﻿namespace LangData.Objects.Base
 {
-    public class IHaveID
+    public interface IHaveID
     {
-        public int ID { get; set; }
+        int ID { get; set; }
     }
 }

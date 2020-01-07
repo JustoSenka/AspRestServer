@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using LangData.Objects.Base;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 
 namespace LangData.Objects
 {
     [DebuggerDisplay("Word: Lang: {Language.Name} Text: {Text}")]
-    public class Word : IHaveID
+    public class Word : BaseObject, IHaveID, IDisplayText, IListableElement
     {
         public Word() { }
         public Word(string text, Language language, string article = "")
@@ -26,5 +27,7 @@ namespace LangData.Objects
         public string AlternateSpelling { get; set; }
 
         public List<Translation> Translations { get; set; }
+
+        string IDisplayText.DisplayText => Text;
     }
 }

@@ -1,12 +1,13 @@
 ﻿using LangData.Context;
 using LangData.Objects;
+using LangData.Objects.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace LangServices
 {
-    public abstract class BaseService<T> : IService<T> where T : IHaveID
+    public abstract class BaseService<T> : IService<T> where T : BaseObject
     {
         protected abstract DbSet<T> EntitiesProxy { get; }
 

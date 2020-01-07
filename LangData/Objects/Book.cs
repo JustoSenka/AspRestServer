@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using LangData.Objects.Base;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 
 namespace LangData.Objects
 {
     [DebuggerDisplay("Book: {Name} Count: {Words.Count}")]
-    public class Book : IHaveID
+    public class Book : BaseObject, IHaveID, IDisplayText, IListableElement
     {
         public Book() { }
         public Book(string name, string description, List <Word> words = null)
@@ -27,5 +28,7 @@ namespace LangData.Objects
         public string Description{ get; set; }
 
         public List<Word> Words { get; set; }
+
+        string IDisplayText.DisplayText => Name;
     }
 }

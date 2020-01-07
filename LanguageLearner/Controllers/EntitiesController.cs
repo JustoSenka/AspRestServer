@@ -2,6 +2,7 @@
 using LanguageLearner.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Linq;
 
 namespace LanguageLearner.Controllers
 {
@@ -19,22 +20,33 @@ namespace LanguageLearner.Controllers
             this.DefinitionsService = DefinitionsService;
         }
 
+        [HttpGet]
         public IActionResult Word(int id)
         {
-            var word = WordsService.Get(id);
-            var model = new EntityModel() { Word = word };
+            var model = new EntityModel() { Word = WordsService.Get(id) };
+            model.AvailableLanguages = LanguagesService.GetAll().ToArray();
             return View(model);
         }
 
-        public IActionResult Word(int id, EntityModel model)
+        [HttpPost]
+        public IActionResult UpdateWord(EntityModel model)
         {
-            var word = WordsService.Get(id);
-            model = model ?? new EntityModel() { Word = word };
-            return View(model);
+            // var origWord = WordsService.Get(model.Word.ID);
+            var newWord = model.Word;
+            var didUpdateWord = true;
+
+            if (didUpdateWord)
+                return RedirectToAction("Word", new { id = newWord.ID });
+            else
+            {
+                model.AvailableLanguages = LanguagesService.GetAll().ToArray();
+                return View("Word", model);
+            }
         }
 
         public IActionResult Definition(int id)
         {
+            // bad ^
             var def = DefinitionsService.Get(id);
             var model = new EntityModel() { Definition = def };
             return View(model);

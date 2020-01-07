@@ -1,4 +1,5 @@
 ﻿using LangData.Objects;
+using LangData.Objects.Base;
 using System.Collections.Generic;
 
 namespace LangServices

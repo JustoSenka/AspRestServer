@@ -1,5 +1,4 @@
-﻿using LanguageLearner.Utilities;
-
+﻿
 namespace LanguageLearner.Models.Shared
 {
     public interface IAlertMessageModel

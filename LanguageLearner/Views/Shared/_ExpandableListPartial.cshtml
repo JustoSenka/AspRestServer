@@ -1,0 +1,24 @@
+﻿@model ExpandableListModel;
+
+<div class="row">
+    <div class="col">
+        <div class="list-group list-group-item-action">
+            <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#translation-list">@Model.Title </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="container">
+            <div id="translation-list" class="collapse">
+                <div class="list-group list-group-item-action">
+                    @foreach (var str in Model.Elements)
+                    {
+                        <a href="#" class="list-group-item list-group-item-action">@str</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

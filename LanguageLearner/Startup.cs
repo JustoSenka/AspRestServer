@@ -47,6 +47,7 @@ namespace LanguageLearner
             services.AddScoped<ILanguagesService, LanguagesService>();
             services.AddScoped<IDefinitionsService, DefinitionsService>();
             services.AddScoped<ITranslationsService, TranslationsService>();
+            services.AddScoped<IUserService, UserService>();
 
             SetupDatabase(services);
 

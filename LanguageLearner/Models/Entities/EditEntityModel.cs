@@ -1,9 +1,9 @@
 ﻿using LangData.Objects;
 using LanguageLearner.Models.Shared;
 
-namespace LanguageLearner.Models.Languages
+namespace LanguageLearner.Models
 {
-    public class LanguagesModel : IAlertMessageModel
+    public class EditEntityModel : EntityModel, IAlertMessageModel
     {
         public Language[] AvailableLanguages { get; set; }
 

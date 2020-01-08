@@ -1,4 +1,4 @@
-﻿namespace LanguageLearner.Utilities
+﻿namespace LanguageLearner
 {
     public enum AlertType
     {

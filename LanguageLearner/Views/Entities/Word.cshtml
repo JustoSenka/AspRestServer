@@ -5,62 +5,42 @@
 }
 
 <div class="container">
-    <form asp-controller="Entities" asp-action="UpdateWord" method="post">
-        <input type="hidden" asp-for="Word.ID" value="@Model.Word.ID" />
+    <div class="text-right">
+        <a class="btn btn-sm" asp-controller="Entities" asp-action="EditWord" asp-route-id="@Model.Word.ID">Edit</a>
+    </div>
 
-        <div class="form-group row">
-            <div class="col">
-                <label for="Word_Text" class="col-form-label">Word</label>
-                <input type="text" class="form-control" asp-for="Word.Text" />
-            </div>
+    <div class="row">
+        <div class="col">
+            <text>
+                @{
+                    var wordName = $"<b>{Model.Word.Article} {Model.Word.Text}</b>";
+                    var alternateSpelling = string.IsNullOrEmpty(Model.Word.AlternateSpelling) ? "" : $"({Model.Word.AlternateSpelling})";
+                    var pronunciationText = string.IsNullOrEmpty(Model.Word.Pronunciation) ? "" : $"({Model.Word.Pronunciation})";
+                    var translation = Model.Word.Translations?.FirstOrDefault(t => t.Definition.Language.ID == Model.PreferredDefaultLanguage.ID);
+                }
+                <h3>@Html.Raw(wordName) <text class="small"><i><b>@Html.Raw(alternateSpelling)</b>@Html.Raw(pronunciationText)</i></text></h3>
 
-            <div class="col">
-                <label for="Word_Pronunciation" class="col-form-label">Pronunciation</label>
-                <input type="text" class="form-control" asp-for="Word.Pronunciation" />
-            </div>
-
-            <div class="col">
-                <label for="Word_AlternateSpelling" class="col-form-label">AlternateSpelling</label>
-                <input type="text" class="form-control" asp-for="Word.AlternateSpelling" />
-            </div>
-
+                @if (translation != default)
+                {
+                    <h4>@Html.Raw(translation.Definition.Text)</h4>
+                    <p>@Html.Raw(translation.Definition.Description)</p>
+                }
+                else
+                {
+                    @: No translations for this word were found.
+                }
+            </text>
         </div>
+    </div>
 
-        <div class="form-group row">
-            <div class="col">
-                <label for="Word_Language">Word Language</label>
-                <select class="custom-select" asp-for="Word.Language" asp-items="@Model.AvailableLanguages.SelectListItems()"></select>
-            </div>
-        </div>
 
-        <div class="form-group">
-            <div class="row">
-                <div class="col">
-                    <div class="list-group list-group-item-action">
-                        <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#translation-list">List of Translations </a>
-                    </div>
-                </div>
-            </div>
+    @{
+        var listModel = new ExpandableListModel()
+        {
+            Title = "List of Translations",
+            Elements = Model.Word.Translations.Select(t => t.Definition.Language.Name + ": " + t.Definition.Text),
+        };
 
-            <div class="row">
-                <div class="col">
-                    <div class="container">
-                        <div id="translation-list" class="collapse">
-                            <div class="list-group list-group-item-action">
-                                <a href="#" class="list-group-item list-group-item-action">First item</a>
-                                <a href="#" class="list-group-item list-group-item-action">Second item</a>
-                                <a href="#" class="list-group-item list-group-item-action">Third item</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <div class="col">
-                    <button type="submit" class="btn btn-success">Update</button>
-                </div>
-            </div>
-        </div>
-    </form>
+        <partial name="_ExpandableListPartial" for="@listModel" />
+    }
 </div>

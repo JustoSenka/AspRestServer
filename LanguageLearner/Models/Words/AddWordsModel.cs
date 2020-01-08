@@ -1,5 +1,4 @@
 ﻿using LanguageLearner.Models.Shared;
-using LanguageLearner.Utilities;
 
 namespace LanguageLearner.Models.Words
 {

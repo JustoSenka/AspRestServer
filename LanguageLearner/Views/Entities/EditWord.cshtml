@@ -39,7 +39,7 @@
         <div class="form-group row">
             <div class="col">
                 <label for="Word_Language">Word Language</label>
-                <select class="custom-select" asp-for="Word.Language" asp-items="@Model.AvailableLanguages.SelectListItems()"></select>
+                <select class="custom-select" asp-for="LanguageID" asp-items="@Model.AvailableLanguages.SelectListItems()"></select>
             </div>
         </div>
 
@@ -58,7 +58,7 @@
         <div class="form-group row">
             <div class="col">
                 <button type="submit" class="btn btn-success">Update</button>
-                <button class="btn btn-sm btn-secondary" asp-controller="Entities" formmethod="get" asp-action="Word" asp-route-id="@Model.Word.ID">Cancel</button>
+                <a class="btn btn-sm btn-secondary" asp-controller="Entities" asp-action="Word" asp-route-id="@Model.Word.ID">Cancel</a>
             </div>
         </div>
     </form>

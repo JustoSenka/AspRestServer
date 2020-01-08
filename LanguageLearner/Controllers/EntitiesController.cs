@@ -44,6 +44,7 @@ namespace LanguageLearner.Controllers
                 Word = WordsService.Get(id),
             };
 
+            model.LanguageID = model.Word.Language.ID;
             model.AvailableLanguages = LanguagesService.GetAll().ToArray();
             return View(model);
         }
@@ -52,14 +53,11 @@ namespace LanguageLearner.Controllers
         public IActionResult UpdateWord(EditEntityModel model)
         {
             var origWord = WordsService.Get(model.Word.ID);
-            var newWord = model.Word;
-            newWord.Translations = origWord.Translations;
-
-            origWord.Text = newWord.Text;
-            origWord.AlternateSpelling = newWord.AlternateSpelling;
-            origWord.Pronunciation = newWord.Pronunciation;
-            origWord.Article = newWord.Article;
-            origWord.Language = newWord.Language ?? origWord.Language;
+            origWord.Text = model.Word.Text;
+            origWord.AlternateSpelling = model.Word.AlternateSpelling;
+            origWord.Pronunciation = model.Word.Pronunciation;
+            origWord.Article = model.Word.Article;
+            origWord.Language = LanguagesService.Get(model.LanguageID);
 
             try
             {
@@ -72,7 +70,7 @@ namespace LanguageLearner.Controllers
             }
 
             if (model.AlertType == default) // Success
-                return RedirectToAction("Word", new { id = newWord.ID });
+                return RedirectToAction("Word", new { id = model.Word.ID });
             else
             {
                 model.AvailableLanguages = LanguagesService.GetAll().ToArray();

@@ -4,6 +4,16 @@
     ViewData["Title"] = "Edit " + Model.Word.Text;
 }
 
+<script>
+    window.onbeforeunload = function () {
+        return true;
+    };
+
+    function disableBeforeUnload() {
+        window.onbeforeunload = null;
+    }
+</script>
+
 <div class="container">
     <form asp-controller="Entities" asp-action="UpdateWord" method="post">
         <input type="hidden" asp-for="Word.ID" value="@Model.Word.ID" />
@@ -30,7 +40,7 @@
                 </div>
 
                 <div class="col">
-                    <label for="Word_AlternateSpelling" class="col-form-label">AlternateSpelling</label>
+                    <label for="Word_AlternateSpelling" class="col-form-label">Alternate Spelling</label>
                     <input type="text" class="form-control" asp-for="Word.AlternateSpelling" />
                 </div>
             </div>
@@ -47,7 +57,7 @@
             var listModel = new ExpandableListModel()
             {
                 Title = "List of Translations",
-                Elements = Model.Word.Translations.Select(t => t.Definition.Language.Name + ": " + t.Definition.Text),
+                Elements = Model.Word.Translations?.Select(t => new ListElement(t.Definition.Language.Name + ": " + t.Definition.Text, "Definition", "Entities", t.Definition.ID.ToString())),
             };
 
             <div class="form-group">
@@ -57,8 +67,9 @@
 
         <div class="form-group row">
             <div class="col">
-                <button type="submit" class="btn btn-success">Update</button>
+                <button onclick="disableBeforeUnload()" type="submit" class="btn btn-success">Update</button>
                 <a class="btn btn-sm btn-secondary" asp-controller="Entities" asp-action="Word" asp-route-id="@Model.Word.ID">Cancel</a>
+                <button onclick="disableBeforeUnload()" type="submit" class="btn btn-success">Update</button>
             </div>
         </div>
     </form>

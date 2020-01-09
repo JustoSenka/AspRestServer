@@ -13,9 +13,24 @@
         <div class="container">
             <div id="translation-list" class="collapse">
                 <div class="list-group list-group-item-action">
-                    @foreach (var str in Model.Elements)
+                    @if (Model.Elements != null)
                     {
-                        <a href="#" class="list-group-item list-group-item-action">@str</a>
+                        @foreach (var e in Model.Elements)
+                        {
+                            @if (e.HasLinkAction)
+                            {
+                                //@Html.ActionLink(e.Text, e.AspAction, e.AspController, e.AspRoute);
+                                <a asp-controller="@e.AspController" asp-action="@e.AspAction" asp-route-id="@e.AspRoute" class="list-group-item list-group-item-action">@e.Text</a>
+                            }
+                            else
+                            {
+                                <a href="#" class="list-group-item list-group-item-action">@e.Text</a>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <a href="#" class="list-group-item list-group-item-action">Empty list</a>
                     }
                 </div>
             </div>

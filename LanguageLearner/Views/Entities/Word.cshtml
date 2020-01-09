@@ -11,25 +11,26 @@
 
     <div class="row">
         <div class="col">
-            <text>
+            <h5><i>Language: @Model.Word.Language.Name</i></h5> <br>
+
                 @{
-                    var wordName = $"<b>{Model.Word.Article} {Model.Word.Text}</b>";
                     var alternateSpelling = string.IsNullOrEmpty(Model.Word.AlternateSpelling) ? "" : $"({Model.Word.AlternateSpelling})";
                     var pronunciationText = string.IsNullOrEmpty(Model.Word.Pronunciation) ? "" : $"({Model.Word.Pronunciation})";
                     var translation = Model.Word.Translations?.FirstOrDefault(t => t.Definition.Language.ID == Model.PreferredDefaultLanguage.ID);
                 }
-                <h3>@Html.Raw(wordName) <text class="small"><i><b>@Html.Raw(alternateSpelling)</b>@Html.Raw(pronunciationText)</i></text></h3>
+                <h3><b>@Model.Word.Article @Model.Word.Text</b> <text class="small"><i><b>@alternateSpelling</b>@pronunciationText</i></text></h3>
 
                 @if (translation != default)
                 {
-                    <h4>@Html.Raw(translation.Definition.Text)</h4>
-                    <p>@Html.Raw(translation.Definition.Description)</p>
+                    <h4>@translation.Definition.Text</h4><br>
+                    <p>@translation.Definition.Description</p>
                 }
                 else
                 {
                     @: No translations for this word were found.
                 }
-            </text>
+
+            <br>
         </div>
     </div>
 
@@ -38,7 +39,7 @@
         var listModel = new ExpandableListModel()
         {
             Title = "List of Translations",
-            Elements = Model.Word.Translations.Select(t => t.Definition.Language.Name + ": " + t.Definition.Text),
+            Elements = Model.Word.Translations?.Select(t => new ListElement(t.Definition.Language.Name + ": " + t.Definition.Text, "Definition", "Entities", t.Definition.ID.ToString())),
         };
 
         <partial name="_ExpandableListPartial" for="@listModel" />

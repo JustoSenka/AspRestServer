@@ -13,7 +13,7 @@ public static class ExtensionMethods
 
     public static SelectListItem ToListItem(this IListableElement listable)
     {
-        return new SelectListItem(listable.ID.ToString(), listable.DisplayText);
+        return new SelectListItem(listable.DisplayText, listable.ID.ToString());
     }
 
     public static IEnumerable<TableElement> SelectTableElements(this IEnumerable<IListableElement> listable)

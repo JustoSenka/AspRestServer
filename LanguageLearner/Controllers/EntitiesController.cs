@@ -24,6 +24,8 @@ namespace LanguageLearner.Controllers
             this.UserService = UserService;
         }
 
+        #region Words
+
         [HttpGet]
         public IActionResult Word(int id)
         {
@@ -78,13 +80,63 @@ namespace LanguageLearner.Controllers
             }
         }
 
+        #endregion // Words
+
+        #region Definitions
+
+        [HttpGet]
         public IActionResult Definition(int id)
         {
-            // bad ^
-            var def = DefinitionsService.Get(id);
-            var model = new EditEntityModel() { Definition = def };
+            var model = new EntityModel()
+            {
+                Definition = DefinitionsService.Get(id),
+                PreferredDefaultLanguage = UserService.GetPreferredLanguage(),
+            };
+
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult EditDefinition(int id)
+        {
+            var model = new EditEntityModel()
+            {
+                Definition = DefinitionsService.Get(id),
+            };
+
+            model.LanguageID = model.Definition.Language.ID;
+            model.AvailableLanguages = LanguagesService.GetAll().ToArray();
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateDefinition(EditEntityModel model)
+        {
+            var origDef = DefinitionsService.Get(model.Definition.ID);
+            origDef.Text = model.Definition.Text;
+            origDef.Description = model.Definition.Description;
+            origDef.Language = LanguagesService.Get(model.LanguageID);
+
+            try
+            {
+                DefinitionsService.Update(origDef);
+            }
+            catch (Exception e)
+            {
+                model.AlertMessage = "Something went wrong: " + e.Message;
+                model.AlertType = AlertType.Error;
+            }
+
+            if (model.AlertType == default) // Success
+                return RedirectToAction("Definition", new { id = model.Definition.ID });
+            else
+            {
+                model.AvailableLanguages = LanguagesService.GetAll().ToArray();
+                return View("EditDefinition", model);
+            }
+        }
+
+        #endregion // Definitions
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -1,0 +1,68 @@
+﻿@model TableLinkModel;
+
+<h3>@Model.Title</h3>
+<table class="table table-hover">
+    @if (Model.TopHeader != null)
+    {
+        <thead>
+            <tr>
+                @foreach (var header in Model.TopHeader)
+                {
+                    <th scope="col">@header</th>
+                }
+            </tr>
+        </thead>
+    }
+    <tbody>
+        @if (Model.LeftHeaders == null)
+        {
+            @foreach (var row in Model.TableElements)
+            {
+                <tr>
+                    @{ var colIndex = 0; }
+                    @foreach (var col in row)
+                    {
+                        <td>
+                            @if (Model.HasLinkAction(colIndex) && col.HasLinkAction)
+                            {
+                                @Html.ActionLink(col.Value, Model.GetAction(colIndex), Model.GetController(colIndex), new { id = col.ID }, new { style = "color: #000000;" })
+                            }
+                            else
+                            {
+                                @col.Value
+                            }
+                        </td>
+
+                        colIndex++;
+                    }
+                </tr>
+            }
+        }
+        else
+        {
+            @foreach (var (row, header) in Model.TableElements.Zip(Model.LeftHeaders, (r, h) => (r, h)))
+            {
+                <tr>
+                    <th scope="row">@header</th>
+
+                    @{ var colIndex = 0; }
+                    @foreach (var col in row)
+                    {
+                        <td>
+                            @if (Model.HasLinkAction(colIndex) && col.HasLinkAction)
+                            {
+                                @Html.ActionLink(col.Value, Model.GetAction(colIndex), Model.GetController(colIndex), new { id = col.ID }, new { style = "color: #000000;" })
+                            }
+                            else
+                            {
+                                @col.Value
+                            }
+                        </td>
+
+                        colIndex++;
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>

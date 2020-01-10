@@ -13,6 +13,14 @@
     </p>
 }
 
+@if (Model.Exception != default)
+{
+    <h3>@Model.Exception.Message</h3>
+    <p>@Model.Exception.StackTrace</p>
+    <h3>@Model.Exception.InnerException?.Message</h3>
+    <h3>@Model.Exception.InnerException?.StackTrace</h3>
+}
+
 <h3>Development Mode</h3>
 <p>
     Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.

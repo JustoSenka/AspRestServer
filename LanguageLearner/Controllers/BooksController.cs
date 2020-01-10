@@ -3,6 +3,7 @@ using LangServices;
 using LanguageLearner.Models;
 using LanguageLearner.Models.Books;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Diagnostics;
 using System.Linq;
 
@@ -18,10 +19,17 @@ namespace LanguageLearner.Controllers
 
         public IActionResult Index()
         {
-            var books = BookService.GetAll().ToArray();
-            var bookModel = new BookIndexModel() { Books = books };
+            try
+            {
+                var books = BookService.GetAll().ToArray();
+                var bookModel = new BookIndexModel() { Books = books };
 
-            return View(bookModel);
+                return View(bookModel);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel { Exception = e, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            }
         }
 
         public IActionResult Book(int id)

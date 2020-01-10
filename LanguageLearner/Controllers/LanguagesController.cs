@@ -3,6 +3,7 @@ using LangServices;
 using LanguageLearner.Models;
 using LanguageLearner.Models.Languages;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Diagnostics;
 using System.Linq;
 
@@ -18,10 +19,17 @@ namespace LanguageLearner.Controllers
 
         public IActionResult Index()
         {
-            var langs = LanguagesService.GetAll().ToArray();
-            var model = new LanguagesModel() { AvailableLanguages = langs };
+            try
+            {
+                var langs = LanguagesService.GetAll().ToArray();
+                var model = new LanguagesModel() { AvailableLanguages = langs };
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel { Exception = e, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            }
         }
 
         public IActionResult ErrorIndex(string errorMsg)
@@ -44,7 +52,7 @@ namespace LanguageLearner.Controllers
                 lang = LanguagesService.Add(lang);
             }
             else
-            {                
+            {
                 var id = int.Parse(buttonName.Split("_")[1]);
                 var lang = LanguagesService.Get(id);
 

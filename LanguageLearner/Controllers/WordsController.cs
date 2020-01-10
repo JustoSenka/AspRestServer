@@ -26,12 +26,19 @@ namespace LanguageLearner.Controllers
 
         public IActionResult Index()
         {
-            var model = new WordsModel
+            try
             {
-                AvailableLanguages = LanguagesService.GetAll().ToArray()
-            };
+                var model = new WordsModel
+                {
+                    AvailableLanguages = LanguagesService.GetAll().ToArray()
+                };
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel { Exception = e, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            }
         }
 
         // Redirecting to Show so language ids appear inside url.

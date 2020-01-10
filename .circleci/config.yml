@@ -20,4 +20,4 @@ jobs:
           name: "Run Tests"
           command: dotnet test Tests/Tests.csproj -v n
       - store_artifacts:
-          path: .\bin\Release\netcoreapp2.2\win10-x64\publish\
+          path: .\LanguageLearner\bin\Release\netcoreapp2.2\win10-x64\publish\

@@ -40,11 +40,11 @@ if "%1" == "config" (
 )
 
 :sendfolder
-ncftpput -R -m %login% %dest% %source%
+NcFTP\ncftpput -R -m %login% %dest% %source%
 goto exit
 
 :sendfiles
-ncftpput -m %login% %dest% %source%
+NcFTP\ncftpput -m %login% %dest% %source%
 goto exit
 
 

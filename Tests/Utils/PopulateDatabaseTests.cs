@@ -21,7 +21,8 @@ namespace Tests.Utils
         }
 
         [Test]
-        //[Ignore("Can be used in special occasions whe something goes wrong. Do not enable for normal test run.")]
+        [Ignore("Can be used in special occasions whe something goes wrong. Do not enable for normal test run.")]
+        // Also deletes migration history if used on main db
         public void DeteteDB()
         {
             PopulateDatabase.DeleteDB(DatabaseContext);

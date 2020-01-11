@@ -49,7 +49,7 @@ namespace Tests.Utils
                 new Word("Como estas", langEsp),
                 new Word("こんにちわ", langJp),
                 new Word("はじめまして", langJp),
-                new Word("おーげんきです", langJp),
+                new Word("おげんきです", langJp),
             };
 
             // Note: order at which translations are added might differ from this array since we're adding the Book object only

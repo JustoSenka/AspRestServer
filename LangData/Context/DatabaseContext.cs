@@ -13,5 +13,10 @@ namespace LangData.Context
         public DbSet<Language> Languages { get; set; }
         public DbSet<Definition> Definitions { get; set; }
         public DbSet<Translation> Translations { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using LangData.Objects.Base;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
 namespace LangData.Objects

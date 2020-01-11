@@ -8,8 +8,13 @@ namespace LangServices
 {
     public class WordsService : BaseService<Word>, IWordsService
     {
+        private readonly ITranslationsService TranslationsService;
+
         protected override DbSet<Word> EntitiesProxy => m_Context.Words;
-        public WordsService(DatabaseContext context) : base(context) { }
+        public WordsService(ITranslationsService TranslationsService, DatabaseContext context) : base(context)
+        {
+            this.TranslationsService = TranslationsService;
+        }
 
         public override Word Get(int id) => m_Context.Words
             .Include(word => word.Language)
@@ -32,5 +37,27 @@ namespace LangServices
             .Include(p => p.Translations)
                 .ThenInclude(t => t.Definition)
                     .ThenInclude(d => d.Language);
+
+        public override void Remove(Word obj)
+        {
+            TranslationsService.StartBatchingRequests();
+
+            TranslationsService.Remove(obj.Translations);
+            base.Remove(obj);
+
+            TranslationsService.EndBatchingRequestsAndSave();
+        }
+        /*
+        public override void Update(Word obj)
+        {
+            TranslationsService.StartBatchingRequests();
+
+            var oldWord = Get(obj.ID);
+            var differentceInTranslations = oldWord.Translations.Concat(obj.Translations).Except(obj.Translations);
+            TranslationsService.Remove(obj.Translations);
+            base.Remove(obj);
+
+            TranslationsService.EndBatchingRequestsAndSave();
+        }*/
     }
 }

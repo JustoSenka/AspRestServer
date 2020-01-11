@@ -77,15 +77,23 @@ namespace LangData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("DefinitionID");
+                    b.Property<int>("DefinitionID");
 
-                    b.Property<int?>("WordID");
+                    b.Property<int?>("DefinitionID1");
+
+                    b.Property<int>("WordID");
+
+                    b.Property<int?>("WordID1");
 
                     b.HasKey("ID");
 
                     b.HasIndex("DefinitionID");
 
+                    b.HasIndex("DefinitionID1");
+
                     b.HasIndex("WordID");
+
+                    b.HasIndex("WordID1");
 
                     b.ToTable("Translations");
                 });
@@ -130,11 +138,23 @@ namespace LangData.Migrations
                 {
                     b.HasOne("LangData.Objects.Definition", "Definition")
                         .WithMany("Translations")
-                        .HasForeignKey("DefinitionID");
+                        .HasForeignKey("DefinitionID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("LangData.Objects.Definition")
+                        .WithMany()
+                        .HasForeignKey("DefinitionID1")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("LangData.Objects.Word", "Word")
                         .WithMany("Translations")
-                        .HasForeignKey("WordID");
+                        .HasForeignKey("WordID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("LangData.Objects.Word")
+                        .WithMany()
+                        .HasForeignKey("WordID1")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("LangData.Objects.Word", b =>

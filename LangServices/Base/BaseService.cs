@@ -3,12 +3,16 @@ using LangData.Objects;
 using LangData.Objects.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace LangServices
 {
     public abstract class BaseService<T> : IService<T> where T : BaseObject
     {
+        public bool SavesChanges => m_BatchingRefCount == 0;
+        private int m_BatchingRefCount;
+
         protected abstract DbSet<T> EntitiesProxy { get; }
 
         protected DatabaseContext m_Context;
@@ -23,26 +27,64 @@ namespace LangServices
         public virtual T Add(T obj)
         {
             var entry = EntitiesProxy.Add(obj);
-            m_Context.SaveChanges();
+            if(SavesChanges)
+                m_Context.SaveChanges();
+
             return entry.Entity;
         }
 
         public virtual void Add(IEnumerable<T> objs)
         {
             EntitiesProxy.AddRange(objs);
-            m_Context.SaveChanges();
+
+            if (SavesChanges)
+                m_Context.SaveChanges();
         }
 
         public virtual void Remove(T obj)
         {
             EntitiesProxy.Remove(obj);
-            m_Context.SaveChanges();
+
+            if (SavesChanges)
+                m_Context.SaveChanges();
+        }
+
+        public virtual void Remove(IEnumerable<T> objs)
+        {
+            EntitiesProxy.RemoveRange(objs);
+
+            if (SavesChanges)
+                m_Context.SaveChanges();
         }
 
         public virtual void Update(T obj)
         {
             EntitiesProxy.Update(obj);
-            m_Context.SaveChanges();
+
+            if (SavesChanges)
+                m_Context.SaveChanges();
+        }
+
+        public virtual void Update(IEnumerable<T> objs)
+        {
+            EntitiesProxy.RemoveRange(objs);
+
+            if (SavesChanges)
+                m_Context.SaveChanges();
+        }
+
+        public void StartBatchingRequests() => m_BatchingRefCount++;
+        public void EndBatchingRequestsAndSave()
+        {
+            m_BatchingRefCount--;
+            if (m_BatchingRefCount < 0)
+            {
+                m_BatchingRefCount = 0;
+                Debug.WriteLine("EndBatchingRequests called without appropriate StartBatchingRequests. m_BatchingRefCount cannot go below 0");
+            }
+
+            if (m_BatchingRefCount == 0)
+                m_Context.SaveChanges();
         }
     }
 }

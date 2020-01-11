@@ -8,8 +8,13 @@ namespace LangServices
 {
     public class DefinitionsService : BaseService<Definition>, IDefinitionsService
     {
+        private readonly ITranslationsService TranslationsService;
+
         protected override DbSet<Definition> EntitiesProxy => m_Context.Definitions;
-        public DefinitionsService(DatabaseContext context) : base(context) { }
+        public DefinitionsService(ITranslationsService TranslationsService, DatabaseContext context) : base(context)
+        {
+            this.TranslationsService = TranslationsService;
+        }
 
         public override Definition Get(int id) => m_Context.Definitions
             .Include(d => d.Language)
@@ -31,5 +36,15 @@ namespace LangServices
                 .Include(p => p.Translations)
                     .ThenInclude(t => t.Definition)
                         .ThenInclude(d => d.Language);
+
+        public override void Remove(Definition obj)
+        {
+            TranslationsService.StartBatchingRequests();
+
+            TranslationsService.Remove(obj.Translations);
+            base.Remove(obj);
+
+            TranslationsService.EndBatchingRequestsAndSave();
+        }
     }
 }

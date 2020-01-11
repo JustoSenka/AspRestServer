@@ -37,7 +37,15 @@ namespace Tests.Base
             DefinitionsService = Host.Services.GetService<IDefinitionsService>();
             TranslationsService = Host.Services.GetService<ITranslationsService>();
 
-            PopulateDatabase.PopulateWithTestData(DatabaseContext);
+            try
+            {
+                PopulateDatabase.PopulateWithTestData(DatabaseContext);
+            }
+            catch
+            {
+                PopulateDatabase.DeleteDB(DatabaseContext);
+                PopulateDatabase.PopulateWithTestData(DatabaseContext);
+            }
         }
 
         protected static IWebHost CreateWebHostBuilder() =>

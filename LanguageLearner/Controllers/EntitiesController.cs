@@ -80,6 +80,28 @@ namespace LanguageLearner.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult DeleteWord(EditEntityModel model)
+        {
+            try
+            {
+                WordsService.Remove(WordsService.Get(model.Word.ID));
+            }
+            catch (Exception e)
+            {
+                model.AlertMessage = "Something went wrong: " + e.Message;
+                model.AlertType = AlertType.Error;
+            }
+
+            if (model.AlertType == default) // Success
+                return RedirectToAction("Index", "Words");
+            else
+            {
+                model.AvailableLanguages = LanguagesService.GetAll().ToArray();
+                return View("EditWord", model);
+            }
+        }
+
         #endregion // Words
 
         #region Definitions
@@ -129,6 +151,28 @@ namespace LanguageLearner.Controllers
 
             if (model.AlertType == default) // Success
                 return RedirectToAction("Definition", new { id = model.Definition.ID });
+            else
+            {
+                model.AvailableLanguages = LanguagesService.GetAll().ToArray();
+                return View("EditDefinition", model);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult DeleteDefinition(EditEntityModel model)
+        {
+            try
+            {
+                DefinitionsService.Remove(DefinitionsService.Get(model.Definition.ID));
+            }
+            catch (Exception e)
+            {
+                model.AlertMessage = "Something went wrong: " + e.Message;
+                model.AlertType = AlertType.Error;
+            }
+
+            if (model.AlertType == default) // Success
+                return RedirectToAction("Index", "Words");
             else
             {
                 model.AvailableLanguages = LanguagesService.GetAll().ToArray();

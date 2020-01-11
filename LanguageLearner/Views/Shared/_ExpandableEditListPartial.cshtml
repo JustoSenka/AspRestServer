@@ -1,0 +1,43 @@
+﻿@model ExpandableListModel;
+
+<div class="row">
+    <div class="col">
+        <div class="list-group list-group-item-action">
+            <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#translation-list">@Model.Title </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="container">
+            <div id="translation-list" class="collapse">
+                <div class="list-group list-group-item-action">
+                    @if (Model.Elements != null)
+                    {
+                        @foreach (var e in Model.Elements)
+                        {
+                            <div class="list-group-item list-group-item-action">
+                                <div class="row">
+                                    <div class="col">@e.Text</div>
+                                    <div class="col text-right">
+                                        <a asp-controller="@e.AspController" asp-action="@e.AspAction" asp-route-id="@e.AspRoute" class="btn btn-sm btn-danger">X</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <a href="#" class="list-group-item list-group-item-action">Empty list</a>
+                    }
+
+                    <div class="list-group-item"></div>
+                    <a class="text-center list-group-item list-group-item-action"><b>&lt;Link to existing Translation&gt;</b></a>
+                    <a class="text-center list-group-item list-group-item-action"><b>&lt;Create new Translation&gt;</b></a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

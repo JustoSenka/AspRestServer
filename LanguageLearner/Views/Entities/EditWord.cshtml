@@ -15,7 +15,7 @@
 </script>
 
 <div class="container">
-    <form asp-controller="Entities" asp-action="UpdateWord" method="post">
+    <form method="post">
         <input type="hidden" asp-for="Word.ID" value="@Model.Word.ID" />
 
         <partial name="_AlertMessage" for="@Model" />
@@ -48,7 +48,7 @@
 
         <div class="form-group row">
             <div class="col">
-                <label for="Word_Language">Word Language</label>
+                <label for="LanguageID">Word Language</label>
                 <select class="custom-select" asp-for="LanguageID" asp-items="@Model.AvailableLanguages.SelectListItems()"></select>
             </div>
         </div>
@@ -67,9 +67,12 @@
 
         <div class="form-group row">
             <div class="col">
-                <button onclick="disableBeforeUnload()" type="submit" class="btn btn-success">Update</button>
+                <button onclick="disableBeforeUnload()" type="submit" class="btn btn-success" asp-controller="Entities" asp-action="UpdateWord">Update</button>
                 <a class="btn btn-sm btn-secondary" asp-controller="Entities" asp-action="Word" asp-route-id="@Model.Word.ID">Cancel</a>
-                <button onclick="disableBeforeUnload()" type="submit" class="btn btn-success">Update</button>
+            </div>
+
+            <div class="col text-right">
+                <button onclick="disableBeforeUnload()" type="submit" class="btn btn-danger btn-sm" asp-controller="Entities" asp-action="DeleteWord">Delete</button>
             </div>
         </div>
     </form>

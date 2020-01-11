@@ -11,14 +11,14 @@
 
     <div class="row">
         <div class="col">
-            <h5><i>Language: @Model.Word.Language.Name</i></h5> <br>
+            <h5><i>Word Language: @Model.Word.Language.Name</i></h5> <br>
 
                 @{
                     var alternateSpelling = string.IsNullOrEmpty(Model.Word.AlternateSpelling) ? "" : $"({Model.Word.AlternateSpelling})";
                     var pronunciationText = string.IsNullOrEmpty(Model.Word.Pronunciation) ? "" : $"({Model.Word.Pronunciation})";
                     var translation = Model.Word.Translations?.FirstOrDefault(t => t.Definition.Language.ID == Model.PreferredDefaultLanguage.ID);
                 }
-                <h3><b>@Model.Word.Article @Model.Word.Text</b> <text class="small"><i><b>@alternateSpelling</b>@pronunciationText</i></text></h3>
+                <h3><b>@Model.Word.Article @Model.Word.Text</b> <text class="small"><b>@alternateSpelling</b><i>@pronunciationText</i></text></h3>
 
                 @if (translation != default)
                 {

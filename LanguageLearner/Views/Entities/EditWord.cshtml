@@ -54,14 +54,18 @@
         </div>
 
         @{
-            var listModel = new ExpandableListModel()
+            var listModel = new ExpandableEditListModel()
             {
                 Title = "List of Translations",
                 Elements = Model.Word.Translations?.Select(t => new ListElement(t.Definition.Language.Name + ": " + t.Definition.Text, "Definition", "Entities", t.Definition.ID.ToString())),
+                AspRoute = Model.Word.ID.ToString(),
+                ControllerForAddingElements = "Entities",
+                AspActionAddition = "WordAddTranslation",
+                AspActionCreation = "WordCreateNewTranslation",
             };
 
             <div class="form-group">
-                <partial name="_ExpandableListPartial" for="@listModel" />
+                <partial name="_ExpandableEditListPartial" for="@listModel" />
             </div>
         }
 

@@ -5,8 +5,8 @@
 }
 
 <script>
-    window.onbeforeunload = function() {
-    return true;
+    window.onbeforeunload = function () {
+        return true;
     };
 
     function disableBeforeUnload() {
@@ -42,15 +42,19 @@
         </div>
 
         @{
-            var listModel = new ExpandableListModel()
+            var listModel = new ExpandableEditListModel()
             {
                 Title = "List of Translations",
                 Elements = Model.Definition.Translations?.Select(t => new ListElement(t.Word.Language.Name + ": " + t.Word.Text, "Word", "Entities", t.Word.ID.ToString())),
-            };
+                AspRoute = Model.Definition.ID.ToString(),
+                ControllerForAddingElements = "Entities",
+                AspActionAddition = "DefinitionAddTranslation",
+                AspActionCreation= "DefinitionCreateNewTranslation",
+        };
 
-            <div class="form-group">
-                <partial name="_ExpandableListPartial" for="@listModel" />
-            </div>
+        <div class="form-group">
+            <partial name="_ExpandableEditListPartial" for="@listModel" />
+        </div>
         }
 
         <div class="form-group row">

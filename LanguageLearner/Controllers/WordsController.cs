@@ -67,7 +67,7 @@ namespace LanguageLearner.Controllers
             // If both languages selected, show translations
             if (LanguageFromID != 0 && LanguageToID != 0)
             {
-                var translations = TranslationsService.GetTranslationsWithData().Where(t => t.Word.Language.ID == LanguageFromID && t.Definition.Language.ID == LanguageToID);
+                var translations = TranslationsService.GetTranslationsWithLanguages().Where(t => t.Word.Language.ID == LanguageFromID && t.Definition.Language.ID == LanguageToID);
                 model.Definitions = translations.Select(t => t.Definition).ToArray();
                 model.Words = translations.Select(t => t.Word).ToArray();
             }

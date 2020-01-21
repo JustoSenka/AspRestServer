@@ -1,4 +1,5 @@
-﻿using LangServices;
+﻿using LangData.Objects;
+using LangServices;
 using LanguageLearner.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -47,8 +48,7 @@ namespace LanguageLearner.Controllers
             };
 
             model.LanguageID = model.Word.Language.ID;
-            model.AvailableLanguages = LanguagesService.GetAll().ToArray();
-            return View(model);
+            return ViewEditWordModel(model);
         }
 
         [HttpPost]
@@ -71,13 +71,7 @@ namespace LanguageLearner.Controllers
                 model.AlertType = AlertType.Error;
             }
 
-            if (model.AlertType == default) // Success
-                return RedirectToAction("Word", new { id = model.Word.ID });
-            else
-            {
-                model.AvailableLanguages = LanguagesService.GetAll().ToArray();
-                return View("EditWord", model);
-            }
+            return model.AlertType == default ? RedirectToAction("Word", new { id = model.Word.ID }) : ViewEditWordModel(model);
         }
 
         [HttpPost]
@@ -93,13 +87,50 @@ namespace LanguageLearner.Controllers
                 model.AlertType = AlertType.Error;
             }
 
-            if (model.AlertType == default) // Success
-                return RedirectToAction("Index", "Words");
-            else
+            return model.AlertType == default ? RedirectToAction("Index", "Words") : ViewEditWordModel(model);
+        }
+
+        [HttpPost]
+        public IActionResult AddTranslationToWord(EditEntityModel model, int id)
+        {
+            try
             {
-                model.AvailableLanguages = LanguagesService.GetAll().ToArray();
-                return View("EditWord", model);
+                var word = WordsService.Get(model.Word.ID);
+                var def = DefinitionsService.Get(id);
+                var translation = new Translation(word, def);
+                TranslationsService.Add(translation);
             }
+            catch (Exception e)
+            {
+                model.AlertMessage = "Something went wrong: " + e.Message;
+                model.AlertType = AlertType.Error;
+            }
+
+            return ViewEditWordModel(model);
+        }
+
+        [HttpPost]
+        public IActionResult RemoveTranslationFromWord(EditEntityModel model, int id)
+        {
+            try
+            {
+                var translation = TranslationsService.Get(id);
+                TranslationsService.Remove(translation);
+            }
+            catch (Exception e)
+            {
+                model.AlertMessage = "Something went wrong: " + e.Message;
+                model.AlertType = AlertType.Error;
+            }
+
+            return ViewEditWordModel(model);
+        }
+
+        private IActionResult ViewEditWordModel(EditEntityModel model)
+        {
+            model.AvailableLanguages = LanguagesService.GetAll().ToArray();
+            model.Definitions = DefinitionsService.GetAll().ToArray();
+            return View("EditWord", model);
         }
 
         #endregion // Words
@@ -124,6 +155,7 @@ namespace LanguageLearner.Controllers
             var model = new EditEntityModel()
             {
                 Definition = DefinitionsService.Get(id),
+                Definitions = DefinitionsService.GetAll().ToArray(),
             };
 
             model.LanguageID = model.Definition.Language.ID;

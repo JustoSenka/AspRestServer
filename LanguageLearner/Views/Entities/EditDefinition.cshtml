@@ -47,9 +47,6 @@
                 Title = "List of Translations",
                 Elements = Model.Definition.Translations?.Select(t => new ListElement(t.Word.Language.Name + ": " + t.Word.Text, "Word", "Entities", t.Word.ID.ToString())),
                 AspRoute = Model.Definition.ID.ToString(),
-                ControllerForAddingElements = "Entities",
-                AspActionAddition = "DefinitionAddTranslation",
-                AspActionCreation= "DefinitionCreateNewTranslation",
         };
 
         <div class="form-group">

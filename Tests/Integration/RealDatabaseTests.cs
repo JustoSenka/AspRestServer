@@ -54,7 +54,7 @@ namespace Tests.Integration
             Assert.IsNotNull(def.Translations);
             Assert.AreEqual(2, def.Translations.Count);
 
-            var trans = TranslationsService.GetTranslationsWithData().ElementAt(0);
+            var trans = TranslationsService.GetTranslationsWithLanguages().ElementAt(0);
 
             Assert.IsNotNull(trans.Definition);
             Assert.IsNotNull(trans.Word);

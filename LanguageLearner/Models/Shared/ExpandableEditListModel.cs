@@ -2,11 +2,8 @@
 {
     public class ExpandableEditListModel : ExpandableListModel
     {
-        public string ControllerForAddingElements;
-
-        public string AspActionAddition;
-        public string AspActionCreation;
-
+        public string AspController;
+        public string AspAction;
         public string AspRoute;
     }
 }

@@ -53,21 +53,49 @@
             </div>
         </div>
 
+        @* Add or Create new definition buttons with dropdown *@
+
+        @{
+            var dropdownModel = new SearcheableDropdownModel()
+            {
+                IsSubmit = true,
+                Text = "Link Existing Definition",
+                AdditionalClasses = "btn btn-light text-center",
+                AspController = "Entities",
+                AspAction = "AddTranslationToWord",
+                Elements = Model.Definitions.Select(d => new ListElement(d.Text, "", "", d.ID.ToString())),
+            };
+        }
+        <div class="form-group row">
+            <div class="col">
+                <partial name="_SearcheableDropdown" model="dropdownModel" />
+                <a class="btn btn-light text-center" asp-controller="Entities" asp-action="Word" asp-route-id="@Model.Word.ID">Create New Translation</a>
+            </div>
+        </div>
+
+        <button type="submit" asp-controller="Entities" asp-action="AddTranslationToWord" asp-route-id="10" class="btn btn-sm btn-danger">Link</button>
+
+
+        @* Expandable List of Definitions *@
+
         @{
             var listModel = new ExpandableEditListModel()
             {
                 Title = "List of Translations",
-                Elements = Model.Word.Translations?.Select(t => new ListElement(t.Definition.Language.Name + ": " + t.Definition.Text, "Definition", "Entities", t.Definition.ID.ToString())),
+                Elements = Model.Word.Translations?.Select(t => new ListElement(t.Definition.Language.Name + ": " + t.Definition.Text, "", "", t.ID.ToString())),
                 AspRoute = Model.Word.ID.ToString(),
-                ControllerForAddingElements = "Entities",
-                AspActionAddition = "WordAddTranslation",
-                AspActionCreation = "WordCreateNewTranslation",
+                AspController = "Entities",
+                AspAction = "RemoveTranslationFromWord",
             };
 
             <div class="form-group">
                 <partial name="_ExpandableEditListPartial" for="@listModel" />
             </div>
         }
+
+
+
+        @* Update, Delete, Cancel Buttons *@
 
         <div class="form-group row">
             <div class="col">
@@ -79,5 +107,7 @@
                 <button onclick="disableBeforeUnload()" type="submit" class="btn btn-danger btn-sm" asp-controller="Entities" asp-action="DeleteWord">Delete</button>
             </div>
         </div>
+
+
     </form>
 </div>

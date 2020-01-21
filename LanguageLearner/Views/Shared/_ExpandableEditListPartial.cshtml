@@ -21,7 +21,7 @@
                                 <div class="row">
                                     <div class="col">@e.Text</div>
                                     <div class="col text-right">
-                                        <a asp-controller="@e.AspController" asp-action="@e.AspAction" asp-route-id="@e.AspRoute" class="btn btn-sm btn-danger">X</a>
+                                        <button type="submit" asp-controller="@Model.AspController" asp-action="@Model.AspAction" asp-route-id="@e.AspRoute" class="btn btn-sm btn-danger">X</button>
                                     </div>
                                 </div>
                             </div>
@@ -31,23 +31,6 @@
                     {
                         <a href="#" class="list-group-item list-group-item-action">Empty list</a>
                     }
-
-                    <div class="list-group-item"></div>
-                    <a asp-controller="@Model.ControllerForAddingElements" asp-action="@Model.AspActionAddition" asp-route-id="@Model.AspRoute" class="text-center list-group-item list-group-item-action"><b>&lt;Add existing Translation&gt;</b></a>
-                    <a asp-controller="@Model.ControllerForAddingElements" asp-action="@Model.AspActionCreation" asp-route-id="@Model.AspRoute" class="text-center list-group-item list-group-item-action"><b>&lt;Create new Translation&gt;</b></a>
-
-                    <div class="text-center list-group-item list-group-item-action dropdown dropdown-toggle searcheable-dropdown"
-                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-                        <div class="dropdown-menu text-center" aria-labelledby="dropdownMenuButton">
-                            <input type="text" autocomplete="new-password" placeholder="Search..">
-
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

@@ -9,6 +9,9 @@
 
         public bool HasLinkAction { get; private set; }
 
+        public bool OverridesController => !string.IsNullOrEmpty(AspController);
+        public bool OverridesAction => !string.IsNullOrEmpty(AspAction);
+
         public ListElement(string Text, string AspAction, string AspController, string AspRoute)
         {
             HasLinkAction = true;

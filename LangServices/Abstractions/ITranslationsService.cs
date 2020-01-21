@@ -5,6 +5,7 @@ namespace LangServices
 {
     public interface ITranslationsService : IService<Translation>
     {
-        IEnumerable<Translation> GetTranslationsWithData();
+        IEnumerable<Translation> GetTranslationsWithText();
+        IEnumerable<Translation> GetTranslationsWithLanguages();
     }
 }

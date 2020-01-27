@@ -30,7 +30,7 @@ highlightActiveMenuItem = function () {
 $(function () {                      
     // Reset input if clicking on dropdown again
     $('.searcheable-dropdown').click(function () {
-        var input = $('.searcheable-dropdown input');
+        var input = $('.searcheable-dropdown button');
         input.val('');
         filterFunction(input);
     });
@@ -45,7 +45,7 @@ $(function () {
 
 function filterFunction(obj) { // obj: JQuery<HTMLElement>
     var filter = obj.val().toUpperCase();
-    var links = obj.parent().children('a');
+    var links = obj.parent().children('button');
 
     for (var i = 0; i < links.length; i++) {
         txtValue = links[i].textContent || links[i].innerText;

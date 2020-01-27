@@ -1,12 +1,13 @@
 ﻿@model SearcheableDropdownModel
 
 @{
-    var divClass = "text-center dropdown dropdown-toggle searcheable-dropdown " + Model.AdditionalClasses;
+    var divClass = "dropdown dropdown-toggle searcheable-dropdown " + Model.AdditionalClasses;
 }
 
-<div class="@divClass"
-     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    @Model.Text
+<div class="dropdown">
+    <div class="@divClass" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        @Model.Text
+    </div>
 
     <div class="dropdown-menu text-center dropdown-menu-center" aria-labelledby="dropdownMenuButton">
         <input type="text" autocomplete="new-password" placeholder="Search..">
@@ -16,17 +17,7 @@
             var ctrl = e.OverridesController ? e.AspController : Model.AspController;
             var ac = e.OverridesAction ? e.AspAction : Model.AspAction;
 
-            Object attrs;
-            if (Model.IsSubmit)
-            {
-                attrs = new { @class = "dropdown-item", type = "submit" };
-            }
-            else
-            {
-                attrs = new { @class = "dropdown-item" };
-            }
-
-            @Html.ActionLink(e.Text, ac, ctrl, new { id = e.AspRoute }, attrs);
+            <button onclick="disableBeforeUnload()" type="submit" asp-controller="@ctrl" asp-action="@ac" asp-route-id="@e.AspRoute" class="dropdown-item">@e.Text</button>
         }
     </div>
 </div>

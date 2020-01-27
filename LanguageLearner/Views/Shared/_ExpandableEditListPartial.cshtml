@@ -1,9 +1,15 @@
 ﻿@model ExpandableEditListModel;
 
+@{
+    var listElementCount = Model.Elements != null ? Model.Elements.Count() : 0;
+    var isListEmpty =  listElementCount <= 0;
+    var listTitle = isListEmpty ? Model.Title + " (Empty)" : $"{Model.Title} ({listElementCount})";
+}
+
 <div class="row">
     <div class="col">
         <div class="list-group list-group-item-action">
-            <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#translation-list">@Model.Title </a>
+            <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#translation-list">@listTitle</a>
         </div>
     </div>
 </div>
@@ -13,7 +19,7 @@
         <div class="container">
             <div id="translation-list" class="collapse">
                 <div class="list-group list-group-item-action">
-                    @if (Model.Elements != null && Model.Elements.Count() > 0)
+                    @if (!isListEmpty)
                     {
                         @foreach (var e in Model.Elements)
                         {
@@ -21,7 +27,7 @@
                                 <div class="row">
                                     <div class="col">@e.Text</div>
                                     <div class="col text-right">
-                                        <button type="submit" asp-controller="@Model.AspController" asp-action="@Model.AspAction" asp-route-id="@e.AspRoute" class="btn btn-sm btn-danger">X</button>
+                                        <button onclick="disableBeforeUnload()" type="submit" asp-controller="@Model.AspController" asp-action="@Model.AspAction" asp-route-id="@e.AspRoute" class="btn btn-sm btn-danger">X</button>
                                     </div>
                                 </div>
                             </div>

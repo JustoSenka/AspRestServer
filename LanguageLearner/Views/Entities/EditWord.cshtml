@@ -66,15 +66,16 @@
                 Elements = Model.Definitions.Select(d => new ListElement(d.Text, "", "", d.ID.ToString())),
             };
         }
+
         <div class="form-group row">
             <div class="col">
                 <partial name="_SearcheableDropdown" model="dropdownModel" />
+            </div>
+            
+            <div class="col">
                 <a class="btn btn-light text-center" asp-controller="Entities" asp-action="Word" asp-route-id="@Model.Word.ID">Create New Translation</a>
             </div>
         </div>
-
-        <button type="submit" asp-controller="Entities" asp-action="AddTranslationToWord" asp-route-id="10" class="btn btn-sm btn-danger">Link</button>
-
 
         @* Expandable List of Definitions *@
 
@@ -94,7 +95,6 @@
         }
 
 
-
         @* Update, Delete, Cancel Buttons *@
 
         <div class="form-group row">
@@ -107,7 +107,5 @@
                 <button onclick="disableBeforeUnload()" type="submit" class="btn btn-danger btn-sm" asp-controller="Entities" asp-action="DeleteWord">Delete</button>
             </div>
         </div>
-
-
     </form>
 </div>

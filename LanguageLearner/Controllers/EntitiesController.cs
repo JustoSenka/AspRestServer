@@ -128,8 +128,13 @@ namespace LanguageLearner.Controllers
 
         private IActionResult ViewEditWordModel(EditEntityModel model)
         {
+            model.Word.Language = LanguagesService.Get(model.LanguageID);
             model.AvailableLanguages = LanguagesService.GetAll().ToArray();
             model.Definitions = DefinitionsService.GetAll().ToArray();
+
+            // During submit, the translations array is lost because they are not in the form
+            model.Word.Translations = WordsService.Get(model.Word.ID).Translations;
+
             return View("EditWord", model);
         }
 

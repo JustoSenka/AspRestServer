@@ -99,6 +99,9 @@ namespace LanguageLearner.Controllers
                 var def = DefinitionsService.Get(id);
                 var translation = new Translation(word, def);
                 TranslationsService.Add(translation);
+
+                model.AlertMessage = "Translation successfully added: " + def.Text;
+                model.AlertType = AlertType.Success;
             }
             catch (Exception e)
             {
@@ -116,6 +119,7 @@ namespace LanguageLearner.Controllers
             {
                 var translation = TranslationsService.Get(id);
                 TranslationsService.Remove(translation);
+                model.ExpandTranslationList = true;
             }
             catch (Exception e)
             {

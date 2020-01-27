@@ -5,6 +5,8 @@ namespace LanguageLearner.Models
 {
     public class EditEntityModel : EntityModel, IAlertMessageModel
     {
+        public bool ExpandTranslationList { get; set; }
+
         public Language[] AvailableLanguages { get; set; }
         public int LanguageID { get; set; }
 

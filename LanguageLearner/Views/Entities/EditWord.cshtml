@@ -83,6 +83,7 @@
             var listModel = new ExpandableEditListModel()
             {
                 Title = "List of Translations",
+                Expanded = Model.ExpandTranslationList,
                 Elements = Model.Word.Translations?.Select(t => new ListElement(t.Definition.Language.Name + ": " + t.Definition.Text, "", "", t.ID.ToString())),
                 AspRoute = Model.Word.ID.ToString(),
                 AspController = "Entities",

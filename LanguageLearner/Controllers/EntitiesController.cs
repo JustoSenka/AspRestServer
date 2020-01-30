@@ -134,10 +134,13 @@ namespace LanguageLearner.Controllers
         {
             model.Word.Language = LanguagesService.Get(model.LanguageID);
             model.AvailableLanguages = LanguagesService.GetAll().ToArray();
-            model.Definitions = DefinitionsService.GetAll().ToArray();
 
             // During submit, the translations array is lost because they are not in the form
             model.Word.Translations = WordsService.Get(model.Word.ID).Translations;
+
+            // Show only definitions which are not linked by the word
+            model.Definitions = DefinitionsService.GetAll()
+                .Except(model.Word.Translations.Select(t => t.Definition)).ToArray();
 
             return View("EditWord", model);
         }

@@ -29,10 +29,17 @@ highlightActiveMenuItem = function () {
  //run when the DOM is ready
 $(function () {                      
     // Reset input if clicking on dropdown again
-    $('.searcheable-dropdown').click(function () {
-        var input = $('.searcheable-dropdown button');
-        input.val('');
-        filterFunction(input);
+    $('.searcheable-dropdown').click(function (e) {
+        console.log(e);
+        var input = e.target.parentNode.querySelector('.dropdown-menu input');
+        var jqueryInput = $(input);
+        jqueryInput.val('');
+
+        // focus and select don't seem to work
+        jqueryInput.focus();
+        jqueryInput.select();
+
+        filterFunction(jqueryInput);
     });
     // Filtering function
     $(".dropdown-menu input").keyup(function (e) {
@@ -44,6 +51,10 @@ $(function () {
 });
 
 function filterFunction(obj) { // obj: JQuery<HTMLElement>
+    var value = obj.val();
+    if (value == null)
+        return;
+       
     var filter = obj.val().toUpperCase();
     var links = obj.parent().children('button');
 

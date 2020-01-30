@@ -41,18 +41,49 @@
             </div>
         </div>
 
+        @* Add or Create new definition buttons with dropdown *@
+
+        @{
+            var dropdownModel = new SearcheableDropdownModel()
+            {
+                IsSubmit = true,
+                Text = "Link to existing Word",
+                AdditionalClasses = "btn btn-light text-center",
+                AspController = "Entities",
+                AspAction = "AddTranslationToDefinition",
+                Elements = Model.Words.Select(d => new ListElement(d.Text, "", "", d.ID.ToString())),
+            };
+        }
+
+        <div class="form-group row">
+            <div class="col">
+                <partial name="_SearcheableDropdown" model="dropdownModel" />
+            </div>
+
+            <div class="col">
+                <a class="btn btn-light text-center" asp-controller="Entities" asp-action="Word" asp-route-id="@Model.Definition.ID">Create New Translation</a>
+            </div>
+        </div>
+
+        @* Expandable List of Words/Translations *@
+
         @{
             var listModel = new ExpandableEditListModel()
             {
                 Title = "List of Translations",
-                Elements = Model.Definition.Translations?.Select(t => new ListElement(t.Word.Language.Name + ": " + t.Word.Text, "Word", "Entities", t.Word.ID.ToString())),
+                Expanded = Model.ExpandTranslationList,
+                Elements = Model.Definition.Translations?.Select(t => new ListElement(t.Word.Language.Name + ": " + t.Word.Text, "", "", t.ID.ToString())),
                 AspRoute = Model.Definition.ID.ToString(),
-        };
+                AspController = "Entities",
+                AspAction = "RemoveTranslationFromDefinition",
+            };
 
-        <div class="form-group">
-            <partial name="_ExpandableEditListPartial" for="@listModel" />
-        </div>
+            <div class="form-group">
+                <partial name="_ExpandableEditListPartial" for="@listModel" />
+            </div>
         }
+
+        @* Update, Delete, Cancel Buttons *@
 
         <div class="form-group row">
             <div class="col">

@@ -43,13 +43,15 @@ namespace LanguageLearner.Controllers
         [HttpPost]
         public IActionResult EditLanguages(string buttonName, string languageName)
         {
+            Action ac = () => { };
+
             if (buttonName == "New")
             {
                 if (string.IsNullOrEmpty(languageName))
                     return RedirectToAction("ErrorIndex", new { errorMsg = "Language name cannot be empty." });
 
                 var lang = new Language(languageName);
-                lang = LanguagesService.Add(lang);
+                ac = () => LanguagesService.Add(lang);
             }
             else
             {
@@ -62,12 +64,28 @@ namespace LanguageLearner.Controllers
                         return RedirectToAction("ErrorIndex", new { errorMsg = "Language name cannot be empty." });
 
                     lang.Name = languageName;
-                    LanguagesService.Update(lang);
+                    ac = () => LanguagesService.Update(lang);
                 }
                 else if (buttonName.StartsWith("Delete"))
                 {
-                    LanguagesService.Remove(lang);
+                    try
+                    {
+                        LanguagesService.Remove(lang);
+                    }
+                    catch
+                    {
+                        return RedirectToAction("ErrorIndex", new { errorMsg = "Cannot delete language because there are words still using it." });
+                    }
                 }
+            }
+
+            try
+            {
+                ac.Invoke();
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ErrorIndex", new { errorMsg = "Something went wrong: " + e.Message });
             }
 
             return RedirectToAction("Index");

@@ -4,6 +4,16 @@
     ViewData["Title"] = "Edit " + Model.Word.Text;
 }
 
+<script>
+    window.onbeforeunload = function () {
+        return true;
+    };
+
+    function disableBeforeUnload() {
+        window.onbeforeunload = null;
+    }
+</script>
+
 <div class="container">
     <form method="post">
         <input type="hidden" asp-for="Word.ID" value="@Model.Word.ID" />

@@ -74,9 +74,8 @@ namespace Tests.Integration
 
             DefinitionsService.Remove(word.Translations[0].Definition);
             var newWord = WordsService.GetWordsWithData().First();
-            var trans = newWord.Translations[0];
 
-            Assert.IsNull(trans.Definition);
+            Assert.AreEqual(0, newWord.Translations.Count, "Translations should be automatically deleted when removing definition");
         }
     }
 }

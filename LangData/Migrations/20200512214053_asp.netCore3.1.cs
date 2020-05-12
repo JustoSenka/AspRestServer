@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LangData.Migrations
 {
-    public partial class initial : Migration
+    public partial class aspnetCore31 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,8 +11,10 @@ namespace LangData.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: false),
+                    WordCount = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -25,7 +26,7 @@ namespace LangData.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -38,10 +39,10 @@ namespace LangData.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(nullable: false),
-                    Examples = table.Column<string>(nullable: true),
-                    LanguageID = table.Column<int>(nullable: true)
+                    LanguageID = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,7 +52,7 @@ namespace LangData.Migrations
                         column: x => x.LanguageID,
                         principalTable: "Languages",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,9 +60,12 @@ namespace LangData.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(nullable: false),
-                    LanguageID = table.Column<int>(nullable: true),
+                    LanguageID = table.Column<int>(nullable: false),
+                    Article = table.Column<string>(nullable: true),
+                    Pronunciation = table.Column<string>(nullable: true),
+                    AlternateSpelling = table.Column<string>(nullable: true),
                     BookID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -78,7 +82,7 @@ namespace LangData.Migrations
                         column: x => x.LanguageID,
                         principalTable: "Languages",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,7 +90,7 @@ namespace LangData.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     WordID = table.Column<int>(nullable: true),
                     DefinitionID = table.Column<int>(nullable: true)
                 },

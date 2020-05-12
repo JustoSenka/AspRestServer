@@ -4,18 +4,20 @@ using LangData.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LangData.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    [Migration("20200512214053_asp.netCore3.1")]
+    partial class aspnetCore31
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -23,14 +25,18 @@ namespace LangData.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("WordCount");
+                    b.Property<int>("WordCount")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -41,14 +47,18 @@ namespace LangData.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LanguageID");
+                    b.Property<int>("LanguageID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Text")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -61,10 +71,12 @@ namespace LangData.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -75,25 +87,20 @@ namespace LangData.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("DefinitionID");
+                    b.Property<int?>("DefinitionID")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("DefinitionID1");
-
-                    b.Property<int>("WordID");
-
-                    b.Property<int?>("WordID1");
+                    b.Property<int?>("WordID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("DefinitionID");
 
-                    b.HasIndex("DefinitionID1");
-
                     b.HasIndex("WordID");
-
-                    b.HasIndex("WordID1");
 
                     b.ToTable("Translations");
                 });
@@ -102,20 +109,27 @@ namespace LangData.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AlternateSpelling");
+                    b.Property<string>("AlternateSpelling")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Article");
+                    b.Property<string>("Article")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("BookID");
+                    b.Property<int?>("BookID")
+                        .HasColumnType("int");
 
-                    b.Property<int>("LanguageID");
+                    b.Property<int>("LanguageID")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Pronunciation");
+                    b.Property<string>("Pronunciation")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Text")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -131,42 +145,32 @@ namespace LangData.Migrations
                     b.HasOne("LangData.Objects.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LangData.Objects.Translation", b =>
                 {
                     b.HasOne("LangData.Objects.Definition", "Definition")
                         .WithMany("Translations")
-                        .HasForeignKey("DefinitionID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LangData.Objects.Definition")
-                        .WithMany()
-                        .HasForeignKey("DefinitionID1")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("DefinitionID");
 
                     b.HasOne("LangData.Objects.Word", "Word")
                         .WithMany("Translations")
-                        .HasForeignKey("WordID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LangData.Objects.Word")
-                        .WithMany()
-                        .HasForeignKey("WordID1")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("WordID");
                 });
 
             modelBuilder.Entity("LangData.Objects.Word", b =>
                 {
-                    b.HasOne("LangData.Objects.Book")
+                    b.HasOne("LangData.Objects.Book", null)
                         .WithMany("Words")
                         .HasForeignKey("BookID");
 
                     b.HasOne("LangData.Objects.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

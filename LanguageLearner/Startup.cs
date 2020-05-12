@@ -73,8 +73,10 @@ namespace LanguageLearner
             else
             {
                 // app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                // app.UseHsts();
+
+                // uncomment above when moving to production, now it's easier to always see exception
+                app.UseDeveloperExceptionPage();
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();

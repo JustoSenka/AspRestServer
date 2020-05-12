@@ -1,9 +1,9 @@
 ﻿using LangData.Context;
 using LangServices;
 using LanguageLearner;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using Tests.Utils;
 
@@ -11,7 +11,7 @@ namespace Tests.Base
 {
     public abstract class IntegrationTest
     {
-        protected IWebHost Host;
+        protected IHost m_Host;
 
         public virtual bool UseInMemoryDB => true;
 
@@ -28,14 +28,14 @@ namespace Tests.Base
         {
             Startup.UseInMemoryDatabase = UseInMemoryDB;
 
-            Host = CreateWebHostBuilder();
+            m_Host = CreateWebHostBuilder();
 
-            DatabaseContext = Host.Services.GetService<DatabaseContext>();
-            BookService = Host.Services.GetService<IBooksService>();
-            WordsService = Host.Services.GetService<IWordsService>();
-            LanguagesService = Host.Services.GetService<ILanguagesService>();
-            DefinitionsService = Host.Services.GetService<IDefinitionsService>();
-            TranslationsService = Host.Services.GetService<ITranslationsService>();
+            DatabaseContext = m_Host.Services.GetService<DatabaseContext>();
+            BookService = m_Host.Services.GetService<IBooksService>();
+            WordsService = m_Host.Services.GetService<IWordsService>();
+            LanguagesService = m_Host.Services.GetService<ILanguagesService>();
+            DefinitionsService = m_Host.Services.GetService<IDefinitionsService>();
+            TranslationsService = m_Host.Services.GetService<ITranslationsService>();
 
             try
             {
@@ -48,9 +48,15 @@ namespace Tests.Base
             }
         }
 
+        /*
         protected static IWebHost CreateWebHostBuilder() =>
             WebHost.CreateDefaultBuilder()
             .UseStartup<Startup>()
+            .Build();
+        */
+        public static IHost CreateWebHostBuilder() =>
+         Host.CreateDefaultBuilder()
+        .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
             .Build();
     }
 }

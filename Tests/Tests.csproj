@@ -1,43 +1,38 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<LangVersion>7.1</LangVersion>
+		<RuntimeIdentifiers>win10-x64;osx.10.11-x64</RuntimeIdentifiers>
+	</PropertyGroup>
 
-    <IsPackable>false</IsPackable>
+	<ItemGroup>
+		<None Remove="appsettings.json" />
+	</ItemGroup>
 
-    <LangVersion>7.1</LangVersion>
-	
-	<RuntimeIdentifiers>win10-x64;osx.10.11-x64</RuntimeIdentifiers>
-	
-  </PropertyGroup>
+	<ItemGroup>
+		<Content Include="appsettings.json">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove="appsettings.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
+		<PackageReference Include="nunit" Version="3.11.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\LangServices\LangServices.csproj" />
+		<ProjectReference Include="..\LanguageLearner\LanguageLearner.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
-    <PackageReference Include="nunit" Version="3.11.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\LangServices\LangServices.csproj" />
-    <ProjectReference Include="..\LanguageLearner\LanguageLearner.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Unit\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Unit\" />
+	</ItemGroup>
 
 </Project>

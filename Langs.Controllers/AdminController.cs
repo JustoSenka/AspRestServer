@@ -37,7 +37,6 @@ namespace Langs.Controllers
             return RedirectToAction("Index");
         }
 
-
         public IActionResult Delete()
         {
             DatabaseUtils.DeleteDB(m_Context);

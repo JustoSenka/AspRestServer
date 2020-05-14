@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using System;
 
 namespace LanguageLearner
 {
@@ -71,7 +71,14 @@ namespace LanguageLearner
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            DatabaseUtils.MigrateDB(app);
+            try
+            {
+                DatabaseUtils.MigrateDB(app);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             if (env.IsDevelopment())
             {

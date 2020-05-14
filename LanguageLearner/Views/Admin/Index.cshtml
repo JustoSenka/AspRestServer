@@ -4,11 +4,23 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
+<environment include="Development">
+    <div>This is a Development build</div>
+</environment>
+
+<environment include="Production">
+    <div>This is a Production build</div>
+</environment>
+
+
 <div class="container">
     <p>
         <a asp-controller="Admin" asp-action="Clean">Clean Database</a><br>
         <a asp-controller="Admin" asp-action="AddWords">Populate with test data</a><br>
         <a asp-controller="Admin" asp-action="Migrate">Migrate Database to latest</a><br>
-        <a asp-controller="Admin" asp-action="Delete">Delete Database</a><br>
+        
+        <environment include="Development">
+            <a asp-controller="Admin" asp-action="Delete">Delete Database</a><br>
+        </environment>
     </p>
 </div>

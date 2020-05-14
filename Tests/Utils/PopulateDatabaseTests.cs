@@ -1,10 +1,11 @@
-﻿using NUnit.Framework;
+﻿using Langs.Utilities;
+using NUnit.Framework;
 using System.Linq;
 using Tests.Base;
 
 namespace Tests.Utils
 {
-    class PopulateDatabaseTests : IntegrationTest
+    public class PopulateDatabaseTests : IntegrationTest
     {
         public override bool UseInMemoryDB => false;
 

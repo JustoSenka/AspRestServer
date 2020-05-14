@@ -1,11 +1,11 @@
-﻿using LangData.Context;
-using LangServices;
+﻿using Langs.Data.Context;
+using Langs.Services;
+using Langs.Utilities;
 using LanguageLearner;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
-using Tests.Utils;
 
 namespace Tests.Base
 {

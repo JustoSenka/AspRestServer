@@ -1,5 +1,6 @@
-﻿using LangData.Context;
-using LangServices;
+﻿using Langs.Controllers;
+using Langs.Data.Context;
+using Langs.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.Sqlite;
@@ -31,6 +32,7 @@ namespace LanguageLearner
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc().AddApplicationPart(typeof(HomeController).Assembly).AddControllersAsServices();
             services.AddControllersWithViews();
 
             services.AddSingleton(Configuration);
@@ -41,6 +43,8 @@ namespace LanguageLearner
             services.AddScoped<IDefinitionsService, DefinitionsService>();
             services.AddScoped<ITranslationsService, TranslationsService>();
             services.AddScoped<IUserService, UserService>();
+
+            services.AddRazorPages().AddRazorRuntimeCompilation();
 
             SetupDatabase(services);
         }
@@ -60,7 +64,7 @@ namespace LanguageLearner
             else
             {
                 var connectionString = Configuration.GetConnectionString("LanguageLearner");
-                services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(connectionString, b => b.MigrationsAssembly("LangData")));
+                services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(connectionString, b => b.MigrationsAssembly("Langs.Data")));
             }
         }
 

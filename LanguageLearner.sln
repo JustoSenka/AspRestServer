@@ -1,17 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.421
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LanguageLearner", "LanguageLearner\LanguageLearner.csproj", "{6FA35B26-C2DF-4B0B-900B-523D6960AAFD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{FA57761E-1790-4B29-A484-019DC3797A24}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LangData", "LangData\LangData.csproj", "{9081DAC1-22A0-4DEB-BBDC-E7925C8FAED0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Langs.Data", "Langs.Data\Langs.Data.csproj", "{9081DAC1-22A0-4DEB-BBDC-E7925C8FAED0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LangServices", "LangServices\LangServices.csproj", "{FA7922F9-20DB-4229-AE00-29ED727A299F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Langs.Services", "Langs.Services\Langs.Services.csproj", "{FA7922F9-20DB-4229-AE00-29ED727A299F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseUtilities", "DatabaseUtilities\DatabaseUtilities.csproj", "{4C767136-635B-42AD-B7CA-C4E619B4DF31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Langs.Utilities", "Langs.Utilities\Langs.Utilities.csproj", "{4C767136-635B-42AD-B7CA-C4E619B4DF31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Langs.Models", "Langs.Models\Langs.Models.csproj", "{36F0BC34-F3E4-43C2-ACB3-6331C894C5F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Langs.Controllers", "Langs.Controllers\Langs.Controllers.csproj", "{CBC82A4E-F9C4-4D1C-9978-E4E4AF5D66E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{4C767136-635B-42AD-B7CA-C4E619B4DF31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C767136-635B-42AD-B7CA-C4E619B4DF31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C767136-635B-42AD-B7CA-C4E619B4DF31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36F0BC34-F3E4-43C2-ACB3-6331C894C5F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36F0BC34-F3E4-43C2-ACB3-6331C894C5F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36F0BC34-F3E4-43C2-ACB3-6331C894C5F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36F0BC34-F3E4-43C2-ACB3-6331C894C5F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBC82A4E-F9C4-4D1C-9978-E4E4AF5D66E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBC82A4E-F9C4-4D1C-9978-E4E4AF5D66E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBC82A4E-F9C4-4D1C-9978-E4E4AF5D66E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBC82A4E-F9C4-4D1C-9978-E4E4AF5D66E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

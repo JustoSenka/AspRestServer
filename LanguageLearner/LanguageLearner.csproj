@@ -14,6 +14,7 @@
 
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,13 +25,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <ProjectReference Include="..\LangData\LangData.csproj" />
-    <ProjectReference Include="..\LangServices\LangServices.csproj" />
+    <ProjectReference Include="..\Langs.Controllers\Langs.Controllers.csproj" />
+    <ProjectReference Include="..\Langs.Data\Langs.Data.csproj" />
+    <ProjectReference Include="..\Langs.Models\Langs.Models.csproj" />
+    <ProjectReference Include="..\Langs.Services\Langs.Services.csproj" />
   </ItemGroup>
 
 

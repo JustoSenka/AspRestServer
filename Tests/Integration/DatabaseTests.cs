@@ -1,4 +1,4 @@
-using LangData.Objects;
+using Langs.Data.Objects;
 using NUnit.Framework;
 using System.Linq;
 using Tests.Base;

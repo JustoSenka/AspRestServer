@@ -43,7 +43,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\LangServices\LangServices.csproj" />
+		<ProjectReference Include="..\Langs.Utilities\Langs.Utilities.csproj" />
+		<ProjectReference Include="..\Langs.Services\Langs.Services.csproj" />
 		<ProjectReference Include="..\LanguageLearner\LanguageLearner.csproj" />
 	</ItemGroup>
 

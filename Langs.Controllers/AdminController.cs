@@ -1,5 +1,7 @@
-﻿using Langs.Models;
+﻿using Langs.Data.Context;
+using Langs.Models;
 using Langs.Services;
+using Langs.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,16 +9,10 @@ namespace Langs.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly ILanguagesService LanguagesService;
-        private readonly IWordsService WordsService;
-        private readonly ITranslationsService TranslationsService;
-        private readonly IDefinitionsService DefinitionsService;
-        public AdminController(IWordsService WordsService, ILanguagesService LanguagesService, ITranslationsService TranslationsService, IDefinitionsService DefinitionsService)
+        private readonly DatabaseContext m_Context;
+        public AdminController(DatabaseContext context)
         {
-            this.WordsService = WordsService;
-            this.LanguagesService = LanguagesService;
-            this.TranslationsService = TranslationsService;
-            this.DefinitionsService = DefinitionsService;
+            this.m_Context = context;
         }
 
         public IActionResult Index()
@@ -25,24 +21,26 @@ namespace Langs.Controllers
         }
         public IActionResult Clean()
         {
-
+            DatabaseUtils.ClearDB(m_Context);
             return RedirectToAction("Index");
         }
 
         public IActionResult AddWords()
         {
-
+            DatabaseUtils.PopulateWithTestData(m_Context);
             return RedirectToAction("Index");
         }
+
         public IActionResult Migrate()
         {
-
+            DatabaseUtils.MigrateDB(m_Context);
             return RedirectToAction("Index");
         }
+
 
         public IActionResult Delete()
         {
-
+            DatabaseUtils.DeleteDB(m_Context);
             return RedirectToAction("Index");
         }
 

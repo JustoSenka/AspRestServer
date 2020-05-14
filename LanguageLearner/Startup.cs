@@ -1,6 +1,7 @@
 ﻿using Langs.Controllers;
 using Langs.Data.Context;
 using Langs.Services;
+using Langs.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.Sqlite;
@@ -70,6 +71,8 @@ namespace LanguageLearner
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            DatabaseUtils.MigrateDB(app);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

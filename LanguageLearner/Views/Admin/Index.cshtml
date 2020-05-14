@@ -5,18 +5,10 @@
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col">
-            <a class="btn btn-secondary" asp-controller="Admin" asp-action="Clean">Clean Database</a><br>
-        </div>
-        <div class="col">
-            <a class="btn btn-secondary" asp-controller="Admin" asp-action="AddWords">Add Test Words</a><br>
-        </div>
-        <div class="col">
-            <a class="btn btn-secondary" asp-controller="Admin" asp-action="Migrate">Migrate</a><br>
-        </div>
-        <div class="col">
-            <a class="btn btn-danger" asp-controller="Admin" asp-action="Delete">Delete Database</a><br>
-        </div>
-    </div>
+    <p>
+        <a asp-controller="Admin" asp-action="Clean">Clean Database</a><br>
+        <a asp-controller="Admin" asp-action="AddWords">Populate with test data</a><br>
+        <a asp-controller="Admin" asp-action="Migrate">Migrate Database to latest</a><br>
+        <a asp-controller="Admin" asp-action="Delete">Delete Database</a><br>
+    </p>
 </div>

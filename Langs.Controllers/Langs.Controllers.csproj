@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Langs.Models\Langs.Models.csproj" />
     <ProjectReference Include="..\Langs.Services\Langs.Services.csproj" />
+    <ProjectReference Include="..\Langs.Utilities\Langs.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

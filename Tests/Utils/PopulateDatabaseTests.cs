@@ -12,7 +12,7 @@ namespace Tests.Utils
         [Test]
         public void AddSingleBook_CheckIfDataCountIsCorrect()
         {
-            PopulateDatabase.PopulateWithTestData(DatabaseContext);
+            DatabaseUtils.PopulateWithTestData(DatabaseContext);
 
             Assert.AreEqual(1, BookService.GetBooksWithData().Count(), "Books");
             Assert.AreEqual(3, LanguagesService.GetAll().Count(), "Langs");
@@ -26,14 +26,14 @@ namespace Tests.Utils
         // Also deletes migration history if used on main db
         public void DeteteDB()
         {
-            PopulateDatabase.DeleteDB(DatabaseContext);
+            DatabaseUtils.DeleteDB(DatabaseContext);
         }
 
         [Test]
         public void ClearDB()
         {
-            PopulateDatabase.PopulateWithTestData(DatabaseContext);
-            PopulateDatabase.ClearDatabase(DatabaseContext);
+            DatabaseUtils.PopulateWithTestData(DatabaseContext);
+            DatabaseUtils.ClearDB(DatabaseContext);
 
             Assert.AreEqual(0, BookService.GetBooksWithData().Count(), "Books");
             Assert.AreEqual(0, LanguagesService.GetAll().Count(), "Langs");

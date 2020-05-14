@@ -39,12 +39,12 @@ namespace Tests.Base
 
             try
             {
-                PopulateDatabase.PopulateWithTestData(DatabaseContext);
+                DatabaseUtils.PopulateWithTestData(DatabaseContext);
             }
             catch
             {
-                PopulateDatabase.DeleteDB(DatabaseContext);
-                PopulateDatabase.PopulateWithTestData(DatabaseContext);
+                DatabaseUtils.DeleteDB(DatabaseContext);
+                DatabaseUtils.PopulateWithTestData(DatabaseContext);
             }
         }
 

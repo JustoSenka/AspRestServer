@@ -1,19 +1,36 @@
 ﻿using Langs.Data.Context;
 using Langs.Data.Objects;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Langs.Utilities
 {
-    public static class PopulateDatabase
+    public static class DatabaseUtils
     {
         public static void DeleteDB(DatabaseContext DatabaseContext)
         {
             DatabaseContext.Database.EnsureDeleted();
         }
 
+        public static void MigrateDB(DatabaseContext DatabaseContext)
+        {
+            DatabaseContext.Database.Migrate();
+        }
 
-        public static void ClearDatabase(DatabaseContext DatabaseContext)
+        public static void MigrateDB(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<DatabaseContext>();
+                MigrateDB(context);
+            }
+        }
+
+        public static void ClearDB(DatabaseContext DatabaseContext)
         {
             DatabaseContext.Database.EnsureCreated();
 
@@ -29,7 +46,7 @@ namespace Langs.Utilities
         public static void PopulateWithTestData(DatabaseContext DatabaseContext)
         {
             DatabaseContext.Database.EnsureCreated();
-            ClearDatabase(DatabaseContext);
+            ClearDB(DatabaseContext);
 
             var langEn = new Language("English");
             var langEsp = new Language("Spanish");

@@ -15,10 +15,23 @@ if "%1" == "all" (
 	goto sendfolder
 )
 
-if "%1" == "proj" (
-	set source=.\LanguageLearner\bin\Release\netcoreapp3.1\publish\*.*
+if "%1" == "code" (
 	set dest=publish\
-	goto sendfiles
+	
+	set source=.\LanguageLearner\bin\Release\netcoreapp3.1\publish\*.exe
+	call :sendfilesProc
+	
+	set source=.\LanguageLearner\bin\Release\netcoreapp3.1\publish\LanguageLearner*.dll
+	call :sendfilesProc
+	
+	set source=.\LanguageLearner\bin\Release\netcoreapp3.1\publish\Langs*.dll
+	call :sendfilesProc
+	
+	set source=.\LanguageLearner\bin\Release\netcoreapp3.1\publish\*.json
+	call :sendfilesProc
+	
+	set source=.\LanguageLearner\bin\Release\netcoreapp3.1\publish\*.config
+	call :sendfilesProc
 )
 
 if "%1" == "wwwroot" (
@@ -45,6 +58,8 @@ if "%1" == "config" (
 	goto sendfiles
 )
 
+goto exit
+
 :sendfolder
 NcFTP\ncftpput -R -m %login% %dest% %source%
 goto exit
@@ -53,10 +68,14 @@ goto exit
 NcFTP\ncftpput -m %login% %dest% %source%
 goto exit
 
+:sendfilesProc
+NcFTP\ncftpput -m %login% %dest% %source%
+exit /B
+
 
 :end
 echo 1. all		to send full publish folder
-echo 2. proj		to send all files in publish, but not folders, runtimes or libraries
+echo 2. code		to send all files in publish, but not folders, runtimes or libraries
 echo 3. wwwroot	to send only wwwroot
 echo 4. runtimes	to send only compiled and json files in publish folder
 echo 5. json		to send only compiled and json files in publish folder

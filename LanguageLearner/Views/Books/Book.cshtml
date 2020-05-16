@@ -11,16 +11,18 @@
 <div class="container">
     <h3>Words in book</h3>
 
-    @foreach (var word in Model.Book?.Words)
-    {
-    <div class="grid">
-        <div class="row">
-            <div class="col-sm-1">@word.ID</div>
-            <div class="col-sm-5">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Entities" asp-action="Word" asp-route-id="@word.ID">@word.Text</a>
-            </div>
-            <div class="col-sm-6">@word.Translations?.First().Definition.Text</div>
-        </div>
-    </div>
+    @{
+        var TableModel = new TableLinkModel()
+        {
+            Title = "Word count: " + Model.Book.Words.Count(),
+            TableElements = Model.Book.Words.Select(w => TableElement.LinkMany(w.ID, w.Text, w.Translations.First().Definition.Text)),
+            LeftHeaders = Model.Book.Words.Select(w => w.ID.ToString()),
+            TopHeader = new[] { "ID", "Word", "Translation" },
+        };
+
+        TableModel.ColumnLinks[0] = ("Entities", "Word");
+        TableModel.ColumnLinks[1] = ("Entities", "Definition");
+
+        <partial name="_TableLinkPartial" for="@TableModel" />
     }
 </div>

@@ -19,17 +19,19 @@ namespace Langs.Controllers
 
         public IActionResult Index()
         {
-            try
+            var books = BookService.GetWithWordCount();
+            var bookModel = new BookIndexModel()
             {
-                var books = BookService.GetAll().ToArray();
-                var bookModel = new BookIndexModel() { Books = books };
+                Books = books.Select(b =>
+                (
+                    b.ID,
+                    b.Name,
+                    b.Description,
+                    b.Words.Count())
+                ).ToArray()
+            };
 
-                return View(bookModel);
-            }
-            catch (Exception e)
-            {
-                return View("Error", new ErrorViewModel { Exception = e, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-            }
+            return View(bookModel);
         }
 
         public IActionResult Book(int id)

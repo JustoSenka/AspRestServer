@@ -6,9 +6,15 @@
 
 <partial name="_BookNavigation" />
 
-<h1>Select Book to display</h1>
+@{
+    var TableModel = new TableLinkModel()
+    {
+        Title = "Book count: " + Model.Books.Count(),
+        TableElements = Model.Books.Select(b => TableElement.LinkMany(b.ID, b.Name, b.Description, b.WordCount.ToString())),
+        TopHeader = new[] { "Name", "Description", "Word Count" },
+        AspAction = "Book",
+        AspController = "Books",
+    };
 
-@foreach (var book in Model.Books)
-{
-    <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Book" asp-route-id="@book.ID">@book.ID - @book.Name</a>
+    <partial name="_TableLinkPartial" for="@TableModel" />
 }

@@ -34,7 +34,7 @@ namespace Langs.Data.Objects
 
         // ----------
         [NotMapped]
-        public IEnumerable<Book> Books => BookWordCollection.Select(c => c.Book);
+        public IEnumerable<Book> Books => BookWordCollection?.Select(c => c.Book);
 
         string IDisplayText.DisplayText => Text;
     }

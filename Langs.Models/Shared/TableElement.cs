@@ -18,12 +18,12 @@ namespace Langs.Models.Shared
             return new TableElement { Value = str, ID = id, HasLinkAction = true };
         }
 
-        public static TableElement[] TextMany(string[] str)
+        public static TableElement[] TextMany(params string[] str)
         {
             return str.Select(s => new TableElement { Value = s, HasLinkAction = false }).ToArray();
         }
 
-        public static TableElement[] LinkMany(int id, string[] str)
+        public static TableElement[] LinkMany(int id, params string[] str)
         {
             return str.Select(s => new TableElement { Value = s, ID = id, HasLinkAction = true }).ToArray();
         }

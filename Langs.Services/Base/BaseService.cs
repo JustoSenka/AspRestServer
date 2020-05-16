@@ -1,9 +1,8 @@
 ﻿using Langs.Data.Context;
-using Langs.Data.Objects;
 using Langs.Data.Objects.Base;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Langs.Services
@@ -27,7 +26,7 @@ namespace Langs.Services
         public virtual T Add(T obj)
         {
             var entry = EntitiesProxy.Add(obj);
-            if(SavesChanges)
+            if (SavesChanges)
                 m_Context.SaveChanges();
 
             return entry.Entity;
@@ -80,7 +79,7 @@ namespace Langs.Services
             if (m_BatchingRefCount < 0)
             {
                 m_BatchingRefCount = 0;
-                Debug.WriteLine("EndBatchingRequests called without appropriate StartBatchingRequests. m_BatchingRefCount cannot go below 0");
+                throw new InvalidOperationException("EndBatchingRequests called without appropriate StartBatchingRequests. m_BatchingRefCount cannot go below 0");
             }
 
             if (m_BatchingRefCount == 0)

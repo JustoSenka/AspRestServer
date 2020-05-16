@@ -18,6 +18,9 @@ namespace Langs.Services
                         .ThenInclude(t => t.Definition)
             .SingleOrDefault(e => e.ID == id);
 
+        public IEnumerable<Book> GetWithWordCount() => m_Context.Books
+            .Include(p => p.BookWordCollection);
+
         public IEnumerable<Book> GetBooksWithData() => m_Context.Books
             .Include(p => p.BookWordCollection)
                 .ThenInclude(c => c.Word)

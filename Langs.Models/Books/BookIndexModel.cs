@@ -1,9 +1,7 @@
-using Langs.Data.Objects;
-
 namespace Langs.Models.Books
 {
     public class BookIndexModel
     {
-        public Book[] Books { get; set; }
+        public (int ID, string Name, string Description, int WordCount)[] Books { get; set; }
     }
 }

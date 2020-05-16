@@ -25,7 +25,7 @@
                         <td>
                             @if (Model.HasLinkAction(colIndex) && col.HasLinkAction)
                             {
-                                @Html.ActionLink(col.Value, Model.GetAction(colIndex), Model.GetController(colIndex), new { id = col.ID }, new { style = "color: #000000;" })
+                                @Html.ActionLink(col.Value ?? "", Model.GetAction(colIndex), Model.GetController(colIndex), new { id = col.ID }, new { style = "color: #000000;" })
                             }
                             else
                             {
@@ -51,7 +51,7 @@
                         <td>
                             @if (Model.HasLinkAction(colIndex) && col.HasLinkAction)
                             {
-                                @Html.ActionLink(col.Value, Model.GetAction(colIndex), Model.GetController(colIndex), new { id = col.ID }, new { style = "color: #000000;" })
+                                @Html.ActionLink(col.Value ?? "", Model.GetAction(colIndex), Model.GetController(colIndex), new { id = col.ID }, new { style = "color: #000000;" })
                             }
                             else
                             {

@@ -15,9 +15,10 @@ namespace Langs.Data.Objects
             Definition = definition;
         }
 
-        public Word Word { get; set; }
-        public Definition Definition { get; set; }
+        public virtual Word Word { get; set; }
+        public virtual Definition Definition { get; set; }
 
+        // ----------
         string IDisplayText.DisplayText => Word.Text + " - " + Definition.Text;
     }
 }

@@ -17,6 +17,18 @@ namespace Langs.Data.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // Book - Word : Many To Many
+            builder.Entity<BookWord>().HasKey(e => new { e.BookId, e.WordId });
+            builder.Entity<BookWord>()
+                .HasOne<Word>(e => e.Word)
+                .WithMany(e => e.BookWordCollection)
+                .HasForeignKey(e => e.WordId);
+
+            builder.Entity<BookWord>()
+                .HasOne<Book>(e => e.Book)
+                .WithMany(e => e.BookWordCollection)
+                .HasForeignKey(e => e.BookId);
         }
     }
 }

@@ -27,6 +27,7 @@ namespace Tests.Base
         public void CreateWebHostBuilderAndDatabase()
         {
             Startup.UseInMemoryDatabase = UseInMemoryDB;
+            Startup.UseTestDatabase = true;
 
             m_Host = CreateWebHostBuilder();
 
@@ -39,21 +40,19 @@ namespace Tests.Base
 
             try
             {
+                if (!UseInMemoryDB)
+                    DatabaseUtils.MigrateDB(DatabaseContext);
                 DatabaseUtils.PopulateWithTestData(DatabaseContext);
             }
             catch
             {
                 DatabaseUtils.DeleteDB(DatabaseContext);
+                if (!UseInMemoryDB)
+                    DatabaseUtils.MigrateDB(DatabaseContext);
                 DatabaseUtils.PopulateWithTestData(DatabaseContext);
             }
         }
 
-        /*
-        protected static IWebHost CreateWebHostBuilder() =>
-            WebHost.CreateDefaultBuilder()
-            .UseStartup<Startup>()
-            .Build();
-        */
         public static IHost CreateWebHostBuilder() =>
          Host.CreateDefaultBuilder()
         .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())

@@ -18,7 +18,7 @@ namespace Tests.Integration
             var book = BookService.GetBooksWithData().First();
 
             Assert.IsNotNull(book.Words);
-            Assert.AreEqual(6, book.Words.Count);
+            Assert.AreEqual(6, book.Words.Count());
         }
 
         [Test]

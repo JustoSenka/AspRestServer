@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Diagnostics;
 
 namespace LanguageLearner
 {
@@ -19,18 +20,18 @@ namespace LanguageLearner
         /// Used only from tests
         /// </summary>
         public static bool UseInMemoryDatabase = false;
+        public static bool UseTestDatabase = false;
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
 
             var msg = Configuration.GetValue<string>("WelcomeMessage");
-            System.Diagnostics.Debug.WriteLine("Config in use: " + msg);
+            Debug.WriteLine("Config in use: " + msg);
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().AddApplicationPart(typeof(HomeController).Assembly).AddControllersAsServices();
@@ -64,22 +65,17 @@ namespace LanguageLearner
             }
             else
             {
-                var connectionString = Configuration.GetConnectionString("LanguageLearner");
+                var dbName = UseTestDatabase ? "TestDB" : "MainDB";
+                var connectionString = Configuration.GetConnectionString(dbName);
+
+                Debug.WriteLine("Database in use: " + dbName);
+
                 services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(connectionString, b => b.MigrationsAssembly("Langs.Data")));
             }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            try
-            {
-                DatabaseUtils.MigrateDB(app);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -92,6 +88,7 @@ namespace LanguageLearner
                 // uncomment above when moving to production, now it's easier to always see exception
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

@@ -2,6 +2,6 @@
 {
     public class BaseObject : IHaveID
     {
-        public int ID { get; set; }
+        public virtual int ID { get; set; }
     }
 }

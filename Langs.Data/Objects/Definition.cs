@@ -17,13 +17,14 @@ namespace Langs.Data.Objects
         }
 
         [Required]
-        public string Text { get; set; }
+        public virtual string Text { get; set; }
         [Required]
-        public Language Language { get; set; }
+        public virtual Language Language { get; set; }
 
-        public string Description { get; set; }
-        public List<Translation> Translations { get; set; }
+        public virtual string Description { get; set; }
+        public virtual ICollection<Translation> Translations { get; set; }
 
+        // -----------------
         string IDisplayText.DisplayText => Text;
     }
 }

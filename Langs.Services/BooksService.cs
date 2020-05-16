@@ -12,21 +12,25 @@ namespace Langs.Services
         public BooksService(DatabaseContext context) : base(context) { }
 
         public override Book Get(int id) => m_Context.Books
-            .Include(p => p.Words)
-                .ThenInclude(word => word.Translations)
-                    .ThenInclude(t => t.Definition)
+            .Include(p => p.BookWordCollection)
+                .ThenInclude(c => c.Word)
+                    .ThenInclude(word => word.Translations)
+                        .ThenInclude(t => t.Definition)
             .SingleOrDefault(e => e.ID == id);
 
         public IEnumerable<Book> GetBooksWithData() => m_Context.Books
-            .Include(p => p.Words)
-                .ThenInclude(word => word.Language)
-            .Include(p => p.Words)
-                .ThenInclude(word => word.Translations)
-                    .ThenInclude(t => t.Definition)
-                        .ThenInclude(d => d.Language)
-            .Include(p => p.Words)
-                .ThenInclude(word => word.Translations)
-                    .ThenInclude(t => t.Word)
-                        .ThenInclude(d => d.Language);
+            .Include(p => p.BookWordCollection)
+                .ThenInclude(c => c.Word)
+                    .ThenInclude(word => word.Language)
+            .Include(p => p.BookWordCollection)
+                .ThenInclude(c => c.Word)
+                    .ThenInclude(word => word.Translations)
+                        .ThenInclude(t => t.Definition)
+                            .ThenInclude(d => d.Language)
+            .Include(p => p.BookWordCollection)
+                .ThenInclude(c => c.Word)
+                    .ThenInclude(word => word.Translations)
+                        .ThenInclude(t => t.Word)
+                            .ThenInclude(d => d.Language);
     }
 }

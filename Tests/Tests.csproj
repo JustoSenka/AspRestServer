@@ -12,29 +12,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="appsettings.Development.json" />
-		<None Remove="appsettings.json" />
-		<None Remove="appsettings.Production.json" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="appsettings.Development.json">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</Content>
-		<Content Include="appsettings.json">
-			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="appsettings.Production.json">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.4" />
 		<PackageReference Include="nunit" Version="3.11.0" />

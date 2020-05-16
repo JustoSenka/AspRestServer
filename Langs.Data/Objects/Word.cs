@@ -1,7 +1,9 @@
 ﻿using Langs.Data.Objects.Base;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Langs.Data.Objects
 {
@@ -17,16 +19,22 @@ namespace Langs.Data.Objects
         }
 
         [Required]
-        public string Text { get; set; }
+        public virtual string Text { get; set; }
 
         [Required]
-        public Language Language { get; set; }
+        public virtual Language Language { get; set; }
 
-        public string Article { get; set; }
-        public string Pronunciation { get; set; }
-        public string AlternateSpelling { get; set; }
+        public virtual string Article { get; set; }
+        public virtual string Pronunciation { get; set; }
+        public virtual string AlternateSpelling { get; set; }
 
-        public List<Translation> Translations { get; set; }
+        public virtual ICollection<Translation> Translations { get; set; }
+
+        public virtual ICollection<BookWord> BookWordCollection { get; set; }
+
+        // ----------
+        [NotMapped]
+        public IEnumerable<Book> Books => BookWordCollection.Select(c => c.Book);
 
         string IDisplayText.DisplayText => Text;
     }

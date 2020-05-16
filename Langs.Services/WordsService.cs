@@ -9,11 +9,13 @@ namespace Langs.Services
     public class WordsService : BaseService<Word>, IWordsService
     {
         private readonly ITranslationsService TranslationsService;
+        private readonly IBooksService BooksService;
 
         protected override DbSet<Word> EntitiesProxy => m_Context.Words;
-        public WordsService(ITranslationsService TranslationsService, DatabaseContext context) : base(context)
+        public WordsService(ITranslationsService TranslationsService, IBooksService BooksService, DatabaseContext context) : base(context)
         {
             this.TranslationsService = TranslationsService;
+            this.BooksService = BooksService;
         }
 
         public override Word Get(int id) => m_Context.Words

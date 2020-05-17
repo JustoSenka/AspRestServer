@@ -12,28 +12,37 @@ namespace Langs.Services
         public BooksService(DatabaseContext context) : base(context) { }
 
         public override Book Get(int id) => m_Context.Books
-            .Include(p => p.BookWordCollection)
-                .ThenInclude(c => c.Word)
-                    .ThenInclude(word => word.Translations)
+            .Include(p => p._BookWordCollection)
+                .ThenInclude(c => c.MasterWord)
+                    .ThenInclude(c => c.Words)
+                        .ThenInclude(t => t.Explanations)
+                            .ThenInclude(t => t.LanguageTo)
+            .Include(p => p._BookWordCollection)
+                .ThenInclude(c => c.MasterWord)
+                    .ThenInclude(c => c.Words)
                         .ThenInclude(t => t.Definition)
+            .Include(p => p._BookWordCollection)
+                .ThenInclude(c => c.MasterWord)
+                    .ThenInclude(c => c.Words)
+                        .ThenInclude(t => t.Language)
             .SingleOrDefault(e => e.ID == id);
 
         public IEnumerable<Book> GetWithWordCount() => m_Context.Books
-            .Include(p => p.BookWordCollection);
+            .Include(p => p._BookWordCollection);
 
         public IEnumerable<Book> GetBooksWithData() => m_Context.Books
-            .Include(p => p.BookWordCollection)
-                .ThenInclude(c => c.Word)
-                    .ThenInclude(word => word.Language)
-            .Include(p => p.BookWordCollection)
-                .ThenInclude(c => c.Word)
-                    .ThenInclude(word => word.Translations)
+            .Include(p => p._BookWordCollection)
+                .ThenInclude(c => c.MasterWord)
+                    .ThenInclude(c => c.Words)
+                        .ThenInclude(t => t.Explanations)
+                            .ThenInclude(t => t.LanguageTo)
+            .Include(p => p._BookWordCollection)
+                .ThenInclude(c => c.MasterWord)
+                    .ThenInclude(c => c.Words)
                         .ThenInclude(t => t.Definition)
-                            .ThenInclude(d => d.Language)
-            .Include(p => p.BookWordCollection)
-                .ThenInclude(c => c.Word)
-                    .ThenInclude(word => word.Translations)
-                        .ThenInclude(t => t.Word)
-                            .ThenInclude(d => d.Language);
+            .Include(p => p._BookWordCollection)
+                .ThenInclude(c => c.MasterWord)
+                    .ThenInclude(c => c.Words)
+                        .ThenInclude(t => t.Language);
     }
 }

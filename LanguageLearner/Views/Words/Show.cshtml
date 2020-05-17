@@ -9,78 +9,35 @@
 <div class="container">
     <br>
     @{
-        // If both languages are selected, show regular translatins
-        if (Model.LanguageFromID != 0 && Model.LanguageToID != 0)
+        // If any languages are selected, show regular translatins
+        if (Model.LanguageFromID != 0 || Model.LanguageToID != 0)
         {
-            var zip = Model.Words.Zip(Model.Definitions, (w, d) => (Word: w, Definition: d));
-
             var TableModel = new TableLinkModel()
             {
-                Title = "Word count: " + Model.Words.Count(),
-                TableElements = zip.Select(t => new[] { t.Word.ToTableElement(), t.Definition.ToTableElement() }),
-                LeftHeaders = zip.Select(t => t.Word.ID.ToString()),
+                Title = "Word count: " + Model.Translations.Length,
+                TableElements = Model.Translations.Select(t => new[] { TableElement.Link(t.LeftID, t.LeftText), TableElement.Link(t.RightID, t.RightText) }),
                 TopHeader = new[] { "ID", "Word", "Translation" },
-            };
-
-            TableModel.ColumnLinks[0] = ("Entities", "Word");
-            TableModel.ColumnLinks[1] = ("Entities", "Definition");
-
-            <partial name="_TableLinkPartial" for="@TableModel" />
-        }
-        // If only one language selected, just list all words/definitions for specified language
-        else if (Model.LanguageFromID != 0)
-        {
-            var TableModel = new TableLinkModel()
-            {
-                Title = "Word count: " + Model.Words.Count(),
-                TableElements = Model.Words.Select(w => new TableElement[] { w.ToTableElement(), TableElement.Text(w.AlternateSpelling), TableElement.Text(w.Pronunciation) }),
-                LeftHeaders = Model.Words.Select(t => t.ID.ToString()),
-                TopHeader = new[] { "ID", "Word", "Alternate Spelling", "Pronunciation" },
                 AspAction = "Word",
-                AspController = "Entities",
+                AspController= "Entities",
             };
 
             <partial name="_TableLinkPartial" for="@TableModel" />
         }
-        else if (Model.LanguageToID != 0)
-        {
-            var TableModel = new TableLinkModel()
-            {
-                Title = "Definition count: " + Model.Definitions.Count(),
-                TableElements = Model.Definitions.Select(d => new TableElement[] { d.ToTableElement(), TableElement.Text(d.Description) }),
-                LeftHeaders = Model.Definitions.Select(t => t.ID.ToString()),
-                TopHeader = new[] { "ID", "Definition", "Description" },
-                AspAction = "Definition",
-                AspController = "Entities",
-            };
 
-            <partial name="_TableLinkPartial" for="@TableModel" />
-        }
         // If nothing is selected, display everything in two tables of words/definitions
         else
         {
             var WordTableModel = new TableLinkModel()
             {
                 Title = "Word count: " + Model.Words.Count(),
-                TableElements = Model.Words.Select(w => new[] { TableElement.Text(w.Language.Name), w.ToTableElement(), TableElement.Text(w.AlternateSpelling), TableElement.Text(w.Pronunciation) }),
+                TableElements = Model.Words.Select(w => new[] { TableElement.Text(w.Language), TableElement.Link(w.ID, w.Text), TableElement.Text(w.AlternateSpelling), TableElement.Text(w.Pronunciation) }),
                 LeftHeaders = Model.Words.Select(t => t.ID.ToString()),
                 TopHeader = new[] { "ID", "Language", "Word", "Alternate Spelling", "Pronunciation" },
                 AspAction = "Word",
                 AspController = "Entities",
             };
 
-            var DefinitionTableModel = new TableLinkModel()
-            {
-                Title = "Definition count: " + Model.Definitions.Count(),
-                TableElements = Model.Definitions.Select(d => new TableElement[] { TableElement.Text(d.Language.Name), d.ToTableElement(), TableElement.Text(d.Description) }),
-                LeftHeaders = Model.Definitions.Select(t => t.ID.ToString()),
-                TopHeader = new[] { "ID", "Language", "Definition", "Description" },
-                AspAction = "Definition",
-                AspController = "Entities",
-            };
-
             <partial name="_TableLinkPartial" for="@WordTableModel" /> <br>
-            <partial name="_TableLinkPartial" for="@DefinitionTableModel" />
         }
     }
 

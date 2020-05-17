@@ -16,14 +16,14 @@
                 @{
                     var alternateSpelling = string.IsNullOrEmpty(Model.Word.AlternateSpelling) ? "" : $"({Model.Word.AlternateSpelling})";
                     var pronunciationText = string.IsNullOrEmpty(Model.Word.Pronunciation) ? "" : $"({Model.Word.Pronunciation})";
-                    var translation = Model.Word.Translations?.FirstOrDefault(t => t.Definition.Language.ID == Model.PreferredDefaultLanguage.ID);
+                    var translation = Model.Word[Model.PreferredDefaultLanguage];
                 }
                 <h3><b>@Model.Word.Article @Model.Word.Text</b> <text class="small"><b>@alternateSpelling</b><i>@pronunciationText</i></text></h3>
 
                 @if (translation != default)
                 {
-                    <h4>@translation.Definition.Text</h4><br>
-                    <p>@translation.Definition.Description</p>
+                    <h4>@translation.Text</h4><br>
+                    <p>@translation.Definition?.Description</p>
                 }
                 else
                 {
@@ -39,7 +39,7 @@
         var listModel = new ExpandableListModel()
         {
             Title = "List of Translations",
-            Elements = Model.Word.Translations?.Select(t => new ListElement(t.Definition.Language.Name + ": " + t.Definition.Text, "Definition", "Entities", t.Definition.ID.ToString())),
+            Elements = Model.Word.Translations?.Select(t => new ListElement(t.Language.Name + ": " + t.Text, "Word", "Entities", t.ID.ToString())),
         };
 
         <partial name="_ExpandableListPartial" for="@listModel" />

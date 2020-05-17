@@ -42,8 +42,7 @@ namespace LanguageLearner
             services.AddScoped<IBooksService, BooksService>();
             services.AddScoped<IWordsService, WordsService>();
             services.AddScoped<ILanguagesService, LanguagesService>();
-            services.AddScoped<IDefinitionsService, DefinitionsService>();
-            services.AddScoped<ITranslationsService, TranslationsService>();
+            services.AddScoped<IExplanationsService, ExplanationService>();
             services.AddScoped<IUserService, UserService>();
 
             services.AddRazorPages().AddRazorRuntimeCompilation();

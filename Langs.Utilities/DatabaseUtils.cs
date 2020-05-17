@@ -3,9 +3,11 @@ using Langs.Data.Objects;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SqlServer.Management.XEvent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
+using System.Net.Http.Headers;
 
 namespace Langs.Utilities
 {
@@ -35,10 +37,11 @@ namespace Langs.Utilities
             DatabaseContext.Database.EnsureCreated();
 
             DatabaseContext.Words.RemoveRange(DatabaseContext.Words);
+            DatabaseContext.MasterWords.RemoveRange(DatabaseContext.MasterWords);
             DatabaseContext.Definitions.RemoveRange(DatabaseContext.Definitions);
+            DatabaseContext.Explanations.RemoveRange(DatabaseContext.Explanations);
             DatabaseContext.Languages.RemoveRange(DatabaseContext.Languages);
             DatabaseContext.Books.RemoveRange(DatabaseContext.Books);
-            DatabaseContext.Translations.RemoveRange(DatabaseContext.Translations);
 
             DatabaseContext.SaveChanges();
         }
@@ -52,46 +55,29 @@ namespace Langs.Utilities
             var langEsp = new Language("Spanish");
             var langJp = new Language("Japanese");
 
-            var def = new[]
-            {
-                new Definition("Hello", langEn),
-                new Definition("Nice to meet you", langEn),
-                new Definition("How are you", langEn),
-            };
+            var masterWords = Enumerable.Repeat<Func<MasterWord>>(() => new MasterWord(), 3).Select(a => a()).ToArray();
 
             var words = new[]
             {
-                new Word("Buenos dias", langEsp),
-                new Word("Mucho gusto", langEsp),
-                new Word("Como estas", langEsp),
-                new Word("こんにちわ", langJp),
-                new Word("はじめまして", langJp),
-                new Word("おげんきです", langJp),
+                new Word(masterWords[0], "Buenos dias", langEsp),
+                new Word(masterWords[1], "Mucho gusto", langEsp),
+                new Word(masterWords[2], "Como estas", langEsp),
+                new Word(masterWords[0], "こんにちわ", langJp),
+                new Word(masterWords[1], "はじめまして", langJp),
+                new Word(masterWords[2], "おげんきです", langJp),
+                new Word(masterWords[0], "Hello", langEn),
+                new Word(masterWords[1], "Nice to meet you", langEn),
+                new Word(masterWords[2], "How are you", langEn),
             };
 
-            // Note: order at which translations are added might differ from this array since we're adding the Book object only
-            var translations = new[]
-            {
-                new Translation(words[0], def[0]),
-                new Translation(words[1], def[1]),
-                new Translation(words[2], def[2]),
-                new Translation(words[3], def[0]),
-                new Translation(words[4], def[1]),
-                new Translation(words[5], def[2]),
-            };
+            words[0].Definition = new Definition("saludo utilizado durante la mañana");
+            words[3].Definition = new Definition("その日初めて人に会うときの挨拶として使われる");
+            words[6].Definition = new Definition("used as a greeting or to begin a conversation");
 
-            def[0].Translations = new List<Translation>() { translations[0], translations[3] };
-            def[1].Translations = new List<Translation>() { translations[1], translations[4] };
-            def[2].Translations = new List<Translation>() { translations[2], translations[5] };
+            words[0].Explanations = new List<Explanation> { new Explanation("Hello, good morning, good day", langEn) };
+            words[3].Explanations = new List<Explanation> { new Explanation("Hello, good day", langEn) };
 
-            words[0].Translations = new List<Translation>() { translations[0] };
-            words[1].Translations = new List<Translation>() { translations[1] };
-            words[2].Translations = new List<Translation>() { translations[2] };
-            words[3].Translations = new List<Translation>() { translations[3] };
-            words[4].Translations = new List<Translation>() { translations[4] };
-            words[5].Translations = new List<Translation>() { translations[5] };
-
-            var book = new Book("Book 0", "", words.ToList());
+            var book = new Book("Book 0", "") { Words = masterWords.ToList() };
 
             DatabaseContext.Books.Add(book);
             DatabaseContext.SaveChanges();

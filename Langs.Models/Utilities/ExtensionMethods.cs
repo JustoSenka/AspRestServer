@@ -16,12 +16,12 @@ public static class ExtensionMethods
         return new SelectListItem(listable.DisplayText, listable.ID.ToString());
     }
 
-    public static IEnumerable<TableElement> SelectTableElements(this IEnumerable<IListableElement> listable)
+    public static IEnumerable<TableElement> SelectLinkTableElements(this IEnumerable<IListableElement> listable)
     {
-        return listable?.Select(ToTableElement);
+        return listable?.Select(ToLinkTableElement);
     }
 
-    public static TableElement ToTableElement(this IListableElement listable)
+    public static TableElement ToLinkTableElement(this IListableElement listable)
     {
         return TableElement.Link(listable.ID, listable.DisplayText);
     }

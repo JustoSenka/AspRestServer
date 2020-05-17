@@ -12,16 +12,11 @@ namespace Langs.Controllers
     {
         private readonly ILanguagesService LanguagesService;
         private readonly IWordsService WordsService;
-        private readonly ITranslationsService TranslationsService;
-        private readonly IDefinitionsService DefinitionsService;
         private readonly IUserService UserService;
-        public EntitiesController(IWordsService WordsService, ILanguagesService LanguagesService, ITranslationsService TranslationsService,
-            IDefinitionsService DefinitionsService, IUserService UserService)
+        public EntitiesController(IWordsService WordsService, ILanguagesService LanguagesService, IUserService UserService)
         {
             this.WordsService = WordsService;
             this.LanguagesService = LanguagesService;
-            this.TranslationsService = TranslationsService;
-            this.DefinitionsService = DefinitionsService;
             this.UserService = UserService;
         }
 
@@ -96,11 +91,12 @@ namespace Langs.Controllers
             try
             {
                 var word = WordsService.Get(model.Word.ID);
-                var def = DefinitionsService.Get(id);
-                var translation = new Translation(word, def);
-                TranslationsService.Add(translation);
+                var translation = WordsService.Get(id);
+                word.AddTranslation(translation);
 
-                model.AlertMessage = "Translation successfully added: " + def.Text;
+                WordsService.Update(word);
+
+                model.AlertMessage = "Translation successfully added: " + translation.Text;
                 model.AlertType = AlertType.Success;
             }
             catch (Exception e)
@@ -125,136 +121,21 @@ namespace Langs.Controllers
             model.AvailableLanguages = LanguagesService.GetAll().ToArray();
 
             // During submit, the translations array is lost because they are not in the form
-            model.Word.Translations = WordsService.Get(model.Word.ID).Translations;
-
-            // Show only definitions which are not linked by the word
-            model.Definitions = DefinitionsService.GetAll()
-                .Except(model.Word.Translations.Select(t => t.Definition)).ToArray();
+            model.Word.MasterWord = WordsService.Get(model.Word.ID).MasterWord;
 
             return View("EditWord", model);
         }
 
         #endregion // Words
 
-        #region Definitions
-
-
-
-        [HttpGet]
-        public IActionResult Definition(int id)
-        {
-            var model = new EntityModel()
-            {
-                Definition = DefinitionsService.Get(id),
-                PreferredDefaultLanguage = UserService.GetPreferredLanguage(),
-            };
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult EditDefinition(int id)
-        {
-            var model = new EditEntityModel()
-            {
-                Definition = DefinitionsService.Get(id),
-            };
-
-            model.LanguageID = model.Definition.Language.ID;
-            return ViewEditDefinitionModel(model);
-        }
-
-        [HttpPost]
-        public IActionResult UpdateDefinition(EditEntityModel model)
-        {
-            var origDef = DefinitionsService.Get(model.Definition.ID);
-            origDef.Text = model.Definition.Text;
-            origDef.Description = model.Definition.Description;
-            origDef.Language = LanguagesService.Get(model.LanguageID);
-
-            try
-            {
-                DefinitionsService.Update(origDef);
-            }
-            catch (Exception e)
-            {
-                model.AlertMessage = "Something went wrong: " + e.Message;
-                model.AlertType = AlertType.Error;
-            }
-
-            return model.AlertType == default ? RedirectToAction("Definition", new { id = model.Definition.ID }) : ViewEditDefinitionModel(model);
-        }
-
-        [HttpPost]
-        public IActionResult DeleteDefinition(EditEntityModel model)
-        {
-            try
-            {
-                DefinitionsService.Remove(DefinitionsService.Get(model.Definition.ID));
-            }
-            catch (Exception e)
-            {
-                model.AlertMessage = "Something went wrong: " + e.Message;
-                model.AlertType = AlertType.Error;
-            }
-
-            return model.AlertType == default ? RedirectToAction("Index", "Words") : ViewEditDefinitionModel(model);
-        }
-
-        //----
-
-        [HttpPost]
-        public IActionResult AddTranslationToDefinition(EditEntityModel model, int id)
-        {
-            try
-            {
-                var def = DefinitionsService.Get(model.Definition.ID);
-                var word = WordsService.Get(id);
-                var translation = new Translation(word, def);
-                TranslationsService.Add(translation);
-
-                model.AlertMessage = "Word successfully linked: " + word.Text;
-                model.AlertType = AlertType.Success;
-            }
-            catch (Exception e)
-            {
-                model.AlertMessage = "Something went wrong: " + e.Message;
-                model.AlertType = AlertType.Error;
-            }
-
-            return ViewEditDefinitionModel(model);
-        }
-
-        [HttpPost]
-        public IActionResult RemoveTranslationFromDefinition(EditEntityModel model, int id)
-        {
-            TryRemoveTranslationById(model, id);
-            return ViewEditDefinitionModel(model);
-        }
-
-        private IActionResult ViewEditDefinitionModel(EditEntityModel model)
-        {
-            model.Definition.Language = LanguagesService.Get(model.LanguageID);
-            model.AvailableLanguages = LanguagesService.GetAll().ToArray();
-
-            // During submit, the translations array is lost because they are not in the form
-            model.Definition.Translations = DefinitionsService.Get(model.Definition.ID).Translations;
-
-            // Show only definitions which are not linked by the word
-            model.Words = WordsService.GetAll()
-                .Except(model.Definition.Translations.Select(t => t.Word)).ToArray();
-
-            return View("EditDefinition", model);
-        }
-
-        #endregion // Definitions
-
         private void TryRemoveTranslationById(EditEntityModel model, int id)
         {
             try
             {
-                var translation = TranslationsService.Get(id);
-                TranslationsService.Remove(translation);
+                var translation = model.Word.Translations.First(w => w.ID == model.Word.ID);
+                model.Word.RemoveTranslation(translation);
+                WordsService.Update(model.Word);
+                
                 model.ExpandTranslationList = true;
             }
             catch (Exception e)

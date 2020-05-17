@@ -15,13 +15,12 @@
         var TableModel = new TableLinkModel()
         {
             Title = "Word count: " + Model.Book.Words.Count(),
-            TableElements = Model.Book.Words.Select(w => TableElement.LinkMany(w.ID, w.Text, w.Translations.First().Definition.Text)),
+            TableElements = Model.Book.Words.Select(w => TableElement.LinkMany(w.ID, w.Words.First().Text)),
             LeftHeaders = Model.Book.Words.Select(w => w.ID.ToString()),
-            TopHeader = new[] { "ID", "Word", "Translation" },
+            TopHeader = new[] { "ID", "Word" },
         };
 
         TableModel.ColumnLinks[0] = ("Entities", "Word");
-        TableModel.ColumnLinks[1] = ("Entities", "Definition");
 
         <partial name="_TableLinkPartial" for="@TableModel" />
     }

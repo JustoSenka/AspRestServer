@@ -14,31 +14,20 @@ namespace Langs.Controllers
     {
         private readonly ILanguagesService LanguagesService;
         private readonly IWordsService WordsService;
-        private readonly ITranslationsService TranslationsService;
-        private readonly IDefinitionsService DefinitionsService;
-        public WordsController(IWordsService WordsService, ILanguagesService LanguagesService, ITranslationsService TranslationsService, IDefinitionsService DefinitionsService)
+        public WordsController(IWordsService WordsService, ILanguagesService LanguagesService)
         {
             this.WordsService = WordsService;
             this.LanguagesService = LanguagesService;
-            this.TranslationsService = TranslationsService;
-            this.DefinitionsService = DefinitionsService;
         }
 
         public IActionResult Index()
         {
-            try
+            var model = new WordsModel
             {
-                var model = new WordsModel
-                {
-                    AvailableLanguages = LanguagesService.GetAll().ToArray()
-                };
+                AvailableLanguages = LanguagesService.GetAll().ToArray()
+            };
 
-                return View(model);
-            }
-            catch (Exception e)
-            {
-                return View("Error", new ErrorViewModel { Exception = e, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-            }
+            return View(model);
         }
 
         // Redirecting to Show so language ids appear inside url.
@@ -64,26 +53,37 @@ namespace Langs.Controllers
 
         private void PopulateModelWithWords(int LanguageFromID, int LanguageToID, WordsModel model)
         {
+            var words = WordsService.GetWordsWithData();
             // If both languages selected, show translations
             if (LanguageFromID != 0 && LanguageToID != 0)
             {
-                var translations = TranslationsService.GetTranslationsWithLanguages().Where(t => t.Word.Language.ID == LanguageFromID && t.Definition.Language.ID == LanguageToID);
-                model.Definitions = translations.Select(t => t.Definition).ToArray();
-                model.Words = translations.Select(t => t.Word).ToArray();
+                model.Translations = words
+                    .Where(w => w.Language.ID == LanguageFromID)
+                    .Where(w => w.Translations != null && w.Translations.Count() > 0)
+                    .Select(w => (left: w, right: w[LanguageToID]))
+                    .Select(t => (t.left.ID, t.left.Text, t.right.ID, t.right.Text)).ToArray();
+
             }
             // Of only one language selected, just list words/definitions in that language
             else if (LanguageFromID != 0)
             {
-                model.Words = WordsService.GetAll().Where(w => w.Language.ID == LanguageFromID).ToArray();
+                model.Translations = words
+                    .Where(w => w.Language.ID == LanguageFromID)
+                    .Where(w => w.Translations != null && w.Translations.Count() > 0)
+                    .SelectMany(w => w.Translations.Select(t => (w, t)))
+                    .Select(tuple => (tuple.w.ID, tuple.w.Text, tuple.t.ID, tuple.t.Text)).ToArray();
             }
             else if (LanguageToID != 0)
             {
-                model.Definitions = DefinitionsService.GetAll().Where(d => d.Language.ID == LanguageToID).ToArray();
+                model.Translations = words
+                    .Where(w => w.Translations != null && w.Translations.Count() > 0)
+                    .SelectMany(w => w.Translations.Where(t => t.Language.ID == LanguageToID).Select(t => (w, t)))
+                    .Select(tuple => (tuple.w.ID, tuple.w.Text, tuple.t.ID, tuple.t.Text)).ToArray();
             }
             else
             {
-                model.Words = WordsService.GetAll().ToArray();
-                model.Definitions = DefinitionsService.GetAll().ToArray();
+                model.Words = words
+                    .Select(w => (w.ID, w.Language.Name, w.Text, w.AlternateSpelling, w.Pronunciation)).ToArray();
             }
         }
 
@@ -176,15 +176,15 @@ namespace Langs.Controllers
             return View("AddWords", AddWordsModel);
         }
 
-        private (string Msg, AlertType LogType) AddWords(int languageFromID, int languageToID, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
+        private (string Msg, AlertType LogType) AddWords(int languageFromID, int languageToID, IEnumerable<string> words, IEnumerable<string> translations, IEnumerable<string> descriptions = null)
         {
-            return AddWords(LanguagesService.Get(languageFromID), LanguagesService.Get(languageToID), words, definitions, descriptions);
+            return AddWords(LanguagesService.Get(languageFromID), LanguagesService.Get(languageToID), words, translations, descriptions);
         }
 
-        private (string Msg, AlertType LogType) AddWords(Language from, Language to, IEnumerable<string> words, IEnumerable<string> definitions, IEnumerable<string> descriptions = null)
+        private (string Msg, AlertType LogType) AddWords(Language from, Language to, IEnumerable<string> words, IEnumerable<string> translations, IEnumerable<string> descriptions = null)
         {
             var count1 = words?.Count();
-            var count2 = definitions?.Count();
+            var count2 = translations?.Count();
             var count3 = descriptions?.Count();
 
             var isInputCorrect = count1 != null && count1 == count2 && (count1 == count3 || count3 == null);
@@ -193,8 +193,8 @@ namespace Langs.Controllers
                 return ("Incorrect word format", AlertType.Error);
 
             IEnumerable<(string Word, string Definition, string Description)> collection = descriptions != null ?
-                words.Zip(definitions, (w, d) => (w, d)).Zip(descriptions, (tuple, ds) => (tuple.w, tuple.d, ds)) :
-                words.Zip(definitions, (w, d) => (w, d, ""));
+                words.Zip(translations, (w, d) => (w, d)).Zip(descriptions, (tuple, ds) => (tuple.w, tuple.d, ds)) :
+                words.Zip(translations, (w, d) => (w, d, ""));
 
             CreateTranslations(from, to, collection);
 
@@ -203,8 +203,21 @@ namespace Langs.Controllers
 
         private void CreateTranslations(Language from, Language to, IEnumerable<(string Word, string Definition, string Description)> collection)
         {
-            var translations = collection.Select(t => new Translation(new Word(t.Word, from), new Definition(t.Definition, to, t.Description))).ToArray();
-            TranslationsService.Add(translations);
+            using (WordsService.BatchRequests())
+            {
+                foreach (var (wordText, translationText, description) in collection)
+                {
+                    var masterWord = new MasterWord();
+                    var word = new Word(masterWord, wordText, from);
+                    var translation = new Word(masterWord, translationText, to);
+
+                    if (!string.IsNullOrWhiteSpace(description))
+                        translation.Definition = new Definition(description);
+
+                    WordsService.Add(word);
+                    WordsService.Add(translation);
+                }
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

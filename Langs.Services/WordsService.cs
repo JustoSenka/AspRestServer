@@ -8,24 +8,20 @@ namespace Langs.Services
 {
     public class WordsService : BaseService<Word>, IWordsService
     {
-        private readonly ITranslationsService TranslationsService;
         private readonly IBooksService BooksService;
 
         protected override DbSet<Word> EntitiesProxy => m_Context.Words;
-        public WordsService(ITranslationsService TranslationsService, IBooksService BooksService, DatabaseContext context) : base(context)
+        public WordsService(IBooksService BooksService, DatabaseContext context) : base(context)
         {
-            this.TranslationsService = TranslationsService;
             this.BooksService = BooksService;
         }
 
         public override Word Get(int id) => m_Context.Words
             .Include(word => word.Language)
-            .Include(word => word.Translations)
-                .ThenInclude(t => t.Definition)
-                    .ThenInclude(d => d.Language)
-            .Include(word => word.Translations)
-                .ThenInclude(t => t.Word)
-                    .ThenInclude(d => d.Language)
+            .Include(word => word.Definition)
+            .Include(word => word.MasterWord)
+                .ThenInclude(t => t.Words)
+                    .ThenInclude(t => t.Language)
             .SingleOrDefault(e => e.ID == id);
 
         // TODO: Language is not needed in all situations in Words/Show
@@ -33,21 +29,19 @@ namespace Langs.Services
 
         public IEnumerable<Word> GetWordsWithData() => m_Context.Words
             .Include(p => p.Language)
-            .Include(p => p.Translations)
-                .ThenInclude(t => t.Word)
-                    .ThenInclude(d => d.Language)
-            .Include(p => p.Translations)
-                .ThenInclude(t => t.Definition)
-                    .ThenInclude(d => d.Language);
+            .Include(p => p.Definition)
+            .Include(p => p.MasterWord)
+                .ThenInclude(t => t.Words)
+                    .ThenInclude(t => t.Language);
 
         public override void Remove(Word obj)
         {
-            TranslationsService.StartBatchingRequests();
+            // TranslationsService.StartBatchingRequests();
 
-            TranslationsService.Remove(obj.Translations);
+            // TranslationsService.Remove(obj.Translations);
             base.Remove(obj);
 
-            TranslationsService.EndBatchingRequestsAndSave();
+            // TranslationsService.EndBatchingRequestsAndSave();
         }
         /*
         public override void Update(Word obj)

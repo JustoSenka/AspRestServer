@@ -7,35 +7,37 @@ namespace Tests.Integration
 {
     public class DatabaseRemovalTests : IntegrationTest
     {
-        #region // Translation - Word - Definition
         [Test]
-        public void RemovingTranslationFromWord_WillUpdateDB()
+        public void RemovingTranslation_FromWord_WillUpdateDB()
         {
             var word = WordsService.GetWordsWithData().First();
             var trans = word.Translations.First();
+            var translationsBefore = word.Translations.Count();
 
-            word.Translations.Remove(trans);
+            word.RemoveTranslation(trans);
             WordsService.Update(word);
 
             var newWord = WordsService.GetWordsWithData().First();
 
-            Assert.AreEqual(0, newWord.Translations.Count, "New reference has less translations");
-            Assert.AreEqual(0, word.Translations.Count, "Old reference should also be updated");
+            Assert.AreEqual(translationsBefore - 1, newWord.Translations.Count(), "New reference has less translations");
+            Assert.AreEqual(translationsBefore - 1, word.Translations.Count(), "Old reference should also be updated");
         }
 
         [Test]
-        public void RemovingDefinition_WillUpdateDB_AndRemoveWordsFromTranslationsAutomatically()
+        public void RemovingDefinition_FromWord_WillUpdateDB()
         {
             var word = WordsService.GetWordsWithData().First();
-            Assert.AreEqual(1, word.Translations.Count, "Translations count incorrect in the beginning");
+            var defsBefore = DefinitionsService.GetAll().Count();
 
-            DefinitionsService.Remove(word.Translations.First().Definition);
+            word.Definition = null;
+            WordsService.Update(word);
             var newWord = WordsService.GetWordsWithData().First();
 
-            Assert.AreEqual(0, newWord.Translations.Count, "Translations should be automatically deleted when removing definition");
-            Assert.AreEqual(0, word.Translations.Count, "Old reference should also be updated");
+            Assert.AreEqual(null, newWord.Definition, "Definition is empty");
+            Assert.AreEqual(defsBefore - 1, DefinitionsService.GetAll().Count(), "Definition should be removed from it's table as well");
         }
 
+        /*
         [Test]
         public void RemovingWord_WillUpdateDB_AndRemoveDefinitionsFromTranslationsAutomatically()
         {
@@ -48,9 +50,7 @@ namespace Tests.Integration
             Assert.AreEqual(1, newDef.Translations.Count, "Translations should be automatically deleted when removing word");
             Assert.AreEqual(1, def.Translations.Count, "Old reference should also be updated");
         }
-        #endregion
 
-        #region // Book - Word
         [Test]
         public void RemovingBook_WillUpdateDB_AndRemoveBookFromWordsAutomatically()
         {
@@ -76,6 +76,6 @@ namespace Tests.Integration
             Assert.AreNotEqual(word, newWord);
             Assert.AreEqual(5, wCount);
         }
-        #endregion
+        */
     }
 }

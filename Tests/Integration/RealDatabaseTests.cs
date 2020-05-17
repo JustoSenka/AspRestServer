@@ -28,36 +28,20 @@ namespace Tests.Integration
 
             Assert.IsNotNull(word.Language);
             Assert.IsNotNull(word.Translations);
-            Assert.AreEqual(1, word.Translations.Count);
+            Assert.AreEqual(2, word.Translations.Count());
         }
 
         [TestCase(true)]
         [TestCase(false)]
         public void AllWords_ContainLanguage_AndTranslation(bool getWordsFromBook)
         {
-            var words = getWordsFromBook ? BookService.GetBooksWithData().First().Words : WordsService.GetWordsWithData();
+            var words = getWordsFromBook ? BookService.GetBooksWithData().First().Words.First().Words : WordsService.GetWordsWithData();
             foreach (var word in words)
             {
                 Assert.IsNotNull(word.Language);
                 Assert.IsNotNull(word.Translations);
-                Assert.AreEqual(1, word.Translations.Count);
+                Assert.AreEqual(2, word.Translations.Count());
             }
-        }
-
-        [Test]
-        // Note: order at which translations are added might differ from this array since we're adding the Book object only
-        public void GettingDefinitions_ContainsALanguageAndListOfTranslation()
-        {
-            var def = DefinitionsService.GetDefinitionsWithData().First();
-
-            Assert.IsNotNull(def.Language);
-            Assert.IsNotNull(def.Translations);
-            Assert.AreEqual(2, def.Translations.Count);
-
-            var trans = TranslationsService.GetTranslationsWithLanguages().ElementAt(0);
-
-            Assert.IsNotNull(trans.Definition);
-            Assert.IsNotNull(trans.Word);
         }
     }
 }

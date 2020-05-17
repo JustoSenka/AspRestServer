@@ -18,8 +18,8 @@ namespace Tests.Base
         protected IBooksService BookService;
         protected IWordsService WordsService;
         protected ILanguagesService LanguagesService;
+        protected IExplanationsService ExplanationsService;
         protected IDefinitionsService DefinitionsService;
-        protected ITranslationsService TranslationsService;
 
         protected DatabaseContext DatabaseContext;
 
@@ -32,11 +32,12 @@ namespace Tests.Base
             m_Host = CreateWebHostBuilder();
 
             DatabaseContext = m_Host.Services.GetService<DatabaseContext>();
+
             BookService = m_Host.Services.GetService<IBooksService>();
             WordsService = m_Host.Services.GetService<IWordsService>();
             LanguagesService = m_Host.Services.GetService<ILanguagesService>();
+            ExplanationsService = m_Host.Services.GetService<IExplanationsService>();
             DefinitionsService = m_Host.Services.GetService<IDefinitionsService>();
-            TranslationsService = m_Host.Services.GetService<ITranslationsService>();
 
             try
             {

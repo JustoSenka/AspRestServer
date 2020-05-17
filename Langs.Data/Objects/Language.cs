@@ -13,7 +13,7 @@ namespace Langs.Data.Objects
             Name = name;
         }
 
-        [Required]
+        [Required, MaxLength(k_WordLength)]
         public virtual string Name { get; set; }
 
         // ----------------

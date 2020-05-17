@@ -85,5 +85,7 @@ namespace Langs.Services
             if (m_BatchingRefCount == 0)
                 m_Context.SaveChanges();
         }
+
+        public ServiceBatchRequest<T> BatchRequests() => new ServiceBatchRequest<T>(this);
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model EditEntityModel;
 
 @{
-    ViewData["Title"] = "Edit " + Model.Definition.Text;
+    ViewData["Title"] = "Edit " + Model.Word.Text;
 }
 
 <script>
@@ -16,14 +16,14 @@
 
 <div class="container">
     <form method="post">
-        <input type="hidden" asp-for="Definition.ID" value="@Model.Definition.ID" />
+        <input type="hidden" asp-for="Word.ID" value="@Model.Word.ID" />
 
         <partial name="_AlertMessage" for="@Model" />
 
         <div class="form-group row">
             <div class="col">
                 <label for="Definition_Text" class="col-form-label">Definition</label>
-                <input type="text" class="form-control" asp-for="Definition.Text" />
+                <input type="text" class="form-control" asp-for="Word.Text" />
             </div>
         </div>
 
@@ -37,7 +37,7 @@
         <div class="form-group row">
             <div class="col">
                 <label for="Definition_Pronunciation" class="col-form-label">Description</label>
-                <textarea type="text" rows="5" class="form-control" asp-for="Definition.Description"></textarea>
+                <textarea type="text" rows="5" class="form-control" asp-for="Word.Text"></textarea>
             </div>
         </div>
 
@@ -46,12 +46,12 @@
         @{
             var dropdownModel = new SearcheableDropdownModel()
             {
-                IsSubmit = true,
+                /*IsSubmit = true,
                 Text = "Link to existing Word",
                 AdditionalClasses = "btn btn-light text-center",
                 AspController = "Entities",
                 AspAction = "AddTranslationToDefinition",
-                Elements = Model.Words.Select(d => new ListElement(d.Text, "", "", d.ID.ToString())),
+                Elements = Model.Words.Select(d => new ListElement(d.Text, "", "", d.ID.ToString())),*/
             };
         }
 
@@ -61,7 +61,7 @@
             </div>
 
             <div class="col">
-                <a class="btn btn-light text-center" asp-controller="Entities" asp-action="Word" asp-route-id="@Model.Definition.ID">Create New Translation</a>
+                <a class="btn btn-light text-center" asp-controller="Entities" asp-action="Word" asp-route-id="#Model.Definition.ID">Create New Translation</a>
             </div>
         </div>
 
@@ -70,12 +70,12 @@
         @{
             var listModel = new ExpandableEditListModel()
             {
-                Title = "List of Translations",
+                /*Title = "List of Translations",
                 Expanded = Model.ExpandTranslationList,
                 Elements = Model.Definition.Translations?.Select(t => new ListElement(t.Word.Language.Name + ": " + t.Word.Text, "", "", t.ID.ToString())),
                 AspRoute = Model.Definition.ID.ToString(),
                 AspController = "Entities",
-                AspAction = "RemoveTranslationFromDefinition",
+                AspAction = "RemoveTranslationFromDefinition",*/
             };
 
             <div class="form-group">
@@ -88,7 +88,7 @@
         <div class="form-group row">
             <div class="col">
                 <button onclick="disableBeforeUnload()" type="submit" class="btn btn-success" asp-controller="Entities" asp-action="UpdateDefinition">Update</button>
-                <a class="btn btn-sm btn-secondary" asp-controller="Entities" asp-action="Definition" asp-route-id="@Model.Definition.ID">Cancel</a>
+                <a class="btn btn-sm btn-secondary" asp-controller="Entities" asp-action="Definition" asp-route-id="#Model.Definition.ID">Cancel</a>
             </div>
 
             <div class="col text-right">

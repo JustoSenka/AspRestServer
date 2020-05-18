@@ -17,6 +17,7 @@ namespace Tests.Base
 
         protected IBooksService BookService;
         protected IWordsService WordsService;
+        protected IMasterWordsService MasterWordsService;
         protected ILanguagesService LanguagesService;
         protected IExplanationsService ExplanationsService;
         protected IDefinitionsService DefinitionsService;
@@ -35,6 +36,7 @@ namespace Tests.Base
 
             BookService = m_Host.Services.GetService<IBooksService>();
             WordsService = m_Host.Services.GetService<IWordsService>();
+            MasterWordsService = m_Host.Services.GetService<IMasterWordsService>();
             LanguagesService = m_Host.Services.GetService<ILanguagesService>();
             ExplanationsService = m_Host.Services.GetService<IExplanationsService>();
             DefinitionsService = m_Host.Services.GetService<IDefinitionsService>();

@@ -13,12 +13,13 @@ namespace Tests.Integration
         public override bool UseInMemoryDB => false;
 
         [Test]
-        public void GettingBook_ContainsAListOfWords()
+        public void GettingBook_ContainsListOfMasterWords_EachOfThemHave3_OtherWords()
         {
             var book = BookService.GetBooksWithData().First();
 
-            Assert.IsNotNull(book.Words);
-            Assert.AreEqual(6, book.Words.Count());
+            Assert.IsNotNull(book.Words, "Book is null");
+            Assert.AreEqual(3, book.Words.Count(), "Master words not 3");
+            Assert.IsTrue(book.Words.All(w => w.Words.Count == 3), "Inner words not 3");
         }
 
         [Test]

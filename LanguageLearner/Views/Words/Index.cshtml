@@ -6,15 +6,13 @@
 
 <partial name="_WordNavigation" />
 
-<div class="container">
-    <form asp-controller="Words" asp-action="ShowRedirect" method="post">
+<form asp-controller="Words" asp-action="ShowRedirect" method="post">
 
-        <partial name="_LanguagePicker" />
+    <partial name="_LanguagePicker" />
 
-        <div class="form-group row">
-            <div class="col-12">
-                <button type="submit" class="btn btn-success">Display</button>
-            </div>
+    <div class="form-group row">
+        <div class="col-12">
+            <button type="submit" class="btn btn-success">Display</button>
         </div>
-    </form>
-</div>
+    </div>
+</form>

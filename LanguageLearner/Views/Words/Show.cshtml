@@ -6,39 +6,37 @@
 
 <partial name="Index" />
 
-<div class="container">
-    <br>
-    @{
-        // If any languages are selected, show regular translatins
-        if (Model.LanguageFromID != 0 || Model.LanguageToID != 0)
+<br>
+@{
+    // If any languages are selected, show regular translatins
+    if (Model.LanguageFromID != 0 || Model.LanguageToID != 0)
+    {
+        var TableModel = new TableLinkModel()
         {
-            var TableModel = new TableLinkModel()
-            {
-                Title = "Word count: " + Model.Translations.Length,
-                TableElements = Model.Translations.Select(t => new[] { TableElement.Link(t.LeftID, t.LeftText), TableElement.Link(t.RightID, t.RightText) }),
-                TopHeader = new[] { "ID", "Word", "Translation" },
-                AspAction = "Word",
-                AspController= "Entities",
-            };
+            Title = "Word count: " + Model.Translations.Length,
+            TableElements = Model.Translations.Select(t => new[] { TableElement.Link(t.LeftID, t.LeftText), TableElement.Link(t.RightID, t.RightText) }),
+            TopHeader = new[] { "ID", "Word", "Translation" },
+            AspAction = "Word",
+            AspController = "Entities",
+        };
 
-            <partial name="_TableLinkPartial" for="@TableModel" />
-        }
-
-        // If nothing is selected, display everything in two tables of words/definitions
-        else
-        {
-            var WordTableModel = new TableLinkModel()
-            {
-                Title = "Word count: " + Model.Words.Count(),
-                TableElements = Model.Words.Select(w => new[] { TableElement.Text(w.Language), TableElement.Link(w.ID, w.Text), TableElement.Text(w.AlternateSpelling), TableElement.Text(w.Pronunciation) }),
-                LeftHeaders = Model.Words.Select(t => t.ID.ToString()),
-                TopHeader = new[] { "ID", "Language", "Word", "Alternate Spelling", "Pronunciation" },
-                AspAction = "Word",
-                AspController = "Entities",
-            };
-
-            <partial name="_TableLinkPartial" for="@WordTableModel" /> <br>
-        }
+        <partial name="_TableLinkPartial" for="@TableModel" />
     }
 
-</div>
+    // If nothing is selected, display everything in two tables of words/definitions
+    else
+    {
+        var WordTableModel = new TableLinkModel()
+        {
+            Title = "Word count: " + Model.Words.Count(),
+            TableElements = Model.Words.Select(w => new[] { TableElement.Text(w.Language), TableElement.Link(w.ID, w.Text), TableElement.Text(w.AlternateSpelling), TableElement.Text(w.Pronunciation) }),
+            LeftHeaders = Model.Words.Select(t => t.ID.ToString()),
+            TopHeader = new[] { "ID", "Language", "Word", "Alternate Spelling", "Pronunciation" },
+            AspAction = "Word",
+            AspController = "Entities",
+        };
+
+        <partial name="_TableLinkPartial" for="@WordTableModel" />
+        <br>
+    }
+}

@@ -1,4 +1,5 @@
-﻿using Langs.Utilities;
+﻿using Langs.Services;
+using Langs.Utilities;
 using NUnit.Framework;
 using System.Linq;
 using Tests.Base;
@@ -17,7 +18,8 @@ namespace Tests.Utils
             Assert.AreEqual(1, BookService.GetBooksWithData().Count(), "Books");
             Assert.AreEqual(3, LanguagesService.GetAll().Count(), "Langs");
             Assert.AreEqual(3, DefinitionsService.GetAll().Count(), "Defs");
-            Assert.AreEqual(6, WordsService.GetWordsWithData().Count(), "Words");
+            Assert.AreEqual(9, WordsService.GetWordsWithData().Count(), "Words");
+            Assert.AreEqual(3, MasterWordsService.GetAll().Count(), "MasterWords");
             Assert.AreEqual(2, ExplanationsService.GetAll().Count(), "Translations");
         }
 

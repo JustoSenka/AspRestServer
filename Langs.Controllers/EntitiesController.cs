@@ -1,5 +1,4 @@
-﻿using Langs.Data.Objects;
-using Langs.Models;
+﻿using Langs.Models;
 using Langs.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -31,6 +30,9 @@ namespace Langs.Controllers
                 PreferredDefaultLanguage = UserService.GetPreferredLanguage(),
             };
 
+            if (model.Word == default)
+                return View("Error", new ErrorViewModel { Exception = new Exception($"Word with ID {id} not found."), RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
             return View(model);
         }
 
@@ -41,6 +43,9 @@ namespace Langs.Controllers
             {
                 Word = WordsService.Get(id),
             };
+
+            if (model.Word == default)
+                return View("Error", new ErrorViewModel { Exception = new Exception($"Word with ID {id} not found."), RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 
             model.LanguageID = model.Word.Language.ID;
             return ViewEditWordModel(model);
@@ -62,7 +67,7 @@ namespace Langs.Controllers
             }
             catch (Exception e)
             {
-                model.AlertMessage = "Something went wrong: " + e.Message;
+                model.AlertMessage = "Something went wrong: " + e.Message + " " + e.InnerException?.Message;
                 model.AlertType = AlertType.Error;
             }
 
@@ -78,7 +83,7 @@ namespace Langs.Controllers
             }
             catch (Exception e)
             {
-                model.AlertMessage = "Something went wrong: " + e.Message;
+                model.AlertMessage = "Something went wrong: " + e.Message + " " + e.InnerException?.Message;
                 model.AlertType = AlertType.Error;
             }
 
@@ -101,7 +106,7 @@ namespace Langs.Controllers
             }
             catch (Exception e)
             {
-                model.AlertMessage = "Something went wrong: " + e.Message;
+                model.AlertMessage = "Something went wrong: " + e.Message + " " + e.InnerException?.Message;
                 model.AlertType = AlertType.Error;
             }
 
@@ -135,12 +140,12 @@ namespace Langs.Controllers
                 var translation = model.Word.Translations.First(w => w.ID == model.Word.ID);
                 model.Word.RemoveTranslation(translation);
                 WordsService.Update(model.Word);
-                
+
                 model.ExpandTranslationList = true;
             }
             catch (Exception e)
             {
-                model.AlertMessage = "Something went wrong: " + e.Message;
+                model.AlertMessage = "Something went wrong: " + e.Message + " " + e.InnerException?.Message;
                 model.AlertType = AlertType.Error;
             }
         }

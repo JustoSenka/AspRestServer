@@ -27,14 +27,27 @@ namespace Tests.Integration
         public void RemovingDefinition_FromWord_WillUpdateDB()
         {
             var word = WordsService.GetWordsWithData().First();
-            var defsBefore = DefinitionsService.GetAll().Count();
+            var before = DefinitionsService.GetAll().Count();
 
             word.Definition = null;
             WordsService.Update(word);
             var newWord = WordsService.GetWordsWithData().First();
 
             Assert.AreEqual(null, newWord.Definition, "Definition is empty");
-            Assert.AreEqual(defsBefore - 1, DefinitionsService.GetAll().Count(), "Definition should be removed from it's table as well");
+            Assert.AreEqual(before - 1, DefinitionsService.GetAll().Count(), "Definition should be removed from it's table as well");
+        }
+
+        [Test]
+        public void RemovingExplanation_FromWord_WillUpdateDB()
+        {
+            var word = WordsService.GetWordsWithData().First();
+            var before = word.Explanations.Count();
+
+            word.Explanations = null;
+            WordsService.Update(word);
+            var newWord = WordsService.GetWordsWithData().First();
+
+            Assert.AreEqual(null, newWord.Explanations, "Explanations is empty");
         }
 
         /*

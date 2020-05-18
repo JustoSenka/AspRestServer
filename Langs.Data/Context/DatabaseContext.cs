@@ -1,5 +1,7 @@
 ﻿using Langs.Data.Objects;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Langs.Data.Context
 {
@@ -19,27 +21,25 @@ namespace Langs.Data.Context
         {
             base.OnModelCreating(builder);
 
+            // Remove cascading on all foreign keys, since in most cases we don't want it.
+            // Re-Add later manually for join tables
+            foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+
             // Book - Word : Many To Many
             builder.Entity<BookWord>().HasKey(e => new { e.BookId, e.MasterWordId });
             builder.Entity<BookWord>()
                 .HasOne(e => e.MasterWord)
                 .WithMany(e => e._BookWordCollection)
-                .HasForeignKey(e => e.MasterWordId);
+                .HasForeignKey(e => e.MasterWordId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<BookWord>()
                 .HasOne(e => e.Book)
                 .WithMany(e => e._BookWordCollection)
-                .HasForeignKey(e => e.BookId);
+                .HasForeignKey(e => e.BookId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Word self referencing : Many To Many
-            // builder.Entity<Translation>().HasNoKey(); // (e => new { e.WordFromId, e.WordId });
-            /*
-            builder.Entity<Translation>().HasKey(e => e.ID);
-            builder.Entity<Translation>()
-                .HasOne(e => e.Word)
-                .WithMany(e => e._WordTranslationCollection)
-                .HasForeignKey(e => e.WordId)
-                .OnDelete(DeleteBehavior.Restrict);*/
         }
     }
 }

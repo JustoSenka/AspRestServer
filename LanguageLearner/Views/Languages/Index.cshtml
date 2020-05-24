@@ -4,17 +4,6 @@
     ViewData["Title"] = "Languages";
 }
 
-<script>
-    function check(obj) {
-        if (obj.value.trim() != "") {
-            document.getElementById("renameButton").disabled = false;
-        }
-        else {
-            document.getElementById("renameButton").disabled = true;
-        }
-    }
-</script>
-
 <div class="container">
     <form asp-controller="Languages" asp-action="EditLanguages" method="post">
         <div class="form-group row">

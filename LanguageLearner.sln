@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Langs.Services", "Langs.Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Langs.Utilities", "Langs.Utilities\Langs.Utilities.csproj", "{4C767136-635B-42AD-B7CA-C4E619B4DF31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Langs.Models", "Langs.Models\Langs.Models.csproj", "{36F0BC34-F3E4-43C2-ACB3-6331C894C5F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Langs.Models", "Langs.Models\Langs.Models.csproj", "{36F0BC34-F3E4-43C2-ACB3-6331C894C5F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Langs.Controllers", "Langs.Controllers\Langs.Controllers.csproj", "{CBC82A4E-F9C4-4D1C-9978-E4E4AF5D66E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Langs.Controllers", "Langs.Controllers\Langs.Controllers.csproj", "{CBC82A4E-F9C4-4D1C-9978-E4E4AF5D66E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

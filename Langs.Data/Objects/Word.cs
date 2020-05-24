@@ -21,6 +21,9 @@ namespace Langs.Data.Objects
             masterWord.Words.Add(this);
         }
 
+        [Required]
+        public virtual MasterWord MasterWord { get; set; }
+
         [Required, MaxLength(k_WordLength)] // Top 10 longest words in english average length is below 30, I believe 40 is safe length
         public virtual string Text { get; set; }
 
@@ -38,23 +41,29 @@ namespace Langs.Data.Objects
 
         public virtual Definition Definition { get; set; }
 
-        public virtual MasterWord MasterWord { get; set; }
         public virtual ICollection<Explanation> Explanations { get; set; }
 
         // API ----------
 
         [NotMapped]
-        public string Description => Definition?.Description;
-
-        public void AddTranslation(Word word) => MasterWord.Words.Add(word);
-        public void RemoveTranslation(Word word) => MasterWord.Words.Remove(word);
+        public string Description
+        {
+            get => Definition?.Description;
+            set
+            {
+                if (Definition == default)
+                    Definition = new Definition(value);
+                else
+                    Definition.Description = value;
+            }
+        }
 
         [NotMapped]
         public IEnumerable<Word> Translations
         {
             get => MasterWord?.Words?.Where(w => w.ID != ID);
-            set
-            {
+            /* set   // Not sure if this ever work how we want to, what to do with leftover MasterWords, when words are taken from them and added to this one?
+            {   // If words lose their MasterWord, it will fail to save DB since MasterWord is required. Never used, not sure if need to.
                 var master = MasterWord;
 
                 // Nullify MasterWord from all words previously attached to them
@@ -67,12 +76,14 @@ namespace Langs.Data.Objects
                 master.Words.Add(this);
                 foreach (var w in master.Words)
                     w.MasterWord = master;
-            }
+            }*/
         }
 
 
         public Word this[int langID] => MasterWord?[langID];
         public Word this[Language lang] => MasterWord?[lang];
+
+        public string GetExplanationTo(int languageID) => Explanations?.FirstOrDefault(e => e.LanguageToID == languageID)?.Text;
 
         string IDisplayText.DisplayText => Text;
     }

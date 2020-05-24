@@ -1,0 +1,15 @@
+﻿@model (string Left, string Right);
+
+<div class="row">
+    <div class="col-5 text-monospace">@Model.Left</div>
+    <div class="col-7">
+        @if (string.IsNullOrEmpty(Model.Right))
+        {
+            <i class="small">&lt;none&gt;</i>
+        }
+        else
+        {
+            <b>@Model.Right</b>
+        }
+    </div>
+</div>

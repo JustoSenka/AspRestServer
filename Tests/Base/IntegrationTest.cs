@@ -13,14 +13,12 @@ namespace Tests.Base
     {
         protected IHost m_Host;
 
-        public virtual bool UseInMemoryDB => true;
+        public virtual bool UseInMemoryDB => false; // SQLite is not compatible with my database model anymore
 
-        protected IBooksService BookService;
+        protected IBooksService BooksService;
         protected IWordsService WordsService;
         protected IMasterWordsService MasterWordsService;
         protected ILanguagesService LanguagesService;
-        protected IExplanationsService ExplanationsService;
-        protected IDefinitionsService DefinitionsService;
 
         protected DatabaseContext DatabaseContext;
 
@@ -34,24 +32,30 @@ namespace Tests.Base
 
             DatabaseContext = m_Host.Services.GetService<DatabaseContext>();
 
-            BookService = m_Host.Services.GetService<IBooksService>();
+            BooksService = m_Host.Services.GetService<IBooksService>();
             WordsService = m_Host.Services.GetService<IWordsService>();
             MasterWordsService = m_Host.Services.GetService<IMasterWordsService>();
             LanguagesService = m_Host.Services.GetService<ILanguagesService>();
-            ExplanationsService = m_Host.Services.GetService<IExplanationsService>();
-            DefinitionsService = m_Host.Services.GetService<IDefinitionsService>();
 
             try
             {
                 if (!UseInMemoryDB)
+                {
                     DatabaseUtils.MigrateDB(DatabaseContext);
+                    DatabaseUtils.ClearDB(DatabaseContext);
+                }
+
                 DatabaseUtils.PopulateWithTestData(DatabaseContext);
             }
             catch
             {
                 DatabaseUtils.DeleteDB(DatabaseContext);
                 if (!UseInMemoryDB)
+                {
                     DatabaseUtils.MigrateDB(DatabaseContext);
+                    DatabaseUtils.ClearDB(DatabaseContext);
+                }
+
                 DatabaseUtils.PopulateWithTestData(DatabaseContext);
             }
         }

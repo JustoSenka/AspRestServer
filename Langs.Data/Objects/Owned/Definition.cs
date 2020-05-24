@@ -1,8 +1,11 @@
-﻿using Langs.Data.Objects.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Langs.Data.Objects
 {
-    public class Definition : BaseObject, IHaveID, IDisplayText, IListableElement
+    [Owned]
+    [DebuggerDisplay("Description: {Description}")]
+    public class Definition
     {
         public Definition() { }
         public Definition(string description)
@@ -11,8 +14,5 @@ namespace Langs.Data.Objects
         }
 
         public virtual string Description { get; set; }
-
-        // -----------------
-        string IDisplayText.DisplayText => Description;
     }
 }

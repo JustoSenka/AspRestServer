@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 
-public static class ExtensionMethods
+public static class UIExtensionMethods
 {
     public static List<SelectListItem> SelectListItems(this IEnumerable<IListableElement> listable)
     {

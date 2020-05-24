@@ -12,5 +12,15 @@ namespace Langs.Services
         public MasterWordsService(DatabaseContext context) : base(context)
         {
         }
+
+        public override IEnumerable<MasterWord> GetAll()
+        {
+            return m_Context.MasterWords.Include(e => e._BookWordCollection);
+        }
+
+        public override MasterWord Get(int ID)
+        {
+            return GetAll().FirstOrDefault(e => e.ID == ID);
+        }
     }
 }

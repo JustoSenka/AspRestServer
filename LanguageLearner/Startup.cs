@@ -39,15 +39,13 @@ namespace LanguageLearner
 
             services.AddSingleton(Configuration);
 
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAccountService, AccountService>();
 
             services.AddScoped<IBooksService, BooksService>();
             services.AddScoped<IWordsService, WordsService>();
             services.AddScoped<IMasterWordsService, MasterWordsService>();
 
             services.AddScoped<ILanguagesService, LanguagesService>();
-            services.AddScoped<IExplanationsService, ExplanationService>();
-            services.AddScoped<IDefinitionsService, DefinitionsService>();
 
             services.AddRazorPages().AddRazorRuntimeCompilation();
 

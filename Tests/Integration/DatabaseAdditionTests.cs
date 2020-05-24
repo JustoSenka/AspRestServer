@@ -10,34 +10,29 @@ namespace Tests.Integration
         [Test]
         public void Service_WithDefaultWebHost_IsResolved()
         {
-            Assert.IsNotNull(BookService);
+            Assert.IsNotNull(BooksService);
         }
 
         [Test]
         public void CanAdd_Word_ToDatabase()
         {
-            WordsService.Add(new Word() { Text = "Something", Language = LanguagesService.GetAll().First() });
-            Assert.AreEqual(7, WordsService.GetWordsWithData().Count());
-        }
-
-        [Test]
-        public void CanAdd_WordWithLanguage_ToDatabase()
-        {
-            WordsService.Add(new Word() { Text = "Something", Language = new Language() { Name = "Another" } });
-
-            Assert.AreEqual(7, WordsService.GetWordsWithData().Count());
-            Assert.AreEqual(4, LanguagesService.GetAll().Count());
+            var beforeWords = WordsService.GetAll().Count();
+            WordsService.Add(new Word() { MasterWord = new MasterWord(), Text = "Something", Language = LanguagesService.GetAll().First() });
+            Assert.AreEqual(beforeWords + 1, WordsService.GetWordsWithData().Count());
         }
 
         [Test]
         public void Adding_WordWithSameLanguage_WillNotIncrementLanguages()
         {
-            var lang = new Language() { Name = "Another" };
-            WordsService.Add(new Word() { Text = "Something", Language = lang });
-            WordsService.Add(new Word() { Text = "anything", Language = lang });
+            var beforeWords = WordsService.GetAll().Count();
+            var beforeLangs = LanguagesService.GetAll().Count();
 
-            Assert.AreEqual(8, WordsService.GetWordsWithData().Count());
-            Assert.AreEqual(4, LanguagesService.GetAll().Count());
+            var lang = new Language() { Name = "Another" };
+            WordsService.Add(new Word() { MasterWord = new MasterWord(), Text = "Something", Language = lang });
+            WordsService.Add(new Word() { MasterWord = new MasterWord(), Text = "anything", Language = lang });
+
+            Assert.AreEqual(beforeWords + 2, WordsService.GetWordsWithData().Count(), "Words count missmatch");
+            Assert.AreEqual(beforeLangs + 1, LanguagesService.GetAll().Count(), "Language count missmatch");
         }
     }
 }

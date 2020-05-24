@@ -1,0 +1,21 @@
+﻿@model AccountModel;
+
+@{
+    ViewData["Title"] = "Account Settings";
+}
+
+    <div class="container">
+        <div class="text-right">
+            <a class="btn btn-sm" asp-controller="Account" asp-action="Edit">Edit</a>
+        </div>
+
+        <hr>
+        <partial name="_RowProperty" model="@("Account Name:", Model.AccountName)" />
+        <partial name="_RowProperty" model="@("Account Email:", "example@gmail.com")" />
+        <hr>
+        <partial name="_RowProperty" model="@("Native Language:", Model.NativeLanguage)" />
+        <partial name="_RowProperty" model="@("Learning Language:", Model.LearningLanguage)" />
+        <partial name="_RowProperty" model="@("Additional Language:", Model.AdditionalLanguage)" />
+        <hr>
+
+    </div>

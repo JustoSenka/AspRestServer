@@ -1,34 +1,47 @@
 ﻿@model EntityModel;
 
 @{
-    ViewData["Title"] = Model.Word.Text;
+    ViewData["Title"] = Model.WordText;
 }
 
 <div class="container">
     <div class="text-right">
-        <a class="btn btn-sm" asp-controller="Entities" asp-action="EditWord" asp-route-id="@Model.Word.ID">Edit</a>
+        <a class="btn btn-sm" asp-controller="Entities" asp-action="EditWord" asp-route-id="@Model.WordID">Edit</a>
     </div>
 
     <div class="row">
         <div class="col">
-            <h5><i>Word Language: @Model.Word.Language.Name</i></h5> <br>
+            <h5><i>Word Language: @Model.WordLanguage</i></h5> <br>
 
-                @{
-                    var alternateSpelling = string.IsNullOrEmpty(Model.Word.AlternateSpelling) ? "" : $"({Model.Word.AlternateSpelling})";
-                    var pronunciationText = string.IsNullOrEmpty(Model.Word.Pronunciation) ? "" : $"({Model.Word.Pronunciation})";
-                    var translation = Model.Word[Model.PreferredDefaultLanguage];
-                }
-                <h3><b>@Model.Word.Article @Model.Word.Text</b> <text class="small"><b>@alternateSpelling</b><i>@pronunciationText</i></text></h3>
+            @{
+                var alternateSpelling = string.IsNullOrEmpty(Model.WordAlternateSpelling) ? "" : $"({Model.WordAlternateSpelling})";
+                var pronunciationText = string.IsNullOrEmpty(Model.WordPronunciation) ? "" : $"({Model.WordPronunciation})";
+            }
+            <h3><b>@Model.WordArticle @Model.WordText</b> <text class="small"><b>@alternateSpelling</b><i>@pronunciationText</i></text></h3>
+            <p>@Model.WordDescription</p>
 
-                @if (translation != default)
+            <hr>
+
+            @if (!string.IsNullOrEmpty(Model.TranslationText))
+            {
+                <p style="font-size: large; font-weight: bold">@Model.TranslationText</p>
+                <p>@Model.TranslationDescription</p>
+            }
+            else
+            {
+                <p>This word is not translated to your native or secondary languages.</p>
+            }
+
+            <hr>
+
+            <ul class="list-group list-group-flush">
+                @foreach (var (langName, explanationText) in Model.Explanations)
                 {
-                    <h4>@translation.Text</h4><br>
-                    <p>@translation.Definition?.Description</p>
+                    <li class="list-group-item">
+                        @langName: @explanationText
+                    </li>
                 }
-                else
-                {
-                    @: No translations for this word were found.
-                }
+            </ul>
 
             <br>
         </div>
@@ -39,7 +52,7 @@
         var listModel = new ExpandableListModel()
         {
             Title = "List of Translations",
-            Elements = Model.Word.Translations?.Select(t => new ListElement(t.Language.Name + ": " + t.Text, "Word", "Entities", t.ID.ToString())),
+            Elements = Model.Translations?.Select(t => new ListElement(t.LangName + ": " + t.Text, "Word", "Entities", t.ID.ToString())),
         };
 
         <partial name="_ExpandableListPartial" for="@listModel" />

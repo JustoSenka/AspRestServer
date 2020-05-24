@@ -1,0 +1,83 @@
+﻿@model EditAccountModel;
+
+@{
+    ViewData["Title"] = "Account Settings";
+}
+
+    <script>
+    window.onbeforeunload = function () {
+        return true;
+    };
+
+    function disableBeforeUnload() {
+        window.onbeforeunload = null;
+    }
+    </script>
+
+
+<div class="container">
+    <p>Edit account settings and press 'Update' to save them.</p>
+    <form>
+
+        <div class="form-group row">
+            <span style="color: darkred" asp-validation-for="AccountName"></span>
+            <div class="col-5"> <label for="Word_Text" class="col-form-label">Account Name</label> </div>
+            <div class="col-7"> <input type="text" class="form-control" asp-for="AccountName" value="@Model.AccountName" /> </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-5"> <label for="NativeLanguageID">Native Language</label> </div>
+            <div class="col-7">
+                <select class="custom-select" asp-for="NativeLanguageID">
+                    <option value="0">&lt;choose&gt;</option>
+
+                    @foreach (var lang in Model.AvailableLanguages)
+                    {
+                        <option value="@lang.ID">@lang.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-5"> <label for="LearningLanguageID">Learning Language</label> </div>
+            <div class="col-7">
+                <select class="custom-select" asp-for="LearningLanguageID">
+                    <option value="0">&lt;choose&gt;</option>
+
+                    @foreach (var lang in Model.AvailableLanguages)
+                    {
+                        <option value="@lang.ID">@lang.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-5"> <label for="AdditionalLanguageID">Additional Language</label> </div>
+            <div class="col-7">
+                <select class="custom-select" asp-for="AdditionalLanguageID">
+                    <option value="0">&lt;choose&gt;</option>
+
+                    @foreach (var lang in Model.AvailableLanguages)
+                    {
+                        <option value="@lang.ID">@lang.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <hr>
+        <div class="form-group row">
+            <div class="col">
+                <button onclick="disableBeforeUnload()" type="submit" class="btn btn-success" asp-controller="Account" asp-action="SaveAccount">Update</button>
+                <a class="btn btn-sm btn-secondary" asp-controller="Account" asp-action="Index" asp-route-id="">Cancel</a>
+            </div>
+
+            <div class="col text-right">
+                <button onclick="disableBeforeUnload()" type="submit" class="btn btn-danger btn-sm disabled">Delete Account</button>
+            </div>
+        </div>
+
+    </form>
+</div>

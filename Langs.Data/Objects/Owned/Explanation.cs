@@ -1,11 +1,13 @@
-﻿using Langs.Data.Objects.Base;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
 namespace Langs.Data.Objects
 {
+    [Owned]
     [DebuggerDisplay("Translation: Text: {Text}")]
-    public class Explanation : BaseObject, IHaveID, IDisplayText, IListableElement
+    public class Explanation
     {
         public Explanation() { }
         public Explanation(string text, Language languageTo)
@@ -17,10 +19,9 @@ namespace Langs.Data.Objects
         [Required, MaxLength(100)] // short line, multiple words which explain translation better
         public virtual string Text { get; set; }
 
-        [Required]
+        [Required, ForeignKey("LanguageToID")]
         public virtual Language LanguageTo { get; set; }
 
-        // ----------
-        string IDisplayText.DisplayText => Text;
+        public virtual int? LanguageToID { get; set; }
     }
 }

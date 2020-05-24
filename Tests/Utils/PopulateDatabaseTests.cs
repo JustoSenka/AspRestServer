@@ -13,14 +13,12 @@ namespace Tests.Utils
         [Test]
         public void AddSingleBook_CheckIfDataCountIsCorrect()
         {
-            DatabaseUtils.PopulateWithTestData(DatabaseContext);
+            // DatabaseUtils.PopulateWithTestData(DatabaseContext); // This is done in setup
 
-            Assert.AreEqual(1, BookService.GetBooksWithData().Count(), "Books");
+            Assert.AreEqual(1, BooksService.GetBooksWithData().Count(), "Books");
             Assert.AreEqual(3, LanguagesService.GetAll().Count(), "Langs");
-            Assert.AreEqual(3, DefinitionsService.GetAll().Count(), "Defs");
             Assert.AreEqual(9, WordsService.GetWordsWithData().Count(), "Words");
             Assert.AreEqual(3, MasterWordsService.GetAll().Count(), "MasterWords");
-            Assert.AreEqual(2, ExplanationsService.GetAll().Count(), "Translations");
         }
 
         [Test]
@@ -34,14 +32,13 @@ namespace Tests.Utils
         [Test]
         public void ClearDB()
         {
-            DatabaseUtils.PopulateWithTestData(DatabaseContext);
+            // DatabaseUtils.PopulateWithTestData(DatabaseContext); // This is done in setup
             DatabaseUtils.ClearDB(DatabaseContext);
 
-            Assert.AreEqual(0, BookService.GetBooksWithData().Count(), "Books");
+            Assert.AreEqual(0, BooksService.GetBooksWithData().Count(), "Books");
             Assert.AreEqual(0, LanguagesService.GetAll().Count(), "Langs");
-            Assert.AreEqual(0, DefinitionsService.GetAll().Count(), "Defs");
             Assert.AreEqual(0, WordsService.GetWordsWithData().Count(), "Words");
-            Assert.AreEqual(0, ExplanationsService.GetAll().Count(), "Translations");
+            Assert.AreEqual(0, MasterWordsService.GetAll().Count(), "MasterWords");
         }
     }
 }

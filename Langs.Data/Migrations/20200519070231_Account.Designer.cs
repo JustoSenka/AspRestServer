@@ -4,14 +4,16 @@ using Langs.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Langs.Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200519070231_Account")]
+    partial class Account
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,17 +64,12 @@ namespace Langs.Data.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
-                    b.Property<int>("LanguageID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(40)")
                         .HasMaxLength(40);
 
                     b.HasKey("ID");
-
-                    b.HasIndex("LanguageID");
 
                     b.ToTable("Books");
                 });
@@ -139,7 +136,7 @@ namespace Langs.Data.Migrations
                     b.Property<int>("LanguageID")
                         .HasColumnType("int");
 
-                    b.Property<int>("MasterWordID")
+                    b.Property<int?>("MasterWordID")
                         .HasColumnType("int");
 
                     b.Property<string>("Pronunciation")
@@ -178,15 +175,6 @@ namespace Langs.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("Langs.Data.Objects.Book", b =>
-                {
-                    b.HasOne("Langs.Data.Objects.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Langs.Data.Objects.BookWord", b =>
                 {
                     b.HasOne("Langs.Data.Objects.Book", "Book")
@@ -213,8 +201,7 @@ namespace Langs.Data.Migrations
                     b.HasOne("Langs.Data.Objects.MasterWord", "MasterWord")
                         .WithMany("Words")
                         .HasForeignKey("MasterWordID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.OwnsOne("Langs.Data.Objects.Definition", "Definition", b1 =>
                         {
@@ -242,8 +229,7 @@ namespace Langs.Data.Migrations
                                 .HasColumnType("int")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<int?>("LanguageToID")
-                                .IsRequired()
+                            b1.Property<int>("LanguageToID")
                                 .HasColumnType("int");
 
                             b1.Property<string>("Text")

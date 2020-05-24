@@ -1,7 +1,6 @@
 ﻿using Langs.Data.Objects;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Langs.Data.Context
 {
@@ -10,12 +9,11 @@ namespace Langs.Data.Context
         public DatabaseContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Book> Books { get; set; }
-
         public DbSet<Word> Words { get; set; }
         public DbSet<MasterWord> MasterWords { get; set; }
         public DbSet<Language> Languages { get; set; }
-        public DbSet<Definition> Definitions { get; set; }
-        public DbSet<Explanation> Explanations { get; set; }
+
+        public DbSet<Account> Accounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -23,7 +21,7 @@ namespace Langs.Data.Context
 
             // Remove cascading on all foreign keys, since in most cases we don't want it.
             // Re-Add later manually for join tables
-            foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            foreach (var relationship in builder.Model.GetEntityTypes().Where(e => !e.IsOwned()).SelectMany(e => e.GetForeignKeys()))
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
 
             // Book - Word : Many To Many
@@ -40,6 +38,9 @@ namespace Langs.Data.Context
                 .HasForeignKey(e => e.BookId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Word Owned types
+            builder.Entity<Word>().OwnsMany(e => e.Explanations).ToTable("Explanations");
+            builder.Entity<Word>().OwnsOne(e => e.Definition).ToTable("Definitions");
         }
     }
 }

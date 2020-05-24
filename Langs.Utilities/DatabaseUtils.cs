@@ -34,22 +34,19 @@ namespace Langs.Utilities
 
         public static void ClearDB(DatabaseContext DatabaseContext)
         {
-            DatabaseContext.Database.EnsureCreated();
-
             DatabaseContext.Words.RemoveRange(DatabaseContext.Words);
             DatabaseContext.MasterWords.RemoveRange(DatabaseContext.MasterWords);
-            DatabaseContext.Definitions.RemoveRange(DatabaseContext.Definitions);
-            DatabaseContext.Explanations.RemoveRange(DatabaseContext.Explanations);
-            DatabaseContext.Languages.RemoveRange(DatabaseContext.Languages);
             DatabaseContext.Books.RemoveRange(DatabaseContext.Books);
+            DatabaseContext.Languages.RemoveRange(DatabaseContext.Languages);
+
+            DatabaseContext.Accounts.RemoveRange(DatabaseContext.Accounts);
 
             DatabaseContext.SaveChanges();
         }
 
         public static void PopulateWithTestData(DatabaseContext DatabaseContext)
         {
-            DatabaseContext.Database.EnsureCreated();
-            ClearDB(DatabaseContext);
+            MigrateDB(DatabaseContext);
 
             var langEn = new Language("English");
             var langEsp = new Language("Spanish");
@@ -77,9 +74,10 @@ namespace Langs.Utilities
             words[0].Explanations = new List<Explanation> { new Explanation("Hello, good morning, good day", langEn) };
             words[3].Explanations = new List<Explanation> { new Explanation("Hello, good day", langEn) };
 
-            var book = new Book("Book 0", "") { Words = masterWords.ToList() };
+            var book = new Book("Book 0", langEn, "") { Words = masterWords.ToList() };
 
             DatabaseContext.Books.Add(book);
+            DatabaseContext.Accounts.Add(new Account() { Name = "Justas", LearningLanguage = langEsp, NativeLanguage = langEn });
             DatabaseContext.SaveChanges();
         }
     }

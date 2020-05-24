@@ -1,7 +1,8 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-// Write your JavaScript code.
+
+// Highligh correct nav item ------------------------------------------------------
 
 $(document).ready(function () {
 
@@ -25,12 +26,11 @@ highlightActiveMenuItem = function () {
 };
 
 
-// Searcheable dropdown
- //run when the DOM is ready
+// Searcheable dropdown ----------------------------------------------------------
+// run when the DOM is ready
 $(function () {                      
     // Reset input if clicking on dropdown again
     $('.searcheable-dropdown').click(function (e) {
-        console.log(e);
         var input = e.target.parentNode.querySelector('.dropdown-menu input');
         var jqueryInput = $(input);
         jqueryInput.val('');
@@ -67,3 +67,13 @@ function filterFunction(obj) { // obj: JQuery<HTMLElement>
         }
     }
 }
+
+// Text area auto size ------------------------------------------------------------
+
+$(function () {
+    $('textarea.auto-size').keyup(function (e) {
+        this.style.overflow = 'hidden';
+        this.style.height = 0;
+        this.style.height = this.scrollHeight + 'px';
+    });
+});

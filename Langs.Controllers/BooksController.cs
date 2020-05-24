@@ -52,7 +52,8 @@ namespace Langs.Controllers
         [HttpPost]
         public IActionResult CompleteNewBook(string name, string description)
         {
-            var book = new Book(name, description);
+            // TODO: Lang is now mandatory, please fix
+            var book = new Book(name, null, description);
             book = BookService.Add(book);
             return RedirectToAction("Book", new { id = book.ID });
         }

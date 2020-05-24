@@ -14,9 +14,16 @@ namespace Langs.Services
         public override Book Get(int id) => GetBooksWithData().SingleOrDefault(e => e.ID == id);
 
         public IEnumerable<Book> GetWithWordCount() => m_Context.Books
+            .Include(p => p.Language)
             .Include(p => p._BookWordCollection);
 
+        public IEnumerable<Book> GetBooksWithMasterWords() => m_Context.Books
+            .Include(p => p.Language)
+            .Include(p => p._BookWordCollection)
+                .ThenInclude(c => c.MasterWord);
+
         public IEnumerable<Book> GetBooksWithData() => m_Context.Books
+            .Include(p => p.Language)
             .Include(p => p._BookWordCollection)
                 .ThenInclude(c => c.MasterWord)
                     .ThenInclude(c => c.Words)

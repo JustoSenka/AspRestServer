@@ -10,7 +10,6 @@ namespace Langs.Models.Shared
         public string AspController { get; set; }
         public string AspAction { get; set; }
 
-
         public string GetController(int columnIndex) => HasLinkActionForColumn(columnIndex) ? ColumnLinks[columnIndex].AspController : AspController;
         public string GetAction(int columnIndex) => HasLinkActionForColumn(columnIndex) ? ColumnLinks[columnIndex].AspAction : AspAction;
 

@@ -6,6 +6,7 @@ namespace Langs.Services
     {
         Language GetPrefferedNativeLanguage();
         Language GetPrefferedSecondaryLanguage();
+        Language GetAdditionalLanguage();
         Account GetLogonAccount();
     }
 }

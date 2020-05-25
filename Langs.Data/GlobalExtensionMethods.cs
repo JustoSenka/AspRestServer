@@ -23,4 +23,10 @@ public static class GlobalExtensionMethods
 
         return -1;
     }
+
+    public static void AddRange<T>(this HashSet<T> set, IEnumerable<T> range)
+    {
+        foreach(var el in range)
+            set.Add(el);
+    }
 }

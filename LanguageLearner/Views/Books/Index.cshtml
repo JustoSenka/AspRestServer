@@ -6,15 +6,17 @@
 
 <partial name="_BookNavigation" />
 
-@{
-    var TableModel = new TableLinkModel()
-    {
-        Title = "Book count: " + Model.Books.Count(),
-        TableElements = Model.Books.Select(b => TableElement.LinkMany(b.ID, b.Name, b.Description, b.WordCount.ToString())),
-        TopHeader = new[] { "Name", "Description", "Word Count" },
-        AspAction = "Book",
-        AspController = "Books",
-    };
+<div class="container">
+    @{
+        <h4>Book count: @Model.Books.Count()</h4>
+        var TableModel = new TableLinkModel()
+        {
+            TableElements = Model.Books.Select(b => TableElement.LinkMany(b.ID, b.Name, b.LanguageName, b.Description, b.WordCount.ToString())),
+            TopHeader = new[] { "Name", "Language", "Description", "Word Count" },
+            AspAction = "Book",
+            AspController = "Books",
+        };
 
-    <partial name="_TableLinkPartial" for="@TableModel" />
-}
+        <partial name="_TableLinkPartial" for="@TableModel" />
+    }
+</div>

@@ -22,6 +22,9 @@ namespace Langs.Services
             .Include(e => e.AdditionalLanguage)
             .FirstOrDefault(e => e.ID == id);
 
+        /// <summary>
+        /// Will always return valid language or default to english or first language in the database
+        /// </summary>
         public Language GetPrefferedNativeLanguage()
         {
             var acc = GetLogonAccount();
@@ -29,12 +32,20 @@ namespace Langs.Services
             return lang ?? LanguagesService.GetAll().FirstOrDefault();
         }
 
+        /// <summary>
+        /// Will always return valid language or default to english or first language in the database
+        /// </summary>
         public Language GetPrefferedSecondaryLanguage()
         {
             var acc = GetLogonAccount();
             var lang = acc.LearningLanguage ?? LanguagesService.GetAll().FirstOrDefault(e => e.Name.Equals("English", StringComparison.InvariantCultureIgnoreCase));
             return lang ?? LanguagesService.GetAll().FirstOrDefault();
         }
+
+        /// <summary>
+        /// Will return account additional language or null if not set
+        /// </summary>
+        public Language GetAdditionalLanguage() => GetLogonAccount().AdditionalLanguage;
 
         public Account GetLogonAccount()
         {

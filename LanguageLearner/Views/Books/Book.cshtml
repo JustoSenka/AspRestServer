@@ -6,21 +6,30 @@
 
 <partial name="_BookNavigation" />
 
-<h1> @Model.Book.Name </h1>
-
 <div class="container">
-    <h3>Words in book</h3>
 
+    <h3> @Model.Book.Name </h3>
+    <h5><i>Book Language: @Model.Book.LanguageName</i></h5>
+    <p>@Model.Book.Description</p>
+    <hr>
+
+    <h5>Word count: @Model.Book.WordCount</h5>
     @{
-        var TableModel = new TableLinkModel()
-        {
-            Title = "Word count: " + Model.Book.Words.Count(),
-            TableElements = Model.Book.Words.Select(w => TableElement.LinkMany(w.ID, w.Words.First().Text)),
-            LeftHeaders = Model.Book.Words.Select(w => w.ID.ToString()),
-            TopHeader = new[] { "ID", "Word" },
-        };
+        var TableModel = new TableLinkModel();
 
-        TableModel.ColumnLinks[0] = ("Entities", "Word");
+        if (string.IsNullOrEmpty(Model.Languages.Additional))
+        {
+            TableModel.TableElements = Model.Words.Select(w => TableElement.LinkMany((w.WordID, w.Word), (w.TranslationID, w.Translation)));
+            TableModel.TopHeader = new[] { Model.Languages.Learning, Model.Languages.Native };
+        }
+        else
+        {
+            TableModel.TableElements = Model.Words.Select(w => TableElement.LinkMany((w.WordID, w.Word), (w.TranslationID, w.Translation), (w.OtherID, w.Other)));
+            TableModel.TopHeader = new[] { Model.Languages.Learning, Model.Languages.Native, Model.Languages.Additional };
+        }
+
+        TableModel.AspController = "Entities";
+        TableModel.AspAction = "Word";
 
         <partial name="_TableLinkPartial" for="@TableModel" />
     }

@@ -27,5 +27,10 @@ namespace Langs.Models.Shared
         {
             return str.Select(s => new TableElement { Value = s, ID = id, HasLinkAction = true }).ToArray();
         }
+
+        public static TableElement[] LinkMany(params (int ID, string Text)[] els)
+        {
+            return els.Select(el => new TableElement { Value = el.Text, ID = el.ID, HasLinkAction = true }).ToArray();
+        }
     }
 }

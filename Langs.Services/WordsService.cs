@@ -1,7 +1,8 @@
 ﻿using Langs.Data.Context;
 using Langs.Data.Objects;
+using Langs.Utilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.SqlServer.Management.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace Langs.Services
             using (BatchRequests())
             {
                 base.Remove(obj);
-                
+
                 if (deleteMaster)
                     MasterWordsService.Remove(master);
             }
@@ -61,6 +62,13 @@ namespace Langs.Services
 
         public void AddTranslation(Word word, Word translation)
         {
+            // Check if merge is possible. If merging MasterWords will procude multiple words of same language under same master, it's invalid
+            var set = word.MasterWord.Words.ToHashSet(new LanguageEqualityComparer());
+            set.AddRange(translation.MasterWord.Words);
+
+            if (set.Count() < word.MasterWord.Words.Count() + translation.MasterWord.Words.Count())
+                throw new InvalidOperationException($"Cannot add translation to word '{word.Text}' because it already has translation {translation.Text} via different language.");
+
             // Transfer to one which has more translations, so less operations are made
             var shouldUseOriginalMasterWord = word.Translations.Count() >= translation.Translations.Count();
 

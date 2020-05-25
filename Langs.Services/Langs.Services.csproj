@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Langs.Data\Langs.Data.csproj" />
+	  <ProjectReference Include="..\Langs.Utilities\Langs.Utilities.csproj" />
 	</ItemGroup>
 
 </Project>

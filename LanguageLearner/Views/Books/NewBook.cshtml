@@ -1,26 +1,43 @@
-﻿@{
+﻿@model NewBookModel;
+
+@{
     ViewData["Title"] = "Books";
 }
 
 <partial name="_BookNavigation" />
 
 <div class="container">
-    <form action="CompleteNewBook" method="post">
+    <form>
+        <partial name="_AlertMessage" />
+
         <div class="form-group row">
-            <label for="name" class="col-2 col-form-label">Book Name</label>
-            <div class="col-10">
-                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+            <span style="color: darkred" asp-validation-for="BookName"></span>
+            <div class="col-5"> <label for="BookName" class="col-form-label">Account Name</label> </div>
+            <div class="col-7"> <input type="text" class="form-control" asp-for="BookName" placeholder="Name" /> </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-5"> <label for="BookDescription" class="col-form-label">Description</label> </div>
+            <div class="col-7"> <input type="text" class="form-control" asp-for="BookDescription" placeholder="Description" /> </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-5"> <label for="BookLanguageID">Book Language</label> </div>
+            <div class="col-7">
+                <select class="custom-select" asp-for="BookLanguageID">
+                    <option value="0">&lt;choose&gt;</option>
+
+                    @foreach (var lang in Model.AvailableLanguages)
+                    {
+                        <option value="@lang.ID">@lang.Name</option>
+                    }
+                </select>
             </div>
         </div>
-        <div class="form-group row">
-            <label for="description" class="col-2 col-form-label">Book Description</label>
-            <div class="col-10">
-                <input type="text" class="form-control" id="description" name="description" placeholder="Description">
-            </div>
-        </div>
+
         <div class="form-group row">
             <div class="col-12">
-                <button type="submit" class="btn btn-success">Save</button>
+                <button type="submit" class="btn btn-success" asp-controller="Books" asp-action="CompleteNewBook" formmethod="post">Save</button>
             </div>
         </div>
     </form>

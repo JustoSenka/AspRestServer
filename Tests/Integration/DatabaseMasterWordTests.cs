@@ -1,4 +1,4 @@
-using Langs.Data.Objects;
+﻿using Langs.Data.Objects;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -49,6 +49,32 @@ namespace Tests.Integration
 
         [TestCase(true)]
         [TestCase(false)]
+        public void AddingLink_BetweenTwoWords_WillRefuseToMergeIfItsAlreadyTranslatedToThatLanguage(bool inverseAddition)
+        {
+            // Arrange
+            var langEn = new Language("English");
+            var langEsp = new Language("Spanish");
+            var langJp = new Language("Japanese");
+
+            var masterA = new MasterWord();
+            var masterB = new MasterWord();
+
+            var wordA1 = new Word(masterA, "Hi orig", langEn);
+            var wordA2 = new Word(masterA, "Hola", langEsp);
+
+            var wordB1 = new Word(masterA, "Hi duplicate", langEn);
+            var wordB2 = new Word(masterA, "おはよう", langJp);
+
+            // Act
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                if (inverseAddition) WordsService.AddTranslation(wordA2, wordB2);
+                else WordsService.AddTranslation(wordB2, wordA2);
+            });
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
         public void AddingLink_BetweenTwoWords_WillUpdateRefsInBooksToCorrectMasterWord(bool bookLinksToBoth)
         {
             // Arrange
@@ -85,7 +111,7 @@ namespace Tests.Integration
             var wordA = new Word(masterA, "Hi", new Language("English"));
             var wordB = new Word(masterA, "Hola", new Language("Spanish"));
             MasterWordsService.Add(masterA);
-            
+
             // Act
             WordsService.RemoveTranslation(wordA, wordB);
 
@@ -129,7 +155,7 @@ namespace Tests.Integration
             Assert.AreEqual(1, book.WordCount, "Book word count should be 1. Old Ref");
             Assert.AreEqual(1, newBook.WordCount, "Book word count should be 1. New Ref");
 
-            Assert.AreEqual(newBook.Words.First().Words.First().Language, newBook.Language, 
+            Assert.AreEqual(newBook.Words.First().Words.First().Language, newBook.Language,
                 "After removing translation between two words, book should keep the master word which aligns with book language. New Ref");
 
             var wordInBook = enBookLang ? wordA : wordB;

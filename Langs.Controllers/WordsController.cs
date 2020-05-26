@@ -14,53 +14,66 @@ namespace Langs.Controllers
     {
         private readonly ILanguagesService LanguagesService;
         private readonly IWordsService WordsService;
-        public WordsController(IWordsService WordsService, ILanguagesService LanguagesService)
+        private readonly IBooksService BooksService;
+        public WordsController(IWordsService WordsService, ILanguagesService LanguagesService, IBooksService BooksService)
         {
             this.WordsService = WordsService;
             this.LanguagesService = LanguagesService;
+            this.BooksService = BooksService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             var model = new WordsModel
             {
-                AvailableLanguages = LanguagesService.GetAll().ToArray()
+                AvailableLanguages = LanguagesService.GetAll().ToArray(),
+                Books = BooksService.GetAll().Select(w => (w.ID, w.Name, w.Language.Name)).ToArray()
             };
 
             return View(model);
         }
 
         // Redirecting to Show so language ids appear inside url.
+        [HttpPost]
         public IActionResult ShowRedirect(WordsModel WordsModel)
         {
-            return RedirectToAction("Show", new { WordsModel.LanguageFromID, WordsModel.LanguageToID });
+            return RedirectToAction("Show", new { WordsModel.LanguageFromID, WordsModel.LanguageToID, WordsModel.SelectedBookID });
         }
-        public IActionResult Show(int LanguageFromID, int LanguageToID)
+
+        [HttpGet]
+        public IActionResult Show(int LanguageFromID, int LanguageToID, int SelectedBookID)
         {
+            var book = BooksService.Get(SelectedBookID);
             var model = new WordsModel()
             {
                 LanguageFromID = LanguageFromID,
                 LanguageToID = LanguageToID,
+                SelectedBookID = SelectedBookID,
                 AvailableLanguages = LanguagesService.GetAll().ToArray(),
+                Books = BooksService.GetAll().Select(w => (w.ID, w.Name, w.Language.Name)).ToArray(),
                 From = LanguagesService.Get(LanguageFromID),
                 To = LanguagesService.Get(LanguageToID),
             };
 
-            PopulateModelWithWords(LanguageFromID, LanguageToID, model);
+            PopulateModelWithWords(LanguageFromID, LanguageToID, SelectedBookID, model);
 
             return View(model);
         }
 
-        private void PopulateModelWithWords(int LanguageFromID, int LanguageToID, WordsModel model)
+        private void PopulateModelWithWords(int LanguageFromID, int LanguageToID, int SelectedBookID, WordsModel model)
         {
             var words = WordsService.GetWordsWithData();
+            if (SelectedBookID != 0) 
+                words = words.Where(w => w.MasterWord.Books.Any(b => b.ID == SelectedBookID));
+
             // If both languages selected, show translations
             if (LanguageFromID != 0 && LanguageToID != 0)
             {
                 model.Translations = words
                     .Where(w => w.Language.ID == LanguageFromID)
-                    .Where(w => w.Translations != null && w.Translations.Count() > 0)
                     .Select(w => (left: w, right: w[LanguageToID]))
+                    .Where(t => t.right != null)
                     .Select(t => (t.left.ID, t.left.Text, t.right.ID, t.right.Text)).ToArray();
 
             }
@@ -126,6 +139,7 @@ namespace Langs.Controllers
             return View(model);
         }
 
+        [NonAction]
         public IActionResult AddWordsSingle(AddWordsModel AddWordsModel)
         {
             var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
@@ -138,6 +152,7 @@ namespace Langs.Controllers
             return View("AddWords", AddWordsModel);
         }
 
+        [NonAction]
         public IActionResult AddWordsArea(AddWordsModel AddWordsModel)
         {
             var lines = AddWordsModel.WordsCombinedArea.Split(Environment.NewLine);
@@ -151,6 +166,7 @@ namespace Langs.Controllers
             return View("AddWords", AddWordsModel);
         }
 
+        [NonAction]
         public IActionResult AddWordsSeparateArea(AddWordsModel AddWordsModel)
         {
             var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
@@ -163,6 +179,7 @@ namespace Langs.Controllers
             return View("AddWords", AddWordsModel);
         }
 
+        [NonAction]
         public IActionResult AddWordsSeparateAreaDescription(AddWordsModel AddWordsModel)
         {
             var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,

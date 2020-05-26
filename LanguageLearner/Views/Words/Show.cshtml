@@ -15,7 +15,7 @@
         {
             Title = "Word count: " + Model.Translations.Length,
             TableElements = Model.Translations.Select(t => new[] { TableElement.Link(t.LeftID, t.LeftText), TableElement.Link(t.RightID, t.RightText) }),
-            TopHeader = new[] { "ID", "Word", "Translation" },
+            TopHeader = new[] { "Word", "Translation" },
             AspAction = "Word",
             AspController = "Entities",
         };

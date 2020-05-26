@@ -8,7 +8,44 @@
 
 <form asp-controller="Words" asp-action="ShowRedirect" method="post">
 
-    <partial name="_LanguagePicker" />
+    <div class="form-group row">
+        <div class="col">
+            <label for="SelectedBookID">Select Book <i>(optional)</i></label>
+
+            <select class="custom-select" asp-for="SelectedBookID">
+                <option value="0">&lt;choose&gt;</option>
+                @foreach (var book in Model.Books)
+                {
+                    <option value="@book.ID">@book.Name - @book.LanguageName</option>
+                }
+            </select>
+        </div>
+
+        <div class="col">
+            <label for="LanguageFromID">Select Language From <i>(optional)</i></label>
+            <select class="custom-select" asp-for="LanguageFromID">
+
+                <option value="0">&lt;choose&gt;</option>
+                @foreach (var lang in Model.AvailableLanguages)
+                {
+                    <option value="@lang.ID">@lang.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="col">
+            <label for="LanguageToID">Select Language To <i>(optional)</i></label>
+            <select class="custom-select" asp-for="LanguageToID">
+
+                <option value="0">&lt;choose&gt;</option>
+                @foreach (var lang in Model.AvailableLanguages)
+                {
+                    <option value="@lang.ID">@lang.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+
 
     <div class="form-group row">
         <div class="col-12">

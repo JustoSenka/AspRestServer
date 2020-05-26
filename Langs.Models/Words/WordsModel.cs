@@ -10,5 +10,9 @@ namespace Langs.Models.Words
         public (int ID, string Language, string Text, string AlternateSpelling, string Pronunciation)[] Words { get; set; }
 
         public (int LeftID, string LeftText, int RightID, string RightText)[] Translations { get; set; }
+
+        public (int ID, string Name, string LanguageName)[] Books { get; set; }
+
+        public int SelectedBookID { get; set; }
     }
 }

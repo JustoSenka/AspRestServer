@@ -8,26 +8,64 @@
 
 <div class="container">
 
+    <div class="text-right">
+        <a class="btn btn-sm" asp-controller="Books" asp-action="Edit" asp-route-id="@Model.Book.ID">Edit</a>
+    </div>
+
     <h3> @Model.Book.Name </h3>
     <h5><i>Book Language: @Model.Book.LanguageName</i></h5>
     <p>@Model.Book.Description</p>
     <hr>
 
+    <div class="row col">
+        @{
+            var dropdownModel = new SearcheableDropdownModel()
+            {
+                IsSubmit = false,
+                Text = "Link to existing Word",
+                AdditionalClasses = "btn btn-light text-center",
+                AspController = "Books",
+                AspAction = "AddWord",
+                Elements = Model.WordsToAdd.Select(t => new ListElement(t.Word, "", "", t.ID)),
+                AdditionalRoutingValues = wordID => new { id = wordID, bookId = Model.Book.ID },
+            };
+
+            <partial name="_SearcheableDropdown" model="dropdownModel" />
+        }
+    </div>
+
     <h5>Word count: @Model.Book.WordCount</h5>
     @{
         var TableModel = new TableLinkModel();
 
-        if (string.IsNullOrEmpty(Model.Languages.Additional))
+        for (int i = 0; i < Model.Words.Length; ++i)
         {
-            TableModel.TableElements = Model.Words.Select(w => TableElement.LinkMany((w.WordID, w.Word), (w.TranslationID, w.Translation)));
-            TableModel.TopHeader = new[] { Model.Languages.Learning, Model.Languages.Native };
+            var nt = "<not translated>";
+            var w = Model.Words[i];
+            w.Word = !string.IsNullOrEmpty(w.Word) ? w.Word : nt;
+            w.Other = !string.IsNullOrEmpty(w.Other) ? w.Other : nt;
+            w.Translation = !string.IsNullOrEmpty(w.Translation) ? w.Translation : nt;
+            Model.Words[i] = w;
+        }
+
+        var isAdditionalLanguageNotDefined = string.IsNullOrEmpty(Model.Languages.Additional);
+        if (isAdditionalLanguageNotDefined)
+        {
+            TableModel.TableElements = Model.Words.Select(w => TableElement.LinkMany((w.WordID, w.Word), (w.TranslationID, w.Translation), (w.MasterWordID, "X")));
+            TableModel.TopHeader = new[] { "ID", Model.Languages.Learning, Model.Languages.Native, "" };
         }
         else
         {
-            TableModel.TableElements = Model.Words.Select(w => TableElement.LinkMany((w.WordID, w.Word), (w.TranslationID, w.Translation), (w.OtherID, w.Other)));
-            TableModel.TopHeader = new[] { Model.Languages.Learning, Model.Languages.Native, Model.Languages.Additional };
+            TableModel.TableElements = Model.Words.Select(w => TableElement.LinkMany((w.WordID, w.Word), (w.TranslationID, w.Translation), (w.OtherID, w.Other), (w.MasterWordID, "X")));
+            TableModel.TopHeader = new[] { "ID", Model.Languages.Learning, Model.Languages.Native, Model.Languages.Additional, "" };
         }
 
+        var deleteColIndex = isAdditionalLanguageNotDefined ? 2 : 3;
+        TableModel.ColumnLinks[deleteColIndex] = ("Books", "RemoveWord");
+        TableModel.AdditionalStyleClass[deleteColIndex] = "btn btn-outline-danger btn-sm";
+        TableModel.AdditionalRoutingValues[deleteColIndex] = colIndex => new { id = colIndex, bookId = Model.Book.ID};
+
+        TableModel.LeftHeaders = Model.Words.Select(w => w.MasterWordID.ToString());
         TableModel.AspController = "Entities";
         TableModel.AspAction = "Word";
 

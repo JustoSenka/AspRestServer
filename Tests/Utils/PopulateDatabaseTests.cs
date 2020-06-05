@@ -1,6 +1,8 @@
 ﻿using Langs.Services;
 using Langs.Utilities;
 using NUnit.Framework;
+using System;
+using System.Collections;
 using System.Linq;
 using Tests.Base;
 
@@ -19,6 +21,7 @@ namespace Tests.Utils
             Assert.AreEqual(3, LanguagesService.GetAll().Count(), "Langs");
             Assert.AreEqual(9, WordsService.GetWordsWithData().Count(), "Words");
             Assert.AreEqual(3, MasterWordsService.GetAll().Count(), "MasterWords");
+            Assert.AreEqual(1, AccountService.GetAll().Count(), "Accounts");
         }
 
         [Test]
@@ -39,6 +42,7 @@ namespace Tests.Utils
             Assert.AreEqual(0, LanguagesService.GetAll().Count(), "Langs");
             Assert.AreEqual(0, WordsService.GetWordsWithData().Count(), "Words");
             Assert.AreEqual(0, MasterWordsService.GetAll().Count(), "MasterWords");
+            Assert.AreEqual(0, AccountService.GetAll().Count(), "Accounts");
         }
     }
 }

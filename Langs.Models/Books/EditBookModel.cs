@@ -3,8 +3,9 @@ using Langs.Models.Shared;
 
 namespace Langs.Models.Books
 {
-    public class NewBookModel : IAlertMessageModel
+    public class EditBookModel : IAlertMessageModel
     {
+        public int BookID { get; set; }
         public string BookName { get; set; }
         public string BookDescription { get; set; }
         public int BookLanguageID { get; set; }

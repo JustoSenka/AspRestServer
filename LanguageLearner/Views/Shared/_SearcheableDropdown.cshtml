@@ -17,7 +17,18 @@
             var ctrl = e.OverridesController ? e.AspController : Model.AspController;
             var ac = e.OverridesAction ? e.AspAction : Model.AspAction;
 
-            <button onclick="disableBeforeUnload()" type="submit" asp-controller="@ctrl" asp-action="@ac" asp-route-id="@e.AspRoute" class="dropdown-item">@e.Text</button>
+            if (Model.IsSubmit)
+            {
+                <button onclick="disableBeforeUnload()" type="submit" asp-controller="@ctrl" asp-action="@ac" asp-route-id="@e.ID" class="dropdown-item">@e.Text</button>
+            }
+            else
+            {
+                object routes = new { id = e.ID };
+                routes = Model.AdditionalRoutingValues == null ? routes : Model.AdditionalRoutingValues.Invoke(e.ID);
+
+                @Html.ActionLink(e.Text, ac, ctrl, routes, new { @class = "dropdown-item" });
+            }
+
         }
     </div>
 </div>

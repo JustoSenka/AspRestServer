@@ -71,7 +71,7 @@
                 AdditionalClasses = "btn btn-light text-center",
                 AspController = "Entities",
                 AspAction = "AddTranslationToWord",
-                Elements = Model.WordsToLink.Select(t => new ListElement(t.Text, "", "", t.ID.ToString())),
+                Elements = Model.WordsToLink.Select(t => new ListElement(t.Text, "", "", t.ID)),
             };
         }
 
@@ -94,7 +94,7 @@
             {
                 Title = "List of Translations",
                 Expanded = Model.ExpandTranslationList,
-                Elements = Model.Translations?.Select(t => new ListElement(t.LangName + ": " + t.Text, "", "", t.ID.ToString())),
+                Elements = Model.Translations?.Select(t => new ListElement(t.LangName + ": " + t.Text, "", "", t.ID)),
                 AspRoute = Model.WordID.ToString(),
                 AspController = "Entities",
                 AspAction = "RemoveTranslationFromWord",

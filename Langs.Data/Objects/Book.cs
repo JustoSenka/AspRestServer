@@ -47,9 +47,10 @@ namespace Langs.Data.Objects
             _BookWordCollection.Add(new BookWord() { Book = this, BookId = ID, MasterWord = word, MasterWordId = word.ID });
         }
 
-        public void RemoveWord(MasterWord word)
+        public void RemoveWord(MasterWord word) => RemoveWord(word.ID);
+        public void RemoveWord(int masterWordID)
         {
-            var first = _BookWordCollection.First(b => b.MasterWordId == word.ID);
+            var first = _BookWordCollection.First(b => b.MasterWordId == masterWordID);
             _BookWordCollection.Remove(first);
         }
 

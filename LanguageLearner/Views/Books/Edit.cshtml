@@ -1,0 +1,37 @@
+﻿@model EditBookModel;
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<script>
+    window.onbeforeunload = function () {
+        return true;
+    };
+
+    function disableBeforeUnload() {
+        window.onbeforeunload = null;
+    }
+</script>
+
+<partial name="_BookNavigation" />
+
+<div class="container">
+    <form>
+        <input type="hidden" asp-for="BookID" value="@Model.BookID" />
+        <partial name="_EditBook" />
+
+        <hr>
+        <div class="form-group row">
+            <div class="col">
+                <button onclick="disableBeforeUnload()" type="submit" class="btn btn-success" asp-controller="Books" asp-action="SaveBook" formmethod="post">Update</button>
+                <a class="btn btn-sm btn-secondary" asp-controller="Books" asp-action="Book" asp-route-id="@Model.BookID">Cancel</a>
+            </div>
+
+            <div class="col text-right">
+                <button onclick="disableBeforeUnload()" type="submit" class="btn btn-danger btn-sm" asp-controller="Books" asp-action="DeleteBook" asp-route-id="@Model.BookID" formmethod="post">Delete Book</button>
+            </div>
+        </div>
+    </form>
+</div>
+

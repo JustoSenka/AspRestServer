@@ -56,7 +56,7 @@ function filterFunction(obj) { // obj: JQuery<HTMLElement>
         return;
        
     var filter = obj.val().toUpperCase();
-    var links = obj.parent().children('button');
+    var links = obj.parent().children('.dropdown-item');
 
     for (var i = 0; i < links.length; i++) {
         txtValue = links[i].textContent || links[i].innerText;

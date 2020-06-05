@@ -52,7 +52,7 @@
         var listModel = new ExpandableListModel()
         {
             Title = "List of Translations",
-            Elements = Model.Translations?.Select(t => new ListElement(t.LangName + ": " + t.Text, "Word", "Entities", t.ID.ToString())),
+            Elements = Model.Translations?.Select(t => new ListElement(t.LangName + ": " + t.Text, "Word", "Entities", t.ID)),
         };
 
         <partial name="_ExpandableListPartial" for="@listModel" />

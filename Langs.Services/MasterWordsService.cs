@@ -18,6 +18,13 @@ namespace Langs.Services
             return m_Context.MasterWords.Include(e => e._BookWordCollection);
         }
 
+        public IEnumerable<MasterWord> GetAllWithWords()
+        {
+            return m_Context.MasterWords
+                .Include(e => e.Words)
+                    .ThenInclude(e => e.Language);
+        }
+
         public override MasterWord Get(int ID)
         {
             return GetAll().FirstOrDefault(e => e.ID == ID);

@@ -28,7 +28,7 @@
                             @if (e.HasLinkAction)
                             {
                                 //@Html.ActionLink(e.Text, e.AspAction, e.AspController, e.AspRoute);
-                                <a asp-controller="@e.AspController" asp-action="@e.AspAction" asp-route-id="@e.AspRoute" class="list-group-item list-group-item-action">@e.Text</a>
+                                <a asp-controller="@e.AspController" asp-action="@e.AspAction" asp-route-id="@e.ID" class="list-group-item list-group-item-action">@e.Text</a>
                             }
                             else
                             {

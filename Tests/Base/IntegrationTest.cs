@@ -19,6 +19,7 @@ namespace Tests.Base
         protected IWordsService WordsService;
         protected IMasterWordsService MasterWordsService;
         protected ILanguagesService LanguagesService;
+        protected IAccountService AccountService;
 
         protected DatabaseContext DatabaseContext;
 
@@ -36,6 +37,7 @@ namespace Tests.Base
             WordsService = m_Host.Services.GetService<IWordsService>();
             MasterWordsService = m_Host.Services.GetService<IMasterWordsService>();
             LanguagesService = m_Host.Services.GetService<ILanguagesService>();
+            AccountService = m_Host.Services.GetService<IAccountService>();
 
             try
             {

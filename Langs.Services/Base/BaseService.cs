@@ -14,14 +14,15 @@ namespace Langs.Services
 
         protected abstract DbSet<T> EntitiesProxy { get; }
 
-        protected DatabaseContext m_Context;
-        public BaseService(DatabaseContext context)
+        protected IDatabaseContext m_Context;
+        public BaseService(IDatabaseContext context)
         {
             m_Context = context;
         }
 
         public virtual T Get(int id) => EntitiesProxy.SingleOrDefault(e => e.ID == id);
         public virtual IEnumerable<T> GetAll() => EntitiesProxy;
+        public virtual int Count() => GetAll().Count();
 
         public virtual T Add(T obj)
         {

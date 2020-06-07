@@ -4,7 +4,15 @@ using System.Collections.Generic;
 
 namespace Langs.Services
 {
-    public interface IService<T> where T : IHaveID
+    public interface IService
+    {
+        int Count();
+        bool SavesChanges { get; }
+        void StartBatchingRequests();
+        void EndBatchingRequestsAndSave();
+    }
+
+    public interface IService<T> : IService where T : IHaveID
     {
         T Get(int id);
         IEnumerable<T> GetAll();
@@ -17,10 +25,6 @@ namespace Langs.Services
 
         void Update(T obj);
         void Update(IEnumerable<T> objs);
-
-        bool SavesChanges { get; }
-        void StartBatchingRequests();
-        void EndBatchingRequestsAndSave();
 
         ServiceBatchRequest<T> BatchRequests();
     }

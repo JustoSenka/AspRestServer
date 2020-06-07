@@ -8,8 +8,8 @@ namespace Langs.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly DatabaseContext m_Context;
-        public AdminController(DatabaseContext context)
+        private readonly IDatabaseContext m_Context;
+        public AdminController(IDatabaseContext context)
         {
             this.m_Context = context;
         }

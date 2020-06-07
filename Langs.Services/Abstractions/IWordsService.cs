@@ -9,5 +9,7 @@ namespace Langs.Services
 
         void AddTranslation(Word word, Word translation);
         void RemoveTranslation(Word word, Word translation);
+
+        bool IsMergePossible(MasterWord masterA, MasterWord masterB);
     }
 }

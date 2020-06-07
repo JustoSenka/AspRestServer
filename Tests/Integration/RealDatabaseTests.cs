@@ -15,7 +15,7 @@ namespace Tests.Integration
         [Test]
         public void GettingBook_ContainsListOfMasterWords_EachOfThemHave3_OtherWords()
         {
-            var book = BooksService.GetBooksWithData().First();
+            var book = BooksService.GetAllWithData().First();
 
             Assert.IsNotNull(book.Words, "Book is null");
             Assert.AreEqual(3, book.Words.Count(), "Master words not 3");
@@ -36,7 +36,7 @@ namespace Tests.Integration
         [TestCase(false)]
         public void AllWords_ContainLanguage_AndTranslation(bool getWordsFromBook)
         {
-            var words = getWordsFromBook ? BooksService.GetBooksWithData().First().Words.First().Words : WordsService.GetWordsWithData();
+            var words = getWordsFromBook ? BooksService.GetAllWithData().First().Words.First().Words : WordsService.GetWordsWithData();
             foreach (var word in words)
             {
                 Assert.IsNotNull(word.Language);

@@ -28,7 +28,7 @@ namespace Langs.Controllers
             var model = new WordsModel
             {
                 AvailableLanguages = LanguagesService.GetAll().ToArray(),
-                Books = BooksService.GetAll().Select(w => (w.ID, w.Name, w.Language.Name)).ToArray()
+                Books = BooksService.GetAllWithLanguage().Select(w => (w.ID, w.Name, w.Language.Name)).ToArray()
             };
 
             return View(model);

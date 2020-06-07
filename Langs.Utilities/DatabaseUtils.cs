@@ -13,26 +13,26 @@ namespace Langs.Utilities
 {
     public static class DatabaseUtils
     {
-        public static void DeleteDB(DatabaseContext DatabaseContext)
+        public static void DeleteDB(IDatabaseContext DatabaseContext)
         {
-            DatabaseContext.Database.EnsureDeleted();
+            DatabaseContext.Context.Database.EnsureDeleted();
         }
 
-        public static void MigrateDB(DatabaseContext DatabaseContext)
+        public static void MigrateDB(IDatabaseContext DatabaseContext)
         {
-            DatabaseContext.Database.Migrate();
+            DatabaseContext.Context.Database.Migrate();
         }
 
         public static void MigrateDB(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var context = serviceScope.ServiceProvider.GetService<DatabaseContext>();
+                var context = serviceScope.ServiceProvider.GetService<IDatabaseContext>();
                 MigrateDB(context);
             }
         }
 
-        public static void ClearDB(DatabaseContext DatabaseContext)
+        public static void ClearDB(IDatabaseContext DatabaseContext)
         {
             DatabaseContext.Words.RemoveRange(DatabaseContext.Words);
             DatabaseContext.MasterWords.RemoveRange(DatabaseContext.MasterWords);
@@ -44,7 +44,7 @@ namespace Langs.Utilities
             DatabaseContext.SaveChanges();
         }
 
-        public static void PopulateWithTestData(DatabaseContext DatabaseContext)
+        public static void PopulateWithTestData(IDatabaseContext DatabaseContext)
         {
             MigrateDB(DatabaseContext);
 

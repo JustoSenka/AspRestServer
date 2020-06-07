@@ -2,7 +2,6 @@
 using Langs.Data.Objects;
 using Langs.Utilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.SqlServer.Management.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,19 +14,13 @@ namespace Langs.Services
         private readonly IMasterWordsService MasterWordsService;
 
         protected override DbSet<Word> EntitiesProxy => m_Context.Words;
-        public WordsService(IBooksService BooksService, IMasterWordsService MasterWordsService, DatabaseContext context) : base(context)
+        public WordsService(IBooksService BooksService, IMasterWordsService MasterWordsService, IDatabaseContext context) : base(context)
         {
             this.BooksService = BooksService;
             this.MasterWordsService = MasterWordsService;
         }
 
-        public override Word Get(int id) => m_Context.Words
-            .Include(word => word.Language)
-            .Include(word => word.Definition)
-            .Include(word => word.MasterWord)
-                .ThenInclude(t => t.Words)
-                    .ThenInclude(t => t.Language)
-            .SingleOrDefault(e => e.ID == id);
+        public override Word Get(int id) => GetWordsWithData().WithID(id);
 
         public override IEnumerable<Word> GetAll() => m_Context.Words.Include(w => w.Language);
 
@@ -36,10 +29,14 @@ namespace Langs.Services
             .Include(p => p.Definition)
             .Include(p => p.MasterWord)
                 .ThenInclude(t => t.Words)
-                    .ThenInclude(t => t.Language);
+                    .ThenInclude(t => t.Language)
+            .Include(word => word.MasterWord)
+                .ThenInclude(t => t._BookWordCollection);
 
         public override void Remove(Word obj)
         {
+            obj = Get(obj.ID);
+
             var master = obj.MasterWord;
             var deleteMaster = master.Words.Count == 1;
 
@@ -54,7 +51,7 @@ namespace Langs.Services
 
         public override void Remove(IEnumerable<Word> objs)
         {
-            var masters = objs.Select(w => w.MasterWord).ToHashSet();
+            var masters = objs.Select(w => w.MasterWord ?? MasterWordsService.Get(w.MasterWordID)).ToHashSet();
 
             base.Remove(objs);
             MasterWordsService.Remove(masters.Where(m => m.Words.Count == 0));
@@ -62,26 +59,30 @@ namespace Langs.Services
 
         public void AddTranslation(Word word, Word translation)
         {
-            // Check if merge is possible. If merging MasterWords will procude multiple words of same language under same master, it's invalid
-            var set = word.MasterWord.Words.ToHashSet(new LanguageEqualityComparer());
-            set.AddRange(translation.MasterWord.Words);
+            // Words might be loaded without master word
+            var masterA = MasterWordsService.Get(word.MasterWordID);
+            var masterB = MasterWordsService.Get(translation.MasterWordID);
 
-            if (set.Count() < word.MasterWord.Words.Count() + translation.MasterWord.Words.Count())
-                throw new InvalidOperationException($"Cannot add translation to word '{word.Text}' because it already has translation {translation.Text} via different language.");
+            if (!IsMergePossibleInternal(masterA, masterB))
+                throw new InvalidOperationException($"Cannot add translation to word '{translation.Text}' " +
+                    $"because it is already translated to '{word.Language?.Name}'.");
 
             // Transfer to one which has more translations, so less operations are made
-            var shouldUseOriginalMasterWord = word.Translations.Count() >= translation.Translations.Count();
+            var shouldUseOriginalMasterWord = masterA.Words.Count() >= masterB.Words.Count();
 
-            var mainMasterWord = shouldUseOriginalMasterWord ? word.MasterWord : translation.MasterWord;
-            var masterWordToDestroy = shouldUseOriginalMasterWord ? translation.MasterWord : word.MasterWord;
+            var mainMasterWord = shouldUseOriginalMasterWord ? masterA : masterB;
+            var masterWordToDestroy = shouldUseOriginalMasterWord ? masterB : masterA;
 
             // Replace all references in books from destroyed to new one 
-            foreach (var book in masterWordToDestroy.Books)
+            foreach (var id in masterWordToDestroy.BookIDs)
+            {
+                var book = BooksService.Get(id);
                 book.ReplaceWord(masterWordToDestroy, mainMasterWord);
+            }
 
             // Transfer all words from one destroyed master word to new one.
             foreach (var w in masterWordToDestroy.Words.ToArray())
-                mainMasterWord.Transfer(w);
+                Transfer(masterWordToDestroy, mainMasterWord, w);
 
             // Update database. Saving only master words, even though some modifications have been made to the book with ReplaceWord. 
             // Although saves everything correctly, and after save all refs are up to date
@@ -92,18 +93,39 @@ namespace Langs.Services
             }
         }
 
+        public bool IsMergePossible(MasterWord masterA, MasterWord masterB)
+        {
+            masterA = MasterWordsService.GetAllWithWords().WithID(masterA.ID);
+            masterB = MasterWordsService.GetAllWithWords().WithID(masterB.ID);
+            return IsMergePossibleInternal(masterA, masterB);
+        }
+
+        private static bool IsMergePossibleInternal(MasterWord masterA, MasterWord masterB)
+        {
+            // Check if merge is possible. If merging MasterWords will procude multiple words of same language under same master, it's invalid
+            var set = masterA.Words.ToHashSet(new LanguageEqualityComparer());
+            set.AddRange(masterB.Words);
+
+            return !(set.Count() < masterA.Words.Count() + masterB.Words.Count());
+        }
+
         public void RemoveTranslation(Word word, Word translation)
         {
+            // Words might be loaded without master word
+            word = Get(word.ID);
+            translation = Get(translation.ID);
+
             var oldMaster = word.MasterWord;
             var newMaster = new MasterWord();
 
             // Move translation to new master word
-            newMaster.Transfer(translation);
+            Transfer(oldMaster, newMaster, translation);
 
             // If books was specifically for language 'a' and translation is in language 'a', prefer to link newly created master word
             // which has translation in question, and not default one.
-            foreach (var book in oldMaster.Books.ToArray())
+            foreach (var id in oldMaster.BookIDs.ToArray())
             {
+                var book = BooksService.Get(id);
                 if (book.Language.ID == translation.Language.ID)
                     book.ReplaceWord(oldMaster, newMaster);
             }
@@ -113,6 +135,12 @@ namespace Langs.Services
                 MasterWordsService.Update(oldMaster);
                 MasterWordsService.Add(newMaster);
             }
+        }
+
+        private void Transfer(MasterWord From, MasterWord to, Word word)
+        {
+            From.Words.Remove(word);
+            to.Words.Add(word);
         }
     }
 }

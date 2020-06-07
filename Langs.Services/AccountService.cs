@@ -11,7 +11,7 @@ namespace Langs.Services
         protected override DbSet<Account> EntitiesProxy => m_Context.Accounts;
 
         private readonly ILanguagesService LanguagesService;
-        public AccountService(DatabaseContext context, ILanguagesService LanguagesService) : base(context)
+        public AccountService(IDatabaseContext context, ILanguagesService LanguagesService) : base(context)
         {
             this.LanguagesService = LanguagesService;
         }

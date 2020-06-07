@@ -7,6 +7,6 @@ namespace Langs.Services
     public class LanguagesService : BaseService<Language>, ILanguagesService
     {
         protected override DbSet<Language> EntitiesProxy => m_Context.Languages;
-        public LanguagesService(DatabaseContext context) : base(context) { }
+        public LanguagesService(IDatabaseContext context) : base(context) { }
     }
 }

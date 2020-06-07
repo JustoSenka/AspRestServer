@@ -27,7 +27,7 @@ namespace Langs.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var books = BooksService.GetWithWordCount();
+            var books = BooksService.GetAllWithWordCount();
             var bookModel = new BookIndexModel()
             {
                 Books = books.Select(b =>
@@ -60,7 +60,7 @@ namespace Langs.Controllers
                 Languages = (langFrom.Name, langTo.Name, langAdd?.Name ?? ""),
                 WordsToAdd = MasterWordsService.GetAllWithWords()
                     .Except(book.Words)
-                    .Select(w => (w.ID, Word: w[book.Language])) // Return ID to master word specifically, since it will be used for linking, while text is translated one
+                    .Select(w => (w.ID, Word: w[book.LanguageID])) // Return ID to master word specifically, since it will be used for linking, while text is translated one
                     .Where(t => t.Word != default)
                     .Select(t => (t.ID, t.Word.Text))
                     .ToArray(),

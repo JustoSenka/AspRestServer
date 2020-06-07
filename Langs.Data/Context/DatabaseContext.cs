@@ -1,12 +1,20 @@
 ﻿using Langs.Data.Objects;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 
 namespace Langs.Data.Context
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : DbContext, IDatabaseContext
     {
-        public DatabaseContext(DbContextOptions options) : base(options) { }
+        private readonly DbContextOptions m_Options;
+
+        public DatabaseContext(DbContextOptions options) : base(options)
+        {
+            m_Options = options;
+        }
+
+        public DbContext Context => this;
 
         public DbSet<Book> Books { get; set; }
         public DbSet<Word> Words { get; set; }
@@ -42,5 +50,19 @@ namespace Langs.Data.Context
             builder.Entity<Word>().OwnsMany(e => e.Explanations).ToTable("Explanations");
             builder.Entity<Word>().OwnsOne(e => e.Definition).ToTable("Definitions");
         }
+
+        public void RefreshDatabaseContext()
+        {
+            throw new NotSupportedException("Cannot ReplaceDatabaseContext on IDatabaseContext which is not a proxy object.");
+        }
+
+        public IDatabaseContext Clone()
+        {
+            var db = new DatabaseContext(m_Options);
+            this.DisposeAsync();
+            return db;
+        }
+
+        void IDatabaseContext.SaveChanges() => SaveChanges();
     }
 }

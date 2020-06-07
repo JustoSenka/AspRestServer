@@ -23,8 +23,9 @@ namespace Langs.Data.Objects
         [Required, MaxLength(k_WordLength)]
         public virtual string Name { get; set; }
 
-        [Required]
+        [Required, ForeignKey("LanguageID")]
         public virtual Language Language { get; set; }
+        public virtual int LanguageID { get; set; }
 
         [MaxLength(200)]
         public virtual string Description { get; set; }

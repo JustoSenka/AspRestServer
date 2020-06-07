@@ -9,20 +9,23 @@ namespace Langs.Services
     public class BooksService : BaseService<Book>, IBooksService
     {
         protected override DbSet<Book> EntitiesProxy => m_Context.Books;
-        public BooksService(DatabaseContext context) : base(context) { }
+        public BooksService(IDatabaseContext context) : base(context) { }
 
-        public override Book Get(int id) => GetBooksWithData().SingleOrDefault(e => e.ID == id);
+        public override Book Get(int id) => GetAllWithData().SingleOrDefault(e => e.ID == id);
 
-        public IEnumerable<Book> GetWithWordCount() => m_Context.Books
+        public IEnumerable<Book> GetAllWithLanguage() => m_Context.Books
+            .Include(p => p.Language);
+
+        public IEnumerable<Book> GetAllWithWordCount() => m_Context.Books
             .Include(p => p.Language)
             .Include(p => p._BookWordCollection);
 
-        public IEnumerable<Book> GetBooksWithMasterWords() => m_Context.Books
+        public IEnumerable<Book> GetAllWithMasterWords() => m_Context.Books
             .Include(p => p.Language)
             .Include(p => p._BookWordCollection)
                 .ThenInclude(c => c.MasterWord);
 
-        public IEnumerable<Book> GetBooksWithData() => m_Context.Books
+        public IEnumerable<Book> GetAllWithData() => m_Context.Books
             .Include(p => p.Language)
             .Include(p => p._BookWordCollection)
                 .ThenInclude(c => c.MasterWord)

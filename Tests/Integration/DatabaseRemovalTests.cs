@@ -62,10 +62,10 @@ namespace Tests.Integration
         [Test]
         public void RemovingBook_WillUpdateDB_AndRemoveBookFromMasterWordsAutomatically()
         {
-            var book = BooksService.GetBooksWithData().First();
+            var book = BooksService.GetAllWithData().First();
 
             BooksService.Remove(book);
-            var newBook = BooksService.GetBooksWithData().FirstOrDefault();
+            var newBook = BooksService.GetAllWithData().FirstOrDefault();
             var bCount = MasterWordsService.GetAll().First()._BookWordCollection.Count;
 
             Assert.IsNull(newBook);
@@ -75,14 +75,14 @@ namespace Tests.Integration
         [Test]
         public void RemovingMasterWord_WillUpdateDB_AndRemoveWordsFromBookAutomatically()
         {
-            var before = BooksService.GetBooksWithData().First().Words.Count();
+            var before = BooksService.GetAllWithData().First().Words.Count();
 
             var word = MasterWordsService.GetAll().First();
             WordsService.Remove(word.Words); // removing all words will remove master automatically
 
             var newWord = MasterWordsService.GetAll().First();
 
-            var after = BooksService.GetBooksWithData().First().Words.Count();
+            var after = BooksService.GetAllWithData().First().Words.Count();
 
             Assert.AreNotEqual(word, newWord);
             Assert.AreEqual(before - 1, after, "Count missmatch");

@@ -15,9 +15,7 @@ namespace Tests.Utils
         [Test]
         public void AddSingleBook_CheckIfDataCountIsCorrect()
         {
-            // DatabaseUtils.PopulateWithTestData(DatabaseContext); // This is done in setup
-
-            Assert.AreEqual(1, BooksService.GetBooksWithData().Count(), "Books");
+            Assert.AreEqual(1, BooksService.GetAllWithData().Count(), "Books");
             Assert.AreEqual(3, LanguagesService.GetAll().Count(), "Langs");
             Assert.AreEqual(9, WordsService.GetWordsWithData().Count(), "Words");
             Assert.AreEqual(3, MasterWordsService.GetAll().Count(), "MasterWords");
@@ -35,14 +33,13 @@ namespace Tests.Utils
         [Test]
         public void ClearDB()
         {
-            // DatabaseUtils.PopulateWithTestData(DatabaseContext); // This is done in setup
+            DatabaseContext.RefreshDatabaseContext();
             DatabaseUtils.ClearDB(DatabaseContext);
 
-            Assert.AreEqual(0, BooksService.GetBooksWithData().Count(), "Books");
-            Assert.AreEqual(0, LanguagesService.GetAll().Count(), "Langs");
-            Assert.AreEqual(0, WordsService.GetWordsWithData().Count(), "Words");
-            Assert.AreEqual(0, MasterWordsService.GetAll().Count(), "MasterWords");
-            Assert.AreEqual(0, AccountService.GetAll().Count(), "Accounts");
+            foreach (var service in Services)
+            {
+                Assert.AreEqual(0, service.Count(), service.GetType().Name);
+            }
         }
     }
 }

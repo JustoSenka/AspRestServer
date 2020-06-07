@@ -5,8 +5,9 @@ namespace Langs.Services
 {
     public interface IBooksService : IService<Book>
     {
-        IEnumerable<Book> GetWithWordCount();
-        IEnumerable<Book> GetBooksWithMasterWords();
-        IEnumerable<Book> GetBooksWithData();
+        IEnumerable<Book> GetAllWithLanguage();
+        IEnumerable<Book> GetAllWithWordCount();
+        IEnumerable<Book> GetAllWithMasterWords();
+        IEnumerable<Book> GetAllWithData();
     }
 }

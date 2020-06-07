@@ -27,7 +27,7 @@ namespace LanguageLearner
             Configuration = configuration;
 
             var msg = Configuration.GetValue<string>("WelcomeMessage");
-            Debug.WriteLine("Config in use: " + msg);
+            Console.WriteLine("Config in use: " + msg);
         }
 
         public IConfiguration Configuration { get; }
@@ -37,19 +37,22 @@ namespace LanguageLearner
             services.AddMvc().AddApplicationPart(typeof(HomeController).Assembly).AddControllersAsServices();
             services.AddControllersWithViews();
 
+            // Singletons
             services.AddSingleton(Configuration);
 
+            // Scoped
             services.AddScoped<IAccountService, AccountService>();
 
             services.AddScoped<IBooksService, BooksService>();
             services.AddScoped<IWordsService, WordsService>();
             services.AddScoped<IMasterWordsService, MasterWordsService>();
-
             services.AddScoped<ILanguagesService, LanguagesService>();
 
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
+            // Database
             SetupDatabase(services);
+            services.AddScoped<IDatabaseContext, DatabaseContextProxy>();
         }
 
         private void SetupDatabase(IServiceCollection services)
@@ -69,7 +72,7 @@ namespace LanguageLearner
                 var dbName = UseTestDatabase ? "TestDB" : "MainDB";
                 var connectionString = Configuration.GetConnectionString(dbName);
 
-                Debug.WriteLine("Database in use: " + dbName);
+                Console.WriteLine("Database in use: " + dbName);
 
                 services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(connectionString, b => b.MigrationsAssembly("Langs.Data")));
             }

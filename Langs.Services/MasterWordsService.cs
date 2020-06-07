@@ -9,25 +9,30 @@ namespace Langs.Services
     public class MasterWordsService : BaseService<MasterWord>, IMasterWordsService
     {
         protected override DbSet<MasterWord> EntitiesProxy => m_Context.MasterWords;
-        public MasterWordsService(DatabaseContext context) : base(context)
+        public MasterWordsService(IDatabaseContext context) : base(context)
         {
-        }
-
-        public override IEnumerable<MasterWord> GetAll()
-        {
-            return m_Context.MasterWords.Include(e => e._BookWordCollection);
         }
 
         public IEnumerable<MasterWord> GetAllWithWords()
         {
             return m_Context.MasterWords
+                .Include(e => e.Words);
+        }
+
+        public IEnumerable<MasterWord> GetAllWithBookIDs()
+        {
+            return m_Context.MasterWords
+                .Include(e => e._BookWordCollection);
+        }
+        public IEnumerable<MasterWord> GetAllWithData()
+        {
+            return m_Context.MasterWords
+                .Include(e => e._BookWordCollection)
+                    .ThenInclude(e => e.Book)
                 .Include(e => e.Words)
                     .ThenInclude(e => e.Language);
         }
 
-        public override MasterWord Get(int ID)
-        {
-            return GetAll().FirstOrDefault(e => e.ID == ID);
-        }
+        public override MasterWord Get(int ID) => GetAllWithData().WithID(ID);
     }
 }

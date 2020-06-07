@@ -21,14 +21,16 @@ namespace Langs.Data.Objects
             masterWord.Words.Add(this);
         }
 
-        [Required]
+        [Required, ForeignKey("MasterWordID")]
         public virtual MasterWord MasterWord { get; set; }
+        public virtual int MasterWordID { get; set; }
 
         [Required, MaxLength(k_WordLength)] // Top 10 longest words in english average length is below 30, I believe 40 is safe length
         public virtual string Text { get; set; }
 
-        [Required]
+        [Required, ForeignKey("LanguageID")]
         public virtual Language Language { get; set; }
+        public virtual int LanguageID { get; set; }
 
         [MaxLength(10)]
         public virtual string Article { get; set; }

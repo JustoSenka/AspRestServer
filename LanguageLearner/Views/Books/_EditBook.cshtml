@@ -17,8 +17,6 @@
     <div class="col-5"> <label for="BookLanguageID">Book Language</label> </div>
     <div class="col-7">
         <select class="custom-select" asp-for="BookLanguageID">
-            <option value="0">&lt;choose&gt;</option>
-
             @foreach (var lang in Model.AvailableLanguages)
             {
                 <option value="@lang.ID">@lang.Name</option>

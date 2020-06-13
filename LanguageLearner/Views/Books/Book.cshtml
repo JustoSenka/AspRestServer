@@ -33,6 +33,7 @@
             <partial name="_SearcheableDropdown" model="dropdownModel" />
         }
     </div>
+    <hr>
 
     <h5>Word count: @Model.Book.WordCount</h5>
     @{
@@ -63,7 +64,7 @@
         var deleteColIndex = isAdditionalLanguageNotDefined ? 2 : 3;
         TableModel.ColumnLinks[deleteColIndex] = ("Books", "RemoveWord");
         TableModel.AdditionalStyleClass[deleteColIndex] = "btn btn-outline-danger btn-sm";
-        TableModel.AdditionalRoutingValues[deleteColIndex] = colIndex => new { id = colIndex, bookId = Model.Book.ID};
+        TableModel.AdditionalRoutingValues[deleteColIndex] = colIndex => new { id = colIndex, bookId = Model.Book.ID };
 
         TableModel.LeftHeaders = Model.Words.Select(w => w.MasterWordID.ToString());
         TableModel.AspController = "Entities";

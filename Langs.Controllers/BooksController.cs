@@ -88,6 +88,7 @@ namespace Langs.Controllers
             var model = new EditBookModel()
             {
                 AvailableLanguages = LanguagesService.GetAll().ToArray(),
+                BookLanguageID = AccountService.GetLogonAccount().LearningLanguageID ?? 0,
             };
 
             return View(model);

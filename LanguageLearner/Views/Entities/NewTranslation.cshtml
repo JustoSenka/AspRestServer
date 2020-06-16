@@ -1,4 +1,4 @@
-﻿@model EditEntityModel
+﻿@model NewWordModel
 
 @{
     ViewData["Title"] = "Edit " + Model.WordText;
@@ -8,7 +8,7 @@
     window.onbeforeunload = function () {
         return true;
     };
-
+    
     function disableBeforeUnload() {
         window.onbeforeunload = null;
     }

@@ -21,8 +21,6 @@ namespace Langs.Controllers
             this.AccountService = AccountService;
         }
 
-        #region Words
-
         [HttpGet]
         public IActionResult Word(int id)
         {
@@ -44,6 +42,49 @@ namespace Langs.Controllers
             var model = (EditEntityModel)FillUpWordModel(new EditEntityModel(), word);
 
             return ViewEditWordModel(model, word);
+        }
+
+        [HttpGet]
+        public IActionResult NewTranslation(int id)
+        {
+            var word = WordsService.Get(id);
+            if (word == default)
+                return ShowErrorViewForNotFoundWord(id);
+
+            var model = new NewWordModel();
+            model.TranslationForID = id;
+
+            model.AvailableLanguages = LanguagesService.GetAll()
+                .Where(lang => word[lang.ID] == default && lang.ID != word.LanguageID).ToArray();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult FinishNewTranslation(NewWordModel model)
+        {
+            var word = WordsService.Get(model.TranslationForID);
+            if (word == default)
+                return ShowErrorViewForNotFoundWord(model.TranslationForID);
+
+            var language = LanguagesService.Get(model.WordLanguageID);
+
+            var newWord = new Word(word.MasterWord, model.WordText, language);
+            EditEntityModel.FillUpWord(model, newWord, language);
+
+            TryOrAlert(model, () => WordsService.Add(newWord));
+
+            if (model.AlertType == default)
+            {
+                return RedirectToAction("Word", new { id = newWord.ID });
+            }
+            else
+            {
+                model.AvailableLanguages = LanguagesService.GetAll()
+                    .Where(lang => word[lang.ID] == default && lang.ID != word.LanguageID).ToArray();
+
+                return View("NewTranslation", model);
+            }
         }
 
         [HttpPost]
@@ -71,6 +112,9 @@ namespace Langs.Controllers
             return model.AlertType == default ? RedirectToAction("Index", "Words") : ViewEditWordModel(model, origWord);
         }
 
+        /// <summary>
+        /// id - Word ID for translation to add to current word inside the model
+        /// </summary>
         [HttpPost]
         public IActionResult AddTranslationToWord(EditEntityModel model, int id)
         {
@@ -90,6 +134,10 @@ namespace Langs.Controllers
             return ViewEditWordModel(model, word);
         }
 
+
+        /// <summary>
+        /// id - Word ID for translation which to remove from current word inside the model
+        /// </summary>
         [HttpPost]
         public IActionResult RemoveTranslationFromWord(EditEntityModel model, int id)
         {
@@ -137,8 +185,7 @@ namespace Langs.Controllers
             return View("EditWord", model);
         }
 
-        #endregion // Words
-
+        
         private EntityModel FillUpWordModel(EntityModel Model, Word word)
         {
             var languageToTranslateTo = AccountService.GetPrefferedNativeLanguage();

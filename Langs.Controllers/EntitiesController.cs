@@ -2,34 +2,58 @@
 using Langs.Models;
 using Langs.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
 namespace Langs.Controllers
 {
-    public class EntitiesController : Controller
+    public class EntitiesController : BaseController
     {
         private readonly ILanguagesService LanguagesService;
         private readonly IWordsService WordsService;
         private readonly IAccountService AccountService;
-        public EntitiesController(IWordsService WordsService, ILanguagesService LanguagesService, IAccountService AccountService)
+        private readonly IBooksService BooksService;
+        private readonly IMasterWordsService MasterWordsService;
+        public EntitiesController(IWordsService WordsService, ILanguagesService LanguagesService,
+            IAccountService AccountService, IBooksService BooksService, IMasterWordsService MasterWordsService)
         {
             this.WordsService = WordsService;
             this.LanguagesService = LanguagesService;
             this.AccountService = AccountService;
+            this.BooksService = BooksService;
+            this.MasterWordsService = MasterWordsService;
         }
 
         [HttpGet]
-        public IActionResult Word(int id)
+        public IActionResult Word(int id, int bookId)
         {
             var word = WordsService.Get(id);
             if (word == default)
                 return ShowErrorViewForNotFoundWord(id);
 
+            var master = MasterWordsService.Get(word.MasterWordID);
+            var bookIDs = master.BookIDs.ToHashSet();
+
             var model = FillUpWordModel(new EntityModel(), word);
-            return View(model);
+            model.BooksToAddWordTo = BooksService.GetAll()
+                .Select(b => (b.Name, b.ID, b.LanguageID))
+                .Where(b => b.LanguageID == word.LanguageID)
+                .Where(b => !bookIDs.Contains(b.ID))
+                .Select(b => (b.Name, b.ID))
+                .ToArray();
+
+            model.AddedToBooks = master.Books.Select(b => (b.Name, b.ID)).ToArray();
+
+            // Display success alert if it's a redirection from AddToBook
+            if (bookId != 0)
+            {
+                var book = BooksService.Get(bookId);
+                model.AlertMessage = $"Word '{word.Text}' was successfully added to book '{book?.Name}'";
+                model.AlertType = AlertType.Success;
+            }
+
+            return View("Word", model);
         }
 
         [HttpGet]
@@ -59,6 +83,24 @@ namespace Langs.Controllers
 
             return View(model);
         }
+
+        [HttpGet, HttpPost]
+        public IActionResult AddToBook(int wordId, int bookId)
+        {
+            var word = WordsService.Get(wordId);
+            if (word == default)
+                return ShowErrorViewForNotFoundWord(wordId);
+
+            var book = BooksService.Get(bookId);
+            if (book == default)
+                return ShowErrorViewForNotFoundBook(bookId);
+
+            book.AddWord(word.MasterWord);
+            BooksService.Update(book);
+
+            return RedirectToAction(nameof(Word), new { id = word.ID, bookId = book.ID });
+        }
+
 
         [HttpPost]
         public IActionResult FinishNewTranslation(NewWordModel model)
@@ -170,7 +212,7 @@ namespace Langs.Controllers
                 translatedTo = new HashSet<int>();
 
             // Add self to not translate to same language word
-            translatedTo.Add(word.Language.ID); 
+            translatedTo.Add(word.Language.ID);
 
             model.WordsToLink = WordsService.GetAll()
                 .Where(e => !translatedTo.Contains(e.Language.ID)) // ex: Don't show words in english, if it's already translated to english
@@ -185,7 +227,7 @@ namespace Langs.Controllers
             return View("EditWord", model);
         }
 
-        
+
         private EntityModel FillUpWordModel(EntityModel Model, Word word)
         {
             var languageToTranslateTo = AccountService.GetPrefferedNativeLanguage();
@@ -198,28 +240,6 @@ namespace Langs.Controllers
 
             var model = EntityModel.FillUpModel(Model, word, translation, languageToTranslateTo);
             return model;
-        }
-
-        private void TryOrAlert(EditEntityModel model, Action ac)
-        {
-            try
-            {
-                ac.Invoke();
-            }
-            catch (Exception e)
-            {
-                model.AlertMessage = "Something went wrong: " + e.Message + " " + e.InnerException?.Message;
-                model.AlertType = AlertType.Error;
-            }
-        }
-
-        private IActionResult ShowErrorViewForNotFoundWord(int id)
-        {
-            return View("Error", new ErrorViewModel
-            {
-                Exception = new Exception($"Word with ID {id} not found."),
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-            });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -28,7 +28,7 @@ namespace Langs.Services
         {
             return m_Context.MasterWords
                 .Include(e => e._BookWordCollection)
-                    .ThenInclude(e => e.Book)
+                    .ThenInclude(e => e.Book) // Needed in Entities/Word to display list of books
                 .Include(e => e.Words)
                     .ThenInclude(e => e.Language);
         }

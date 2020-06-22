@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Langs.Controllers
 {
-    public class LanguagesController : Controller
+    public class LanguagesController : BaseController
     {
         private readonly ILanguagesService LanguagesService;
         public LanguagesController(ILanguagesService LanguagesService)

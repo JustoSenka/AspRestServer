@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Langs.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly ILanguagesService LanguagesService;
         private readonly IAccountService AccountService;

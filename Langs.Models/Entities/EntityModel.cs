@@ -1,9 +1,10 @@
 ﻿using Langs.Data.Objects;
+using Langs.Models.Shared;
 using System.Linq;
 
 namespace Langs.Models
 {
-    public class EntityModel
+    public class EntityModel : IAlertMessageModel
     {
         public int WordID { get; set; }
         public string WordText { get; set; }
@@ -21,6 +22,12 @@ namespace Langs.Models
 
         public (string LangName, string Explanation)[] Explanations { get; set; }
         public (string LangName, string Text, int ID)[] Translations { get; set; }
+
+        public (string Name, int ID)[] BooksToAddWordTo { get; set; }
+        public (string Name, int ID)[] AddedToBooks { get; set; }
+        
+        public AlertType AlertType { get; set; }
+        public string AlertMessage { get; set; }
 
         public static EntityModel FillUpModel(EntityModel Model, Word word, Word translation, Language nativeLang)
         {

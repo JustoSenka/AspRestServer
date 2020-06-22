@@ -32,6 +32,7 @@ namespace Langs.Services
                     .ThenInclude(t => t.Language)
             .Include(word => word.MasterWord)
                 .ThenInclude(t => t._BookWordCollection);
+                    
 
         public override void Remove(Word obj)
         {

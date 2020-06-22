@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Langs.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : BaseController
     {
         private readonly IDatabaseContext m_Context;
         public AdminController(IDatabaseContext context)

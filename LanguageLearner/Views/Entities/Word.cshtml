@@ -5,6 +5,8 @@
 }
 
 <div class="container">
+    <partial name="_AlertMessage" for="@Model" />
+
     <div class="text-right">
         <a class="btn btn-sm" asp-controller="Entities" asp-action="EditWord" asp-route-id="@Model.WordID">Edit</a>
     </div>
@@ -57,4 +59,36 @@
 
         <partial name="_ExpandableListPartial" for="@listModel" />
     }
+
+    <hr>
+    <div class="row col">
+
+        <p>
+            @* Show which books this word is added to *@
+            Word is added to these books:
+            <span> | </span>
+            @foreach (var b in Model.AddedToBooks)
+            {
+                <a class="text-monospace" style="color: black" asp-controller="Books" asp-action="Book" asp-route-id="@b.ID">@b.Name</a>
+                <span> | </span>
+            }
+        </p>
+    </div>
+
+    <div class="row col">
+        @{
+            var dropdownModel = new SearcheableDropdownModel()
+            {
+                IsSubmit = false,
+                Text = "Add to Book",
+                AdditionalClasses = "btn btn-light text-center",
+                AspController = "Entities",
+                AspAction = "AddToBook",
+                Elements = Model.BooksToAddWordTo.Select(t => new ListElement(t.Name, "", "", t.ID)),
+                AdditionalRoutingValues = bookId => new { wordId = Model.WordID, bookId = bookId },
+            };
+
+            <partial name="_SearcheableDropdown" model="dropdownModel" />
+        }
+    </div>
 </div>

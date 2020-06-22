@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Langs.Controllers
 {
-    public class BooksController : Controller
+    public class BooksController : BaseController
     {
         private readonly IBooksService BooksService;
         private readonly IAccountService AccountService;
@@ -222,18 +222,6 @@ namespace Langs.Controllers
             }
 
             return true;
-        }
-
-        private IActionResult ShowErrorViewForNotFoundBook(int id) => ShowErrorView(id, "Book with ID {0} not found.");
-        private IActionResult ShowErrorViewForNotFoundWord(int id) => ShowErrorView(id, "Word with ID {0} not found.");
-
-        private IActionResult ShowErrorView(int id, string msg)
-        {
-            return View("Error", new ErrorViewModel
-            {
-                Exception = new Exception(string.Format(msg, id)),
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-            });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

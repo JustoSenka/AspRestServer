@@ -4,7 +4,7 @@
 
 <div class="form-group row">
     <span style="color: darkred" asp-validation-for="BookName"></span>
-    <div class="col-5"> <label for="BookName" class="col-form-label">Account Name</label> </div>
+    <div class="col-5"> <label for="BookName" class="col-form-label">Name</label> </div>
     <div class="col-7"> <input type="text" class="form-control" asp-for="BookName" placeholder="Name" /> </div>
 </div>
 
@@ -14,7 +14,7 @@
 </div>
 
 <div class="form-group row">
-    <div class="col-5"> <label for="BookLanguageID">Book Language</label> </div>
+    <div class="col-5"> <label for="BookLanguageID">Language</label> </div>
     <div class="col-7">
         <select class="custom-select" asp-for="BookLanguageID">
             @foreach (var lang in Model.AvailableLanguages)

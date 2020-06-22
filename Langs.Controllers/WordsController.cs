@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Langs.Controllers
 {
-    public class WordsController : Controller
+    public class WordsController : BaseController
     {
         private readonly ILanguagesService LanguagesService;
         private readonly IWordsService WordsService;

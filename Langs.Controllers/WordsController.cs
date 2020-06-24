@@ -51,9 +51,9 @@ namespace Langs.Controllers
                 LanguageToID = LanguageToID,
                 SelectedBookID = SelectedBookID,
                 AvailableLanguages = LanguagesService.GetAll().ToArray(),
-                Books = BooksService.GetAll().Select(w => (w.ID, w.Name, w.Language.Name)).ToArray(),
                 From = LanguagesService.Get(LanguageFromID),
                 To = LanguagesService.Get(LanguageToID),
+                Books = BooksService.GetAllWithLanguage().Select(w => (w.ID, w.Name, w.Language.Name)).ToArray(),
             };
 
             PopulateModelWithWords(LanguageFromID, LanguageToID, SelectedBookID, model);
@@ -100,105 +100,106 @@ namespace Langs.Controllers
             }
         }
 
-        public IActionResult AddWords(AddWordsModel AddWordsModel)
+        public IActionResult AddWords(AddWordsModel model)
         {
-            var model = AddWordsModel ?? new AddWordsModel();
+            model = model ?? new AddWordsModel();
             model.AvailableLanguages = LanguagesService.GetAll().ToArray();
+            model.Books = BooksService.GetAllWithLanguage().Select(w => (w.ID, w.Name, w.Language.Name)).ToArray();
 
             // This means we came here from submitting a form while adding words. Process addition
-            if (!string.IsNullOrEmpty(AddWordsModel.SubmitButtonName))
+            if (!string.IsNullOrEmpty(model.SubmitButtonName))
             {
                 // Show error if no languages selected
-                if (AddWordsModel.LanguageFromID == 0 || AddWordsModel.LanguageToID == 0)
+                if (model.LanguageFromID == 0 || model.LanguageToID == 0)
                 {
                     model.ShowNotSelectedError = true;
                     return View(model);
                 }
 
                 // Add entered words and return success message
-                if (AddWordsModel.SubmitButtonName == "1")
-                    return AddWordsSingle(AddWordsModel);
+                if (model.SubmitButtonName == "1")
+                    return AddWordsSingle(model);
 
-                else if (AddWordsModel.SubmitButtonName == "2")
-                    return AddWordsArea(AddWordsModel);
+                else if (model.SubmitButtonName == "2")
+                    return AddWordsArea(model);
 
-                else if (AddWordsModel.SubmitButtonName == "3")
-                    return AddWordsSeparateArea(AddWordsModel);
+                else if (model.SubmitButtonName == "3")
+                    return AddWordsSeparateArea(model);
 
-                else if (AddWordsModel.SubmitButtonName == "4")
-                    return AddWordsSeparateAreaDescription(AddWordsModel);
+                else if (model.SubmitButtonName == "4")
+                    return AddWordsSeparateAreaDescription(model);
 
                 else
                 {
-                    Debug.WriteLine("Incorrect button name: " + AddWordsModel.SubmitButtonName);
-                    AddWordsModel.AlertMessage = "[Error] Incorrect button name. No words were added.";
-                    AddWordsModel.AlertType = AlertType.Error;
+                    Debug.WriteLine("Incorrect button name: " + model.SubmitButtonName);
+                    model.AlertMessage = "[Error] Incorrect button name. No words were added.";
+                    model.AlertType = AlertType.Error;
                 }
             }
 
-            return View(model);
+            return base.View((object)model);
         }
 
         [NonAction]
-        public IActionResult AddWordsSingle(AddWordsModel AddWordsModel)
+        public IActionResult AddWordsSingle(AddWordsModel model)
         {
-            var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
-                new[] { AddWordsModel.SingleWordText },
-                new[] { AddWordsModel.SingleDefinitionText });
+            var log = AddWords(model.SelectedBookID, model.LanguageFromID, model.LanguageToID,
+                new[] { model.SingleWordText },
+                new[] { model.SingleDefinitionText });
 
-            AddWordsModel.AlertMessage = log.Msg;
-            AddWordsModel.AlertType = log.LogType;
+            model.AlertMessage = log.Msg;
+            model.AlertType = log.LogType;
 
-            return View("AddWords", AddWordsModel);
+            return View("AddWords", model);
         }
 
         [NonAction]
-        public IActionResult AddWordsArea(AddWordsModel AddWordsModel)
+        public IActionResult AddWordsArea(AddWordsModel model)
         {
-            var lines = AddWordsModel.WordsCombinedArea.Split(Environment.NewLine);
-            var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
+            var lines = model.WordsCombinedArea.Split(Environment.NewLine);
+            var log = AddWords(model.SelectedBookID, model.LanguageFromID, model.LanguageToID,
                 lines.Select(s => s.Split("-")[0].Trim()),
                 lines.Select(s => s.Split("-")[1].Trim()));
 
-            AddWordsModel.AlertMessage = log.Msg;
-            AddWordsModel.AlertType = log.LogType;
+            model.AlertMessage = log.Msg;
+            model.AlertType = log.LogType;
 
-            return View("AddWords", AddWordsModel);
+            return View("AddWords", model);
         }
 
         [NonAction]
-        public IActionResult AddWordsSeparateArea(AddWordsModel AddWordsModel)
+        public IActionResult AddWordsSeparateArea(AddWordsModel model)
         {
-            var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
-                AddWordsModel.WordsArea3.Split(Environment.NewLine),
-                AddWordsModel.DefinitionsArea3.Split(Environment.NewLine));
+            var log = AddWords(model.SelectedBookID, model.LanguageFromID, model.LanguageToID,
+                model.WordsArea3.Split(Environment.NewLine),
+                model.DefinitionsArea3.Split(Environment.NewLine));
 
-            AddWordsModel.AlertMessage = log.Msg;
-            AddWordsModel.AlertType = log.LogType;
+            model.AlertMessage = log.Msg;
+            model.AlertType = log.LogType;
 
-            return View("AddWords", AddWordsModel);
+            return View("AddWords", model);
         }
 
         [NonAction]
-        public IActionResult AddWordsSeparateAreaDescription(AddWordsModel AddWordsModel)
+        public IActionResult AddWordsSeparateAreaDescription(AddWordsModel model)
         {
-            var log = AddWords(AddWordsModel.LanguageFromID, AddWordsModel.LanguageToID,
-                AddWordsModel.WordsArea4.Split(Environment.NewLine),
-                AddWordsModel.DefinitionsArea4.Split(Environment.NewLine),
-                AddWordsModel.DescriptionsArea4.Split(Environment.NewLine));
+            var log = AddWords(model.SelectedBookID, model.LanguageFromID, model.LanguageToID,
+                model.WordsArea4.Split(Environment.NewLine),
+                model.DefinitionsArea4.Split(Environment.NewLine),
+                model.DescriptionsArea4.Split(Environment.NewLine));
 
-            AddWordsModel.AlertMessage = log.Msg;
-            AddWordsModel.AlertType = log.LogType;
+            model.AlertMessage = log.Msg;
+            model.AlertType = log.LogType;
 
-            return View("AddWords", AddWordsModel);
+            return View("AddWords", model);
         }
 
-        private (string Msg, AlertType LogType) AddWords(int languageFromID, int languageToID, IEnumerable<string> words, IEnumerable<string> translations, IEnumerable<string> descriptions = null)
+        private (string Msg, AlertType LogType) AddWords(int bookToAddID, int languageFromID, int languageToID, IEnumerable<string> words, IEnumerable<string> translations, IEnumerable<string> descriptions = null)
         {
-            return AddWords(LanguagesService.Get(languageFromID), LanguagesService.Get(languageToID), words, translations, descriptions);
+            return AddWords(BooksService.Get(bookToAddID), LanguagesService.Get(languageFromID), LanguagesService.Get(languageToID), words, translations, descriptions);
         }
 
-        private (string Msg, AlertType LogType) AddWords(Language from, Language to, IEnumerable<string> words, IEnumerable<string> translations, IEnumerable<string> descriptions = null)
+        private (string Msg, AlertType LogType) AddWords(Book bookToAdd, Language from, Language to, IEnumerable<string> words, IEnumerable<string> translations, IEnumerable<string> descriptions = null)
         {
             var count1 = words?.Count();
             var count2 = translations?.Count();
@@ -213,12 +214,12 @@ namespace Langs.Controllers
                 words.Zip(translations, (w, d) => (w, d)).Zip(descriptions, (tuple, ds) => (tuple.w, tuple.d, ds)) :
                 words.Zip(translations, (w, d) => (w, d, ""));
 
-            CreateTranslations(from, to, collection);
+            CreateTranslations(bookToAdd, from, to, collection);
 
             return ($"Successfully added {count1} words!", AlertType.Success);
         }
 
-        private void CreateTranslations(Language from, Language to, IEnumerable<(string Word, string Definition, string Description)> collection)
+        private void CreateTranslations(Book bookToAdd, Language from, Language to, IEnumerable<(string Word, string Definition, string Description)> collection)
         {
             using (WordsService.BatchRequests())
             {
@@ -233,7 +234,14 @@ namespace Langs.Controllers
 
                     WordsService.Add(word);
                     WordsService.Add(translation);
+
+                    if (bookToAdd != default)
+                        bookToAdd.AddWord(masterWord);
                 }
+
+                if (bookToAdd != default)
+                    BooksService.Update(bookToAdd);
+
             }
         }
 

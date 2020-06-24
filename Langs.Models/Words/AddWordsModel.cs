@@ -11,6 +11,9 @@ namespace Langs.Models.Words
 
         public string SubmitButtonName { get; set; }
 
+        public int SelectedBookID { get; set; }
+        public (int ID, string Name, string LanguageName)[] Books { get; set; }
+
         // add1
         public string SingleWordText { get; set; }
         public string SingleDefinitionText { get; set; }

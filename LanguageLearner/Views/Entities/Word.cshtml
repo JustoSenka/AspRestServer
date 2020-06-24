@@ -69,7 +69,7 @@
             <span> | </span>
             @foreach (var b in Model.AddedToBooks)
             {
-                <a class="text-monospace" style="color: black" asp-controller="Books" asp-action="Book" asp-route-id="@b.ID">@b.Name</a>
+                <a class="badge text-monospace" style="color: black; background-color: antiquewhite" asp-controller="Books" asp-action="Book" asp-route-id="@b.ID">@b.Name</a>
                 <span> | </span>
             }
         </p>

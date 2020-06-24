@@ -27,7 +27,7 @@ namespace Langs.Models
         public (string Name, int ID)[] AddedToBooks { get; set; }
         
         public AlertType AlertType { get; set; }
-        public string AlertMessage { get; set; }
+        public string AlertMessage { get; set; }                                  
 
         public static EntityModel FillUpModel(EntityModel Model, Word word, Word translation, Language nativeLang)
         {

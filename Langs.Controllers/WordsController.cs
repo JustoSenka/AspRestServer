@@ -15,11 +15,13 @@ namespace Langs.Controllers
         private readonly ILanguagesService LanguagesService;
         private readonly IWordsService WordsService;
         private readonly IBooksService BooksService;
-        public WordsController(IWordsService WordsService, ILanguagesService LanguagesService, IBooksService BooksService)
+        private readonly IAccountService AccountService;
+        public WordsController(IWordsService WordsService, ILanguagesService LanguagesService, IBooksService BooksService, IAccountService AccountService)
         {
             this.WordsService = WordsService;
             this.LanguagesService = LanguagesService;
             this.BooksService = BooksService;
+            this.AccountService = AccountService;
         }
 
         [HttpGet]
@@ -64,7 +66,7 @@ namespace Langs.Controllers
         private void PopulateModelWithWords(int LanguageFromID, int LanguageToID, int SelectedBookID, WordsModel model)
         {
             var words = WordsService.GetWordsWithData();
-            if (SelectedBookID != 0) 
+            if (SelectedBookID != 0)
                 words = words.Where(w => w.MasterWord.Books.Any(b => b.ID == SelectedBookID));
 
             // If both languages selected, show translations
@@ -137,7 +139,10 @@ namespace Langs.Controllers
                 }
             }
 
-            return base.View((object)model);
+            model.LanguageFromID = AccountService.GetPrefferedNativeLanguage().ID;
+            model.LanguageToID = AccountService.GetPrefferedSecondaryLanguage().ID;
+
+            return base.View(model);
         }
 
         [NonAction]
@@ -156,10 +161,16 @@ namespace Langs.Controllers
         [NonAction]
         public IActionResult AddWordsArea(AddWordsModel model)
         {
-            var lines = model.WordsCombinedArea.Split(Environment.NewLine);
+            var lines = model.WordsCombinedArea
+                .Split(Environment.NewLine)
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Select(s => s.Split("-"))
+                .Where(s => s.Length == 2)
+                .ToList();
+
             var log = AddWords(model.SelectedBookID, model.LanguageFromID, model.LanguageToID,
-                lines.Select(s => s.Split("-")[0].Trim()),
-                lines.Select(s => s.Split("-")[1].Trim()));
+                lines.Select(s => s[0].Trim()),
+                lines.Select(s => s[1].Trim()));
 
             model.AlertMessage = log.Msg;
             model.AlertType = log.LogType;
@@ -221,6 +232,7 @@ namespace Langs.Controllers
 
         private void CreateTranslations(Book bookToAdd, Language from, Language to, IEnumerable<(string Word, string Definition, string Description)> collection)
         {
+            var masterList = new List<MasterWord>();
             using (WordsService.BatchRequests())
             {
                 foreach (var (wordText, translationText, description) in collection)
@@ -235,13 +247,19 @@ namespace Langs.Controllers
                     WordsService.Add(word);
                     WordsService.Add(translation);
 
-                    if (bookToAdd != default)
-                        bookToAdd.AddWord(masterWord);
+                    masterList.Add(masterWord);
                 }
+            }
 
-                if (bookToAdd != default)
+            if (bookToAdd != default)
+            {
+                using (BooksService.BatchRequests())
+                {
+                    foreach (var m in masterList)
+                        bookToAdd.AddWord(m);
+
                     BooksService.Update(bookToAdd);
-
+                }
             }
         }
 

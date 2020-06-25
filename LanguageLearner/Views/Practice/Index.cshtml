@@ -1,0 +1,48 @@
+﻿@model PracticeModel;
+
+@{
+    ViewData["Title"] = "Practice";
+}
+
+<form asp-controller="Words" asp-action="ShowRedirect" method="post">
+
+    <div class="row">
+        <div class="col">
+            <button onclick="@RenderSomething">Button</button>
+
+            <label for="SelectedBookID" class="col-form-label">Select Book</label>
+            <select class="custom-select" asp-for="SelectedBookID">
+
+                <option value="0">&lt;choose&gt;</option>
+
+                @foreach (var book in Model.Books)
+                {
+                    <option value="@book.ID">@book.Name (@book.WordCount) </option>
+                }
+            </select>
+        </div>
+
+        <div class="col">
+            <label for="WordRange_Item2" class="col-form-label">Bottom Range</label>
+            <input type="number" class="form-control" asp-for="WordRange.Bottom" value="0" />
+        </div>
+
+
+        <div class="col">
+            <label for="WordRange_Item1" class="col-form-label">Top Range</label>
+            <input type="number" class="form-control" asp-for="WordRange.Top" value="@Model.Books[0].WordCount" />
+        </div>
+    </div>
+
+</form>
+
+@{ RenderSomething(); }
+
+@functions{
+
+    void RenderSomething()
+    {
+        <b> Something </b>
+    }
+
+}

@@ -77,3 +77,39 @@ $(function () {
         this.style.height = this.scrollHeight + 'px';
     });
 });
+
+
+// Practice Run code
+
+function After(e) {
+    $("p#someid").after("Some text after");
+}
+
+function EnterClick(e) {
+
+    // obj: JQuery<HTMLElement>
+    var value = obj.val();
+    if (value == null)
+        return;
+
+    var filter = obj.val().toUpperCase();
+    var links = obj.parent().children('.dropdown-item');
+
+    for (var i = 0; i < links.length; i++) {
+        txtValue = links[i].textContent || links[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            links[i].style.display = "";
+        } else {
+            links[i].style.display = "none";
+        }
+    }
+}
+
+function ToggleElement(id) {
+    var x = document.getElementById(id);
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}

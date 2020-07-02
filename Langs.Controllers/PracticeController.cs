@@ -1,7 +1,9 @@
-﻿using Langs.Models.Practice;
+﻿using Langs.Data.Objects;
+using Langs.Models.Practice;
 using Langs.Models.Words;
 using Langs.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Linq;
 
 namespace Langs.Controllers
@@ -29,6 +31,36 @@ namespace Langs.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Run(PracticeModel model)
+        {
+            var book = BooksService.Get(model.SelectedBookID);
+            if (book == default)
+                ShowErrorViewForNotFoundBook(model.SelectedBookID);
+
+            var langFrom = AccountService.GetPrefferedNativeLanguage();
+            var langTo = AccountService.GetPrefferedSecondaryLanguage();
+
+            var words = book.Words.Select(w => (From: w[langFrom], To: w[langTo])) // TODO: Words could be not translated, fail?
+                .Select((t, i) => (t.From.ID, t.To.ID, t.From.Text, t.To.Text, t.To.AlternateSpelling, t.To.Pronunciation, Index: i))
+                .ToList();
+
+            // TODO: verify correct word range
+
+
+            var runModel = new RunPracticeModel
+            {
+                Language = (langFrom.Name, langTo.Name),
+                Book = (book.ID, book.Name),
+                WordRange = (model.WordRangeTop, model.WordRangeBottom),
+                Words = words
+                .Where(w => w.Index <= model.WordRangeTop && w.Index >= model.WordRangeBottom)
+                .ToArray()
+            };
+
+            return View(runModel);
         }
     }
 }

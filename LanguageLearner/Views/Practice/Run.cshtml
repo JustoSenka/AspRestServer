@@ -1,0 +1,61 @@
+﻿@model RunPracticeModel;
+
+@{
+    ViewData["Title"] = "Practice";
+}
+
+
+<h3>Practicing: @Model.Book.Name</h3>
+
+<form>
+    <div class="row">
+        <div class="col">
+            <label for="From" class="col-form-label">@Model.Language.From</label>
+        </div>
+
+        <div class="col">
+            <label for="To" class="col-form-label">@Model.Language.To</label>
+        </div>
+    </div>
+
+    @foreach (var t in Model.Words)
+    {
+        <div class="row">
+            <div class="col">
+                <input id="From" type="text" class="form-control disabled" disabled value="@t.FromText" />
+            </div>
+
+            <div class="col">
+                <input id="To" type="text" class="form-control" value="@t.ToText" />
+            </div>
+        </div>
+    }
+
+</form>
+
+<p id="someid">Some text</p>
+<button class="btn btn-secondary" type="button" onclick="After">After jquery</button>
+<button class="btn btn-secondary" type="button" onclick="ToggleElement(" someid")">After regular js</button>
+<button class="btn btn-secondary" type="button" onclick="ToggleElement">After toggler</button>
+<button class="btn btn-secondary" type="button" onclick="Alert('somemessage')">Alert</button>
+<button onclick="print('something')">Print</button>
+
+
+
+<script type="text/javascript">
+    function AlertName(name) {
+        alert('You clicked ' + name + "!");
+    }
+</script>
+<div>
+    <table class="table table-bordered table-condensed">
+        <tr>
+            <th>Name</th>
+        </tr>
+        <tr>
+            <td>
+                <a onclick="AlertName('text" href="#">text</a>
+            </td>
+        </tr>
+    </table>
+</div>

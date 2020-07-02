@@ -4,32 +4,41 @@
     ViewData["Title"] = "Practice";
 }
 
-<form asp-controller="Words" asp-action="ShowRedirect" method="post">
+    <form asp-controller="Practice" asp-action="Run" method="post">
 
-    <div class="row">
-        <div class="col">
-            <label for="SelectedBookID" class="col-form-label">Select Book</label>
-            <select class="custom-select" asp-for="SelectedBookID">
+        <Game />
 
-                <option value="0">&lt;choose&gt;</option>
+        <div class="form-group row">
+            <div class="col">
+                <label for="SelectedBookID" class="col-form-label">Select Book</label>
+                <select class="custom-select" asp-for="SelectedBookID">
 
-                @foreach (var book in Model.Books)
-                {
-                    <option value="@book.ID">@book.Name (@book.WordCount) </option>
-                }
-            </select>
+                    <option value="0">&lt;choose&gt;</option>
+
+                    @foreach (var book in Model.Books)
+                    {
+                        <option value="@book.ID">@book.Name (@book.WordCount) </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col">
+                <label for="WordRangeBottom" class="col-form-label">Bottom Range</label>
+                <input type="number" class="form-control" asp-for="WordRangeBottom" value="0" />
+            </div>
+
+
+            <div class="col">
+                <label for="WordRangeTop" class="col-form-label">Top Range</label>
+                <input type="number" class="form-control" asp-for="WordRangeTop" value="@Model.Books[0].WordCount" />
+            </div>
         </div>
 
-        <div class="col">
-            <label for="WordRange_Item2" class="col-form-label">Bottom Range</label>
-            <input type="number" class="form-control" asp-for="WordRange.Bottom" value="0" />
+
+        <div class="form-group row">
+            <div class="col">
+                <button type="submit" class="btn btn-success">Start</button>
+            </div>
         </div>
 
-
-        <div class="col">
-            <label for="WordRange_Item1" class="col-form-label">Top Range</label>
-            <input type="number" class="form-control" asp-for="WordRange.Top" value="@Model.Books[0].WordCount" />
-        </div>
-    </div>
-
-</form>
+    </form>

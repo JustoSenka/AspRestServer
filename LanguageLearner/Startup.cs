@@ -1,7 +1,6 @@
 ﻿using Langs.Controllers;
 using Langs.Data.Context;
 using Langs.Services;
-using Langs.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.Sqlite;
@@ -10,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Diagnostics;
 
 namespace LanguageLearner
 {
@@ -49,6 +47,7 @@ namespace LanguageLearner
             services.AddScoped<ILanguagesService, LanguagesService>();
 
             services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddServerSideBlazor();
 
             // Database
             SetupDatabase(services);
@@ -105,6 +104,8 @@ namespace LanguageLearner
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapBlazorHub();
             });
         }
     }

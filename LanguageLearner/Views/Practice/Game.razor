@@ -1,14 +1,80 @@
 ﻿<h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
-
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<hr>
+
+<h1>Practicing: @Title</h1>
+<h1>TEst: @Model.Test</h1>
+
+<h3>Practicing: @Model.Book.Name</h3>
+
+<form>
+    <div class="row">
+        <div class="col">
+            <label for="From" class="col-form-label">@Model.Language.From</label>
+        </div>
+
+        <div class="col">
+            <label for="To" class="col-form-label">@Model.Language.To</label>
+        </div>
+    </div>
+
+    @foreach (var t in Model.Words)
+    {
+        <div class="row">
+            <div class="col">
+                <input id="From" type="text" class="form-control disabled" disabled value="@t.FromText" />
+            </div>
+
+            <div class="col">
+                <input id="To" type="text" class="form-control" value="@t.ToText" />
+            </div>
+        </div>
+    }
+
+
+    @foreach (var t in Words)
+    {
+        <div class="row">
+            <div class="col">
+                <input id="From" type="text" class="form-control disabled" disabled value="@t.FromText" />
+            </div>
+
+            <div class="col">
+                <input id="To" type="text" class="form-control" value="@t.ToText" />
+            </div>
+        </div>
+    }
+
+</form>
 
 @code {
     private int currentCount = 0;
 
-    private void IncrementCount()
+    [Parameter]
+    public RunPracticeModel Model { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public IEnumerable<(int FromID, int ToID, string FromText, string ToText, string ToAlternateSpelling, string ToPronunciation, int Index)> Words { get; set; }
+
+    [Parameter]
+    public IEnumerable<string> WordsFrom { get; set; }
+
+    [Parameter]
+    public IEnumerable<int> Indices { get; set; }
+
+    [Parameter]
+    public IEnumerable<PracticeWords> PracticeWords { get; set; }
+
+    private Task IncrementCount()
     {
         currentCount++;
+
+        return Task.CompletedTask;
     }
 }

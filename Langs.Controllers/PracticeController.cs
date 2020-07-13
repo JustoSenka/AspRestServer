@@ -38,7 +38,7 @@ namespace Langs.Controllers
         {
             var book = BooksService.Get(model.SelectedBookID);
             if (book == default)
-                ShowErrorViewForNotFoundBook(model.SelectedBookID);
+                return ShowErrorViewForNotFoundBook(model.SelectedBookID);
 
             var langFrom = AccountService.GetPrefferedNativeLanguage();
             var langTo = AccountService.GetPrefferedSecondaryLanguage();
@@ -52,6 +52,7 @@ namespace Langs.Controllers
 
             var runModel = new RunPracticeModel
             {
+                Test = "Test",
                 Language = (langFrom.Name, langTo.Name),
                 Book = (book.ID, book.Name),
                 WordRange = (model.WordRangeTop, model.WordRangeBottom),
@@ -59,6 +60,8 @@ namespace Langs.Controllers
                 .Where(w => w.Index <= model.WordRangeTop && w.Index >= model.WordRangeBottom)
                 .ToArray()
             };
+
+            runModel.PracticeWords = runModel.Words.Select(w => new PracticeWords(w)).ToArray();
 
             return View(runModel);
         }

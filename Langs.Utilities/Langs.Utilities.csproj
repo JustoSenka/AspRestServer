@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.0" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.7" />
 		<PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="150.18208.0" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
 	</ItemGroup>
